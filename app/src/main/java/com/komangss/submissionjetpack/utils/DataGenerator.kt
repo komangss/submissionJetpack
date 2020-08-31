@@ -1,8 +1,8 @@
 package com.komangss.submissionjetpack.utils
 
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.data.MovieEntity
-import com.komangss.submissionjetpack.data.TvShowEntity
+import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
+import com.komangss.submissionjetpack.data.source.local.entity.TvShowEntity
 
 object DataGenerator {
     fun generateDummyMovies(): List<MovieEntity> {

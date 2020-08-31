@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.data
+package com.komangss.submissionjetpack.data.source.local.entity
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
