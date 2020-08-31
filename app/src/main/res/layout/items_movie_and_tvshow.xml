@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingStart="12dp"
-    android:paddingEnd="12dp"
     android:layout_marginTop="8dp">
 
 
@@ -19,7 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:src="@android:color/darker_gray" />
+        tools:src="@android:color/darker_gray"
+        android:contentDescription="@string/this_is_content_description" />
 
     <LinearLayout
         android:id="@+id/rv_layout"

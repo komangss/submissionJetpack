@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">submissionJetpack</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="movie">Movie</string>
+    <string name="tvshow">Tv Show</string>
+    <string name="this_is_content_description">this is content description</string>
 </resources>
