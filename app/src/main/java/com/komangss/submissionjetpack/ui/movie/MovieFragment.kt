@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.movie
+package com.komangss.submissionjetpack.ui.movie
 
 import androidx.fragment.app.Fragment
 

@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.tvshow
+package com.komangss.submissionjetpack.ui.tvshow
 
 import androidx.fragment.app.Fragment
 

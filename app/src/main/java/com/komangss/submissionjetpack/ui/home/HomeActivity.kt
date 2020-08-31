@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.home
+package com.komangss.submissionjetpack.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
