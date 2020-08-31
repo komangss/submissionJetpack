@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.utils.DataGenerator
@@ -27,7 +28,10 @@ class TvShowFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-            val tvShows = DataGenerator.generateDummyTvShows()
+
+            val viewModel = ViewModelProvider(this).get(TvShowViewModel::class.java)
+            val tvShows = viewModel.getTvShows()
+
             val tvShowAdapter = TvShowAdapter()
             tvShowAdapter.setTvShows(tvShows)
 
