@@ -2,6 +2,7 @@ package com.komangss.submissionjetpack.utils
 
 import android.content.Context
 import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
+import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -46,5 +47,30 @@ class JsonHelper(private val context: Context) {
             e.printStackTrace()
         }
         return movieResponseList
+    }
+
+    fun loadTvShow(): List<TvShowResponse> {
+        val tvShowResponseList = ArrayList<TvShowResponse>()
+        try {
+            val responseObject = JSONObject(parsingFileToString("TvShowResponse.json").toString())
+            val listArray = responseObject.getJSONArray("tvShows")
+            for (i in 0 until listArray.length()) {
+                val tvShow = listArray.getJSONObject(i)
+
+                tvShowResponseList.add(
+                    TvShowResponse(
+                        tvShow.getInt("id"),
+                        tvShow.getString("title"),
+                        tvShow.getString("description"),
+                        tvShow.getInt("image"),
+                        tvShow.getString("date"),
+                        tvShow.getString("rating")
+                    )
+                )
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        return tvShowResponseList
     }
 }

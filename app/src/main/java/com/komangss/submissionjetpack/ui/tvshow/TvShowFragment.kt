@@ -30,10 +30,10 @@ class TvShowFragment : Fragment() {
         if (activity != null) {
 
             val viewModel = ViewModelProvider(this).get(TvShowViewModel::class.java)
-            val tvShows = viewModel.getTvShows()
+//            val tvShows = viewModel.g()
 
             val tvShowAdapter = TvShowAdapter()
-            tvShowAdapter.setTvShows(tvShows)
+//            tvShowAdapter.setTvShows(tvShows)
 
             with(fragment_tvshow_rv_tvshow) {
                 layoutManager = LinearLayoutManager(context)

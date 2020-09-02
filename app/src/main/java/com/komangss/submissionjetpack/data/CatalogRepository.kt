@@ -3,8 +3,10 @@ package com.komangss.submissionjetpack.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
+import com.komangss.submissionjetpack.data.source.local.entity.TvShowEntity
 import com.komangss.submissionjetpack.data.source.remote.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
+import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
 
 class CatalogRepository private constructor(private val catalogRemoteDataSource: CatalogRemoteDataSource) :
     CatalogDataSource {
@@ -42,6 +44,29 @@ class CatalogRepository private constructor(private val catalogRemoteDataSource:
 
         })
         return movieResults
+    }
+
+    override fun getAllTvShows(): LiveData<List<TvShowEntity>> {
+        val tvShowResults = MutableLiveData<List<TvShowEntity>>()
+        catalogRemoteDataSource.getAllTvShows(object : CatalogRemoteDataSource.LoadTvShowsCallback {
+            override fun onTvShowsReceived(tvShowsResponse: List<TvShowResponse>) {
+                val tvShowResponseList = ArrayList<TvShowEntity>()
+                for (response in tvShowsResponse) {
+                    val tvShow = TvShowEntity (
+                        response.id,
+                        response.title,
+                        response.description,
+                        response.image,
+                        response.releaseDate,
+                        response.rating
+                    )
+                    tvShowResponseList.add(tvShow)
+                }
+                tvShowResults.postValue(tvShowResponseList)
+            }
+
+        })
+        return tvShowResults
     }
 
 }

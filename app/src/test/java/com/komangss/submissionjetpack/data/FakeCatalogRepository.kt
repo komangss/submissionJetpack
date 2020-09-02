@@ -3,13 +3,15 @@ package com.komangss.submissionjetpack.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
+import com.komangss.submissionjetpack.data.source.local.entity.TvShowEntity
 import com.komangss.submissionjetpack.data.source.remote.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
+import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
 
-class FakeCatalogRepository(private val remoteDataSource: CatalogRemoteDataSource) : CatalogDataSource {
+class FakeCatalogRepository(private val catalogRemoteDataSource: CatalogRemoteDataSource) : CatalogDataSource {
     override fun getAllMovies(): LiveData<List<MovieEntity>> {
         val movieResults = MutableLiveData<List<MovieEntity>>()
-        remoteDataSource.getAllMovies(object : CatalogRemoteDataSource.LoadMoviesCallback {
+        catalogRemoteDataSource.getAllMovies(object : CatalogRemoteDataSource.LoadMoviesCallback {
             override fun onMoviesReceived(movieResponses: List<MovieResponse>) {
                 val movieResponseList = ArrayList<MovieEntity>()
                 for (response in movieResponses) {
@@ -28,5 +30,28 @@ class FakeCatalogRepository(private val remoteDataSource: CatalogRemoteDataSourc
             }
         })
         return movieResults
+    }
+
+    override fun getAllTvShows(): LiveData<List<TvShowEntity>> {
+        val tvShowResults = MutableLiveData<List<TvShowEntity>>()
+        catalogRemoteDataSource.getAllTvShows(object : CatalogRemoteDataSource.LoadTvShowsCallback {
+            override fun onTvShowsReceived(tvShowsResponse: List<TvShowResponse>) {
+                val tvShowResponseList = ArrayList<TvShowEntity>()
+                for (response in tvShowsResponse) {
+                    val tvShow = TvShowEntity (
+                        response.id,
+                        response.title,
+                        response.description,
+                        response.image,
+                        response.releaseDate,
+                        response.rating
+                    )
+                    tvShowResponseList.add(tvShow)
+                }
+                tvShowResults.postValue(tvShowResponseList)
+            }
+
+        })
+        return tvShowResults
     }
 }

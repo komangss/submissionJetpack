@@ -3,6 +3,7 @@ package com.komangss.submissionjetpack.utils
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.data.source.local.entity.TvShowEntity
 import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
+import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
 
 object DataGenerator {
     fun generateDummyMovies(): List<MovieResponse> {
@@ -155,10 +156,10 @@ object DataGenerator {
         )
     }
 
-    fun generateDummyTvShows(): List<TvShowEntity> {
+    fun generateDummyTvShows(): List<TvShowResponse> {
 
         return listOf(
-            TvShowEntity(
+            TvShowResponse(
                 1,
                 "Arrow",
                 "Spoiled billionaire playboy Oliver Queen is missing and presumed dead when his yacht is lost at sea. He returns five years later a changed man, determined to clean up the city as a hooded vigilante armed with a bow.",
@@ -166,7 +167,7 @@ object DataGenerator {
                 "2012",
                 "58"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 2,
                 "Doom Patrol",
                 "The Doom Patrol’s members each suffered horrible accidents that gave them superhuman abilities — but also left them scarred and disfigured. Traumatized and downtrodden, the team found purpose through The Chief, who brought them together to investigate the weirdest phenomena in existence — and to protect Earth from what they find.",
@@ -174,7 +175,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 3,
                 "Dragon Ball",
                 "Long ago in the mountains, a fighting master known as Gohan discovered a strange boy whom he named Goku. Gohan raised him and trained Goku in martial arts until he died. The young and very strong boy was on his own, but easily managed. Then one day, Goku met a teenage girl named Bulma, whose search for the dragon balls brought her to Goku's home. Together, they set off to find all seven dragon balls in an adventure that would change Goku's life forever. See how Goku met his life long friends Bulma, Yamcha, Krillin, Master Roshi and more. And see his adventures as a boy, all leading up to Dragonball Z and later Dragonball GT.",
@@ -182,7 +183,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 4,
                 "Fairy Tail",
                 "Lucy is a 17-year-old girl, who wants to be a full-fledged mage. One day when visiting Harujion Town, she meets Natsu, a young man who gets sick easily by any type of transportation. But Natsu isn't just any ordinary kid, he's a member of one of the world's most infamous mage guilds: Fairy Tail.",
@@ -190,7 +191,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 5,
                 "Family Guy",
                 "Sick, twisted, politically incorrect and Freakin' Sweet animated series featuring the adventures of the dysfunctional Griffin family. Bumbling Peter and long-suffering Lois have three kids. Stewie (a brilliant but sadistic baby bent on killing his mother and taking over the world), Meg (the oldest, and is the most unpopular girl in town) and Chris (the middle kid, he's not very bright but has a passion for MovieResponse). The final member of the family is Brian - a talking dog and much more than a pet, he keeps Stewie in check whilst sipping Martinis and sorting through his own life issues.",
@@ -198,7 +199,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 6,
                 "The Flash",
                 "After a particle accelerator causes a freak storm, CSI Investigator Barry Allen is struck by lightning and falls into a coma. Months later he awakens with the power of super speed, granting him the ability to move through Central City like an unseen guardian angel. Though initially excited by his newfound powers, Barry is shocked to discover he is not the only \"meta-human\" who was created in the wake of the accelerator explosion -- and not everyone is using their new powers for good. Barry partners with S.T.A.R. Labs and dedicates his life to protect the innocent. For now, only a few close friends and associates know that Barry is literally the fastest man alive, but it won't be long before the world learns what Barry Allen has become...The Flash.",
@@ -206,7 +207,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 7,
                 "Gotham",
                 "Before there was Batman, there was GOTHAM.\n" +
@@ -216,7 +217,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 8,
                 "Grey's Anatomy",
                 "Follows the personal and professional lives of a group of doctors at Seattle’s Grey Sloan Memorial Hospital.",
@@ -224,7 +225,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 9,
                 "Hanna",
                 "This thriller and coming-of-age drama follows the journey of an extraordinary young girl as she evades the relentless pursuit of an off-book CIA agent and tries to unearth the truth behind who she is. Based on the 2011 Joe Wright film.",
@@ -232,7 +233,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 10,
                 "NCIS",
                 "From murder and espionage to terrorism and stolen submarines, a team of special agents investigates any crime that has a shred of evidence connected to Navy and Marine Corps personnel, regardless of rank or position.",
@@ -240,7 +241,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 11,
                 "Riverdale",
                 "Set in the present, the series offers a bold, subversive take on Archie, Betty, Veronica and their friends, exploring the surreality of small-town life, the darkness and weirdness bubbling beneath Riverdale’s wholesome facade.",
@@ -248,7 +249,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 12,
                 "Shameless",
                 "Chicagoan Frank Gallagher is the proud single dad of six smart, industrious, independent kids, who without him would be... perhaps better off. When Frank's not at the bar spending what little money they have, he's passed out on the floor. But the kids have found ways to grow up in spite of him. They may not be like any family you know, but they make no apologies for being exactly who they are.",
@@ -256,7 +257,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 13,
                 "Supergirl",
                 "Twenty-four-year-old Kara Zor-El, who was taken in by the Danvers family when she was 13 after being sent away from Krypton, must learn to embrace her powers after previously hiding them. The Danvers teach her to be careful with her powers, until she has to reveal them during an unexpected disaster, setting her on her journey of heroism.",
@@ -264,7 +265,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 14,
                 "Supernatural",
                 "When they were boys, Sam and Dean Winchester lost their mother to a mysterious and demonic supernatural force. Subsequently, their father raised them to be soldiers. He taught them about the paranormal evil that lives in the dark corners and on the back roads of America ... and he taught them how to kill it. Now, the Winchester brothers crisscross the country in their '67 Chevy Impala, battling every kind of supernatural threat they encounter along the way.",
@@ -272,7 +273,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 15,
                 "The Simpson",
                 "lorem ipsum",
@@ -280,7 +281,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 16,
                 "The Umbrella Academy",
                 "A dysfunctional family of superheroes comes together to solve the mystery of their father's death, the threat of the apocalypse and more.",
@@ -288,7 +289,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            TvShowEntity(
+            TvShowResponse(
                 17,
                 "The Walking Dead",
                 "Sheriff's deputy Rick Grimes awakens from a coma to find a post-apocalyptic world dominated by flesh-eating zombies. He sets out to find his family and encounters many other survivors along the way.",
@@ -308,7 +309,7 @@ object DataGenerator {
         return null
     }
 
-    fun getTvShowById(id: Int): TvShowEntity? {
+    fun getTvShowById(id: Int): TvShowResponse? {
         for (movie in generateDummyTvShows()) {
             if (id == movie.id) {
                 return movie

@@ -3,6 +3,7 @@ package com.komangss.submissionjetpack.data.source.remote
 import android.os.Handler
 import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
 import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
+import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
 import com.komangss.submissionjetpack.utils.JsonHelper
 
 class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHelper){
@@ -26,5 +27,12 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
 
     interface LoadMoviesCallback {
         fun onMoviesReceived(movieResponses: List<MovieResponse>)
+    }
+
+    fun getAllTvShows(callback : LoadTvShowsCallback) {
+        handler.postDelayed({callback.onTvShowsReceived(jsonHelper.loadTvShow())}, SERVICE_LATENCY_IN_MILLIS)
+    }
+    interface LoadTvShowsCallback {
+        fun onTvShowsReceived(tvShowsResponse : List<TvShowResponse>)
     }
 }
