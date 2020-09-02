@@ -1,14 +1,14 @@
 package com.komangss.submissionjetpack.utils
 
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
 import com.komangss.submissionjetpack.data.source.local.entity.TvShowEntity
+import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
 
 object DataGenerator {
-    fun generateDummyMovies(): List<MovieEntity> {
+    fun generateDummyMovies(): List<MovieResponse> {
 
         return listOf(
-            MovieEntity(
+            MovieResponse(
                 1,
                 "Alita : Battle Angel",
                 "Robert Rodriguez",
@@ -17,7 +17,7 @@ object DataGenerator {
                 "2019",
                 "67"
             ),
-            MovieEntity(
+            MovieResponse(
                 2,
                 "Aquaman",
                 "James Wan",
@@ -26,7 +26,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 3,
                 "Bohemian Rhapsody",
                 "",
@@ -35,7 +35,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 4,
                 "Creed II",
                 "Steven Caple Jr.",
@@ -44,7 +44,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 5,
                 "The Crimes Of Grindelwald",
                 "David Yates",
@@ -53,7 +53,7 @@ object DataGenerator {
                 "2018",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 6,
                 "Glass",
                 "M. Night Shyamalan",
@@ -62,7 +62,7 @@ object DataGenerator {
                 "2019",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 7,
                 "How To Train Your Dragon : The Hidden World",
                 "Dean DeBlois",
@@ -71,7 +71,7 @@ object DataGenerator {
                 "2019",
                 "76"
             ),
-            MovieEntity(
+            MovieResponse(
                 8,
                 "Avengers : Infinity War",
                 "Joe Russo",
@@ -80,7 +80,7 @@ object DataGenerator {
                 "2018",
                 "83"
             ),
-            MovieEntity(
+            MovieResponse(
                 9,
                 "Master Z: Ip Man Legacy",
                 "Yuen Woo-ping",
@@ -89,7 +89,7 @@ object DataGenerator {
                 "2018",
                 "52"
             ),
-            MovieEntity(
+            MovieResponse(
                 10,
                 "Mortal Engines",
                 "Christian Rivers",
@@ -98,7 +98,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 11,
                 "Overlord",
                 "Yumi Hara",
@@ -107,7 +107,7 @@ object DataGenerator {
                 "2015",
                 "75"
             ),
-            MovieEntity(
+            MovieResponse(
                 12,
                 "Ralph Breaks The Internet",
                 "Phil Johnston",
@@ -116,7 +116,7 @@ object DataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 13,
                 "Robin Hood",
                 "Ben Chandler",
@@ -125,7 +125,7 @@ object DataGenerator {
                 "2018",
                 "72"
             ),
-            MovieEntity(
+            MovieResponse(
                 14,
                 "Serenity",
                 "Steven Knight",
@@ -134,7 +134,7 @@ object DataGenerator {
                 "2019",
                 "51"
             ),
-            MovieEntity(
+            MovieResponse(
                 15,
                 "Spider-Man : Into The Spider-Verse",
                 "Rodney Rothman",
@@ -143,7 +143,7 @@ object DataGenerator {
                 "2018",
                 "9.5"
             ),
-            MovieEntity(
+            MovieResponse(
                 16,
                 "T34",
                 "Aleksey Sidorov",
@@ -193,7 +193,7 @@ object DataGenerator {
             TvShowEntity(
                 5,
                 "Family Guy",
-                "Sick, twisted, politically incorrect and Freakin' Sweet animated series featuring the adventures of the dysfunctional Griffin family. Bumbling Peter and long-suffering Lois have three kids. Stewie (a brilliant but sadistic baby bent on killing his mother and taking over the world), Meg (the oldest, and is the most unpopular girl in town) and Chris (the middle kid, he's not very bright but has a passion for MovieEntity). The final member of the family is Brian - a talking dog and much more than a pet, he keeps Stewie in check whilst sipping Martinis and sorting through his own life issues.",
+                "Sick, twisted, politically incorrect and Freakin' Sweet animated series featuring the adventures of the dysfunctional Griffin family. Bumbling Peter and long-suffering Lois have three kids. Stewie (a brilliant but sadistic baby bent on killing his mother and taking over the world), Meg (the oldest, and is the most unpopular girl in town) and Chris (the middle kid, he's not very bright but has a passion for MovieResponse). The final member of the family is Brian - a talking dog and much more than a pet, he keeps Stewie in check whilst sipping Martinis and sorting through his own life issues.",
                 R.drawable.poster_family_guy,
                 "17 Agustus 1945",
                 "9.5"
@@ -299,7 +299,7 @@ object DataGenerator {
         )
     }
 
-    fun getMovieById(id: Int): MovieEntity? {
+    fun getMovieById(id: Int): MovieResponse? {
         for (movie in generateDummyMovies()) {
             if (id == movie.id) {
                 return movie

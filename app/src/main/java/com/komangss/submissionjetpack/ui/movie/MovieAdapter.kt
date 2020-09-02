@@ -38,8 +38,9 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
                 item_movie_tvshow_tv_item_title.text = movie.title
                 item_movie_tvshow_tv_description.text = movie.description
 
+
                 Glide.with(context)
-                    .load(movie.image)
+                    .load(resources.getDrawable(movie.image))
                     .into(item_movie_tvshow_image_view_poster)
             }
 
