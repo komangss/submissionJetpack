@@ -4,9 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.komangss.submissionjetpack.data.source.remote.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.utils.DataGenerator
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doAnswer
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
 import org.junit.Test
 
@@ -23,6 +21,10 @@ class CatalogRepositoryTest {
 
     private val movieResponses = DataGenerator.generateDummyMovies()
     private val tvShowResponse = DataGenerator.generateDummyTvShows()
+
+    private val movieId = movieResponses[0].id
+
+    private val movieResponse = DataGenerator.getMovieById(movieId)
 
     @Test
     fun getAllMovies() {
@@ -50,5 +52,23 @@ class CatalogRepositoryTest {
         verify(remote).getAllTvShows(any())
         Assert.assertNotNull(tvShowEntities)
         Assert.assertEquals(tvShowResponse.size.toLong(), tvShowEntities.size.toLong())
+    }
+
+    @Test
+    fun getMovieById() {
+        doAnswer { invocation ->
+            if (movieResponse != null) {
+                (invocation.arguments[1] as CatalogRemoteDataSource.LoadMovieByIdCallback)
+                    .onMovieReceived(movieResponse)
+            }
+            null
+        }.`when`(remote).getMovieById(eq(movieId), any())
+
+        val movieEntity = LiveDataTestUtil.getValue(catalogRepository.getMovieById(movieId))
+
+        verify(remote, times(1)).getMovieById(eq(movieId), any())
+
+        Assert.assertNotNull(movieEntity)
+        Assert.assertEquals(movieEntity.id, movieId)
     }
 }

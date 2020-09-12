@@ -54,4 +54,24 @@ class FakeCatalogRepository(private val catalogRemoteDataSource: CatalogRemoteDa
         })
         return tvShowResults
     }
+
+    override fun getMovieById(id : Int) : LiveData<MovieEntity> {
+        val movieResult = MutableLiveData<MovieEntity>()
+        catalogRemoteDataSource.getMovieById(id, object : CatalogRemoteDataSource.LoadMovieByIdCallback {
+            override fun onMovieReceived(movieResponse: MovieResponse) {
+                val movie = MovieEntity(
+                    movieResponse.id,
+                    movieResponse.title,
+                    movieResponse.director,
+                    movieResponse.description,
+                    movieResponse.image,
+                    movieResponse.releaseDate,
+                    movieResponse.rating
+                )
+                movieResult.postValue(movie)
+            }
+
+        })
+        return movieResult
+    }
 }
