@@ -35,4 +35,12 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
     interface LoadTvShowsCallback {
         fun onTvShowsReceived(tvShowsResponse : List<TvShowResponse>)
     }
+
+    fun getMovieById(id : Int, callback : LoadMovieByIdCallback) {
+        handler.postDelayed({callback.onMovieReceived(jsonHelper.loadMovieById(id))}, SERVICE_LATENCY_IN_MILLIS)
+    }
+
+    interface LoadMovieByIdCallback {
+        fun onMovieReceived(movieResponse: MovieResponse)
+    }
 }

@@ -6,6 +6,7 @@ import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.lang.NullPointerException
 
 class JsonHelper(private val context: Context) {
 
@@ -23,7 +24,7 @@ class JsonHelper(private val context: Context) {
         }
     }
 
-    fun loadMovies() : List<MovieResponse> {
+    fun loadMovies(): List<MovieResponse> {
         val movieResponseList = ArrayList<MovieResponse>()
         try {
             val responseObject = JSONObject(parsingFileToString("MovieResponse.json").toString())
@@ -72,5 +73,27 @@ class JsonHelper(private val context: Context) {
             e.printStackTrace()
         }
         return tvShowResponseList
+    }
+
+    fun loadMovieById(id: Int): MovieResponse {
+        val fileName = parsingFileToString("movie_$id.json")
+        var result = MovieResponse()
+        if (fileName != null) {
+            try {
+                val movie = JSONObject(fileName)
+                result =  MovieResponse(
+                    movie.getInt("id"),
+                    movie.getString("title"),
+                    movie.getString("director"),
+                    movie.getString("description"),
+                    movie.getInt("image"),
+                    movie.getString("date"),
+                    movie.getString("rating")
+                )
+            } catch (e : NullPointerException) {
+                throw e
+            }
+        }
+        return result
     }
 }

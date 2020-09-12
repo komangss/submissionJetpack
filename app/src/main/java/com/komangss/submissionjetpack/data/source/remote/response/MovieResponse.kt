@@ -12,4 +12,6 @@ data class MovieResponse(
     val image : Int,
     val releaseDate : String,
     val rating : String
-) : Parcelable
+) : Parcelable {
+    constructor() : this(0, "", "", "", 0, "","")
+}
