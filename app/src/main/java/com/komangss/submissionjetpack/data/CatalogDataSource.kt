@@ -8,4 +8,6 @@ interface CatalogDataSource {
     fun getAllMovies() : LiveData<List<MovieEntity>>
 
     fun getAllTvShows() : LiveData<List<TvShowEntity>>
+
+    fun getMovieById(id : Int) : LiveData<MovieEntity>
 }
