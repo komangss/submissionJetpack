@@ -69,11 +69,20 @@ class CatalogRepository private constructor(private val catalogRemoteDataSource:
         return tvShowResults
     }
 
-    fun getMovieById(id : Int) : LiveData<MovieResponse> {
-        val movieResult = MutableLiveData<MovieResponse>()
+    fun getMovieById(id : Int) : LiveData<MovieEntity> {
+        val movieResult = MutableLiveData<MovieEntity>()
         catalogRemoteDataSource.getMovieById(id, object : CatalogRemoteDataSource.LoadMovieByIdCallback {
             override fun onMovieReceived(movieResponse: MovieResponse) {
-                movieResult.postValue(movieResponse)
+                val movie = MovieEntity(
+                    movieResponse.id,
+                    movieResponse.title,
+                    movieResponse.director,
+                    movieResponse.description,
+                    movieResponse.image,
+                    movieResponse.releaseDate,
+                    movieResponse.rating
+                )
+                movieResult.postValue(movie)
             }
 
         })
