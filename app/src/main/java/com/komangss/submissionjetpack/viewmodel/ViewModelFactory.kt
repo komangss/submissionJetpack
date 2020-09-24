@@ -28,7 +28,7 @@ class ViewModelFactory private constructor(private val catalogRepository: Catalo
                 MovieViewModel(catalogRepository) as T
             }
             modelClass.isAssignableFrom(MovieDetailViewModel::class.java) -> {
-                MovieViewModel(catalogRepository) as T
+                MovieDetailViewModel(catalogRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
