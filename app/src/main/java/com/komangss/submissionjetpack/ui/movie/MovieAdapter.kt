@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
+import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
@@ -45,7 +46,9 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
                     .into(item_movie_tvshow_image_view_poster)
 
                 setOnClickListener {
-                    context.startActivity(Intent(context, MovieDetailActivity::class.java))
+                    val intent = Intent(context, MovieDetailActivity::class.java)
+                    intent.putExtra(EXTRA_MOVIE_ID, movie.id)
+                    context.startActivity(intent)
                 }
             }
 
