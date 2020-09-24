@@ -7,12 +7,10 @@ import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.data.CatalogRepository
 import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
 import com.komangss.submissionjetpack.utils.EntityDataGenerator
-import com.komangss.submissionjetpack.utils.ResponseDataGenerator
-import org.junit.Test
-
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.mockito.Mockito.*
 
 class MovieDetailViewModelTest {
@@ -39,18 +37,25 @@ class MovieDetailViewModelTest {
         )
     }
 
+    @Suppress("UNCHECKED_CAST")
     @Test
     fun detailMovie() {
         val mutableMovie = MutableLiveData<MovieEntity>()
         mutableMovie.value = EntityDataGenerator.getMovieById(dummyMovie.id)
         `when`(catalogRepository.getMovieById(dummyMovie.id)).thenReturn(mutableMovie)
-        val observer = mock(Observer::class.java)
-        viewModel.detailMovie(dummyMovie.id).observeForever(observer as Observer<MovieEntity>)
+        val observer: Observer<MovieEntity> = mock(Observer::class.java) as Observer<MovieEntity>
+        viewModel.detailMovie(dummyMovie.id).observeForever(observer)
         verify(catalogRepository).getMovieById(dummyMovie.id)
         assertEquals(dummyMovie.id, viewModel.detailMovie(dummyMovie.id).value?.id)
         assertEquals(dummyMovie.title, viewModel.detailMovie(dummyMovie.id).value?.title)
-        assertEquals(dummyMovie.description, viewModel.detailMovie(dummyMovie.id).value?.description)
+        assertEquals(
+            dummyMovie.description,
+            viewModel.detailMovie(dummyMovie.id).value?.description
+        )
         assertEquals(dummyMovie.image, viewModel.detailMovie(dummyMovie.id).value?.image)
-        assertEquals(dummyMovie.releaseDate, viewModel.detailMovie(dummyMovie.id).value?.releaseDate)
+        assertEquals(
+            dummyMovie.releaseDate,
+            viewModel.detailMovie(dummyMovie.id).value?.releaseDate
+        )
     }
 }
