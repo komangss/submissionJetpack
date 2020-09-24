@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.utils.DataGenerator
 import kotlinx.android.synthetic.main.fragment_tv_show.*
 
 
@@ -29,7 +27,7 @@ class TvShowFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
 
-            val viewModel = ViewModelProvider(this).get(TvShowViewModel::class.java)
+//            val viewModel = ViewModelProvider(this).get(TvShowViewModel::class.java)
 //            val tvShows = viewModel.g()
 
             val tvShowAdapter = TvShowAdapter()

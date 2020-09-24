@@ -8,13 +8,13 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.utils.DataGenerator
+import com.komangss.submissionjetpack.utils.ResponseDataGenerator
 import org.junit.Rule
 import org.junit.Test
 
 class HomeActivityTest {
-    private val dummyMovies = DataGenerator.generateDummyMovies()
-    private val dummyTvShows = DataGenerator.generateDummyTvShows()
+    private val dummyMovies = ResponseDataGenerator.generateDummyMovies()
+    private val dummyTvShows = ResponseDataGenerator.generateDummyTvShows()
 
 
     @get:Rule
