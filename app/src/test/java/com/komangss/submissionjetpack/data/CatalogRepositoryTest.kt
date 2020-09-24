@@ -2,7 +2,7 @@ package com.komangss.submissionjetpack.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.komangss.submissionjetpack.data.source.remote.CatalogRemoteDataSource
-import com.komangss.submissionjetpack.utils.DataGenerator
+import com.komangss.submissionjetpack.utils.ResponseDataGenerator
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil
 import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert
@@ -19,12 +19,12 @@ class CatalogRepositoryTest {
     private val remote = mock(CatalogRemoteDataSource::class.java)
     private val catalogRepository = FakeCatalogRepository(remote)
 
-    private val movieResponses = DataGenerator.generateDummyMovies()
-    private val tvShowResponse = DataGenerator.generateDummyTvShows()
+    private val movieResponses = ResponseDataGenerator.generateDummyMovies()
+    private val tvShowResponse = ResponseDataGenerator.generateDummyTvShows()
 
     private val movieId = movieResponses[0].id
 
-    private val movieResponse = DataGenerator.getMovieById(movieId)
+    private val movieResponse = ResponseDataGenerator.getMovieById(movieId)
 
     @Test
     fun getAllMovies() {
