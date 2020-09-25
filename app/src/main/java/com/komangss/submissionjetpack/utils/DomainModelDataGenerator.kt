@@ -1,12 +1,12 @@
 package com.komangss.submissionjetpack.utils
 
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import com.komangss.submissionjetpack.business.domain.model.Movie
 
-object EntityDataGenerator {
-    fun generateDummyMovies(): List<MovieEntity> {
+object DomainModelDataGenerator {
+    fun generateDummyMovies(): List<Movie> {
         return listOf(
-            MovieEntity(
+            Movie(
                 1,
                 "Alita : Battle Angel",
                 "Robert Rodriguez",
@@ -15,7 +15,7 @@ object EntityDataGenerator {
                 "2019",
                 "67"
             ),
-            MovieEntity(
+            Movie(
                 2,
                 "Aquaman",
                 "James Wan",
@@ -24,7 +24,7 @@ object EntityDataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 3,
                 "Bohemian Rhapsody",
                 "",
@@ -33,7 +33,7 @@ object EntityDataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 4,
                 "Creed II",
                 "Steven Caple Jr.",
@@ -42,7 +42,7 @@ object EntityDataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 5,
                 "The Crimes Of Grindelwald",
                 "David Yates",
@@ -51,7 +51,7 @@ object EntityDataGenerator {
                 "2018",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 6,
                 "Glass",
                 "M. Night Shyamalan",
@@ -60,7 +60,7 @@ object EntityDataGenerator {
                 "2019",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 7,
                 "How To Train Your Dragon : The Hidden World",
                 "Dean DeBlois",
@@ -69,7 +69,7 @@ object EntityDataGenerator {
                 "2019",
                 "76"
             ),
-            MovieEntity(
+            Movie(
                 8,
                 "Avengers : Infinity War",
                 "Joe Russo",
@@ -78,7 +78,7 @@ object EntityDataGenerator {
                 "2018",
                 "83"
             ),
-            MovieEntity(
+            Movie(
                 9,
                 "Master Z: Ip Man Legacy",
                 "Yuen Woo-ping",
@@ -87,7 +87,7 @@ object EntityDataGenerator {
                 "2018",
                 "52"
             ),
-            MovieEntity(
+            Movie(
                 10,
                 "Mortal Engines",
                 "Christian Rivers",
@@ -96,7 +96,7 @@ object EntityDataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 11,
                 "Overlord",
                 "Yumi Hara",
@@ -105,7 +105,7 @@ object EntityDataGenerator {
                 "2015",
                 "75"
             ),
-            MovieEntity(
+            Movie(
                 12,
                 "Ralph Breaks The Internet",
                 "Phil Johnston",
@@ -114,7 +114,7 @@ object EntityDataGenerator {
                 "17 Agustus 1945",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 13,
                 "Robin Hood",
                 "Ben Chandler",
@@ -123,7 +123,7 @@ object EntityDataGenerator {
                 "2018",
                 "72"
             ),
-            MovieEntity(
+            Movie(
                 14,
                 "Serenity",
                 "Steven Knight",
@@ -132,7 +132,7 @@ object EntityDataGenerator {
                 "2019",
                 "51"
             ),
-            MovieEntity(
+            Movie(
                 15,
                 "Spider-Man : Into The Spider-Verse",
                 "Rodney Rothman",
@@ -141,7 +141,7 @@ object EntityDataGenerator {
                 "2018",
                 "9.5"
             ),
-            MovieEntity(
+            Movie(
                 16,
                 "T34",
                 "Aleksey Sidorov",
@@ -153,7 +153,7 @@ object EntityDataGenerator {
         )
     }
 
-    fun getMovieById(id: Int): MovieEntity? {
+    fun getMovieById(id: Int): Movie? {
         for (movie in generateDummyMovies()) {
             if (id == movie.id) {
                 return movie

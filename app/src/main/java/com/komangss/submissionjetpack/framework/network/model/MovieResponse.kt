@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.data.source.remote.response
+package com.komangss.submissionjetpack.framework.network.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

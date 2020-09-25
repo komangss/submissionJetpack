@@ -1,8 +1,8 @@
 package com.komangss.submissionjetpack.utils
 
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
-import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.model.MovieResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 
 object ResponseDataGenerator {
     fun generateDummyMovies(): List<MovieResponse> {

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.data.source.local.entity.TvShowEntity
+import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {

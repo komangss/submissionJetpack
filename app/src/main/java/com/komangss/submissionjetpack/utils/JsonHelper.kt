@@ -1,8 +1,8 @@
 package com.komangss.submissionjetpack.utils
 
 import android.content.Context
-import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
-import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.model.MovieResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException

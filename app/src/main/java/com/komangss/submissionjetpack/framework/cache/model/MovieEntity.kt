@@ -1,4 +1,6 @@
-package com.komangss.submissionjetpack.data.source.local.entity
+package com.komangss.submissionjetpack.framework.cache.model
+
+// TODO : Make this entity using room's entity
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
