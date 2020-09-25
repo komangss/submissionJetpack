@@ -1,7 +1,8 @@
-package com.komangss.submissionjetpack.data
+package com.komangss.submissionjetpack.business.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.komangss.submissionjetpack.data.source.remote.CatalogRemoteDataSource
+import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
+import com.komangss.submissionjetpack.framework.network.mappers.MovieNetworkMapper
 import com.komangss.submissionjetpack.utils.ResponseDataGenerator
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil
 import com.nhaarman.mockitokotlin2.*
@@ -17,7 +18,8 @@ class CatalogRepositoryTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val remote = mock(CatalogRemoteDataSource::class.java)
-    private val catalogRepository = FakeCatalogRepository(remote)
+    private val networkMapper = MovieNetworkMapper()
+    private val catalogRepository = FakeCatalogRepository(remote, networkMapper)
 
     private val movieResponses = ResponseDataGenerator.generateDummyMovies()
     private val tvShowResponse = ResponseDataGenerator.generateDummyTvShows()
@@ -34,10 +36,10 @@ class CatalogRepositoryTest {
             null
         }.`when`(remote).getAllMovies(any())
 
-        val movieEntities = LiveDataTestUtil.getValue(catalogRepository.getAllMovies())
+        val movieList = LiveDataTestUtil.getValue(catalogRepository.getAllMovies())
         verify(remote).getAllMovies(any())
-        Assert.assertNotNull(movieEntities)
-        Assert.assertEquals(movieResponses.size.toLong(), movieEntities.size.toLong())
+        Assert.assertNotNull(movieList)
+        Assert.assertEquals(movieResponses.size.toLong(), movieList.size.toLong())
     }
 
     @Test

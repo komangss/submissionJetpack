@@ -4,9 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.data.CatalogRepository
-import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
-import com.komangss.submissionjetpack.utils.EntityDataGenerator
+import com.komangss.submissionjetpack.business.domain.model.Movie
+import com.komangss.submissionjetpack.business.repository.CatalogRepository
+import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -20,13 +20,13 @@ class MovieDetailViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel : MovieDetailViewModel
-    private lateinit var dummyMovie : MovieEntity
+    private lateinit var dummyMovie : Movie
     private val catalogRepository = mock(CatalogRepository::class.java)
 
     @Before
     fun setUp() {
         viewModel = MovieDetailViewModel(catalogRepository)
-        dummyMovie = MovieEntity(
+        dummyMovie = Movie(
             1,
             "Alita : Battle Angel",
             "Robert Rodriguez",
@@ -40,10 +40,10 @@ class MovieDetailViewModelTest {
     @Suppress("UNCHECKED_CAST")
     @Test
     fun detailMovie() {
-        val mutableMovie = MutableLiveData<MovieEntity>()
-        mutableMovie.value = EntityDataGenerator.getMovieById(dummyMovie.id)
+        val mutableMovie = MutableLiveData<Movie>()
+        mutableMovie.value = DomainModelDataGenerator.getMovieById(dummyMovie.id)
         `when`(catalogRepository.getMovieById(dummyMovie.id)).thenReturn(mutableMovie)
-        val observer: Observer<MovieEntity> = mock(Observer::class.java) as Observer<MovieEntity>
+        val observer: Observer<Movie> = mock(Observer::class.java) as Observer<Movie>
         viewModel.detailMovie(dummyMovie.id).observeForever(observer)
         verify(catalogRepository).getMovieById(dummyMovie.id)
         assertEquals(dummyMovie.id, viewModel.detailMovie(dummyMovie.id).value?.id)
