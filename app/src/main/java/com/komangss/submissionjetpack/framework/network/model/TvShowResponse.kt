@@ -1,6 +1,6 @@
-package com.komangss.submissionjetpack.data.source.local.entity
+package com.komangss.submissionjetpack.framework.network.model
 
-data class TvShowEntity (
+data class TvShowResponse (
     val id : Int,
     val title : String,
     val description : String,

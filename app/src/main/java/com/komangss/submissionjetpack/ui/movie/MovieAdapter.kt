@@ -7,16 +7,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
+import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
-    private val movieList = ArrayList<MovieEntity>()
+    private val movieList = ArrayList<Movie>()
 
-    fun setMovies(movieList : List<MovieEntity>) {
+    fun setMovies(movieList : List<Movie>) {
         this.movieList.clear()
         this.movieList.addAll(movieList)
         notifyDataSetChanged()
@@ -36,7 +36,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
     }
 
     class MovieViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie : MovieEntity) {
+        fun bind(movie : Movie) {
             with(itemView) {
                 item_movie_tvshow_tv_item_title.text = movie.title
                 item_movie_tvshow_tv_description.text = movie.description

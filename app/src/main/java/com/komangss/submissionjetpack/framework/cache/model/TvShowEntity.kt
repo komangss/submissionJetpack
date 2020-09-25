@@ -1,6 +1,6 @@
-package com.komangss.submissionjetpack.data.source.remote.response
+package com.komangss.submissionjetpack.framework.cache.model
 
-data class TvShowResponse (
+data class TvShowEntity (
     val id : Int,
     val title : String,
     val description : String,

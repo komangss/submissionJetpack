@@ -3,10 +3,9 @@ package com.komangss.submissionjetpack.ui.movie
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.komangss.submissionjetpack.data.CatalogRepository
-import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
-import com.komangss.submissionjetpack.utils.EntityDataGenerator
-import com.komangss.submissionjetpack.utils.ResponseDataGenerator
+import com.komangss.submissionjetpack.business.domain.model.Movie
+import com.komangss.submissionjetpack.business.repository.CatalogRepository
+import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -31,7 +30,7 @@ class MovieViewModelTest {
     private lateinit var catalogRepository: CatalogRepository
 
     @Mock
-    private lateinit var observer: Observer<List<MovieEntity>>
+    private lateinit var observer: Observer<List<Movie>>
 
     @Before
     fun setUp() {
@@ -40,15 +39,15 @@ class MovieViewModelTest {
 
     @Test
     fun getMovies() {
-        val dummyMovies = EntityDataGenerator.generateDummyMovies()
-        val movies = MutableLiveData<List<MovieEntity>>()
+        val dummyMovies = DomainModelDataGenerator.generateDummyMovies()
+        val movies = MutableLiveData<List<Movie>>()
         movies.value = dummyMovies
 
         `when`(catalogRepository.getAllMovies()).thenReturn(movies)
-        val movieEntities = viewModel.getMovies().value
+        val movieList = viewModel.getMovies().value
         verify(catalogRepository).getAllMovies()
-        assertNotNull(movieEntities)
-        assertEquals(16, movieEntities?.size)
+        assertNotNull(movieList)
+        assertEquals(16, movieList?.size)
 
         viewModel.getMovies().observeForever(observer)
         verify(observer).onChanged(dummyMovies)

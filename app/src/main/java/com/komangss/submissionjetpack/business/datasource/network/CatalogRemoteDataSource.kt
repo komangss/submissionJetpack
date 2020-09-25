@@ -1,9 +1,8 @@
-package com.komangss.submissionjetpack.data.source.remote
+package com.komangss.submissionjetpack.business.datasource.network
 
 import android.os.Handler
-import com.komangss.submissionjetpack.data.source.local.entity.MovieEntity
-import com.komangss.submissionjetpack.data.source.remote.response.MovieResponse
-import com.komangss.submissionjetpack.data.source.remote.response.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.model.MovieResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import com.komangss.submissionjetpack.utils.JsonHelper
 
 class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHelper){
