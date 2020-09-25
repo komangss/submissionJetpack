@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.ui.home
+package com.komangss.submissionjetpack.ui.home.home
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
@@ -8,6 +8,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import com.komangss.submissionjetpack.R
+import com.komangss.submissionjetpack.ui.home.HomeActivity
 import com.komangss.submissionjetpack.utils.ResponseDataGenerator
 import org.junit.Rule
 import org.junit.Test
