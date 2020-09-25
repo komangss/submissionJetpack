@@ -1,36 +1,41 @@
 package com.komangss.submissionjetpack.ui.home.home
 
-import androidx.recyclerview.widget.RecyclerView
+import android.content.Intent
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeLeft
+import androidx.test.espresso.action.ViewActions.swipeRight
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.ui.home.HomeActivity
-import com.komangss.submissionjetpack.utils.ResponseDataGenerator
+import org.hamcrest.core.IsNull.notNullValue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
 class HomeActivityTest {
-    private val dummyMovies = ResponseDataGenerator.generateDummyMovies()
-    private val dummyTvShows = ResponseDataGenerator.generateDummyTvShows()
-
 
     @get:Rule
-    var activityRule = ActivityTestRule(HomeActivity::class.java)
+    val activityTestRule : ActivityTestRule<HomeActivity> =
+        ActivityTestRule(HomeActivity::class.java)
 
-    @Test
-    fun loadMovies() {
-        onView(withId(R.id.fragment_movie_rv_movie)).check(matches(isDisplayed()))
-        onView(withId(R.id.fragment_movie_rv_movie)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(dummyMovies.size))
+    private lateinit var activity : HomeActivity
+
+    @Before
+    fun setUp() {
+        activity = activityTestRule.activity
+        activityTestRule.launchActivity(Intent())
+        assertThat(activityTestRule, notNullValue())
     }
 
     @Test
-    fun loadTvShows() {
-        onView(withText("TV SHOW")).perform(click())
-        onView(withId(R.id.fragment_tvshow_rv_tvshow)).check(matches(isDisplayed()))
-        onView(withId(R.id.fragment_tvshow_rv_tvshow)).perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(dummyTvShows.size))
+    fun swipePage() {
+        onView(withId(R.id.view_pager))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.view_pager))
+            .perform(swipeLeft())
+        onView(withId(R.id.view_pager))
+            .perform(swipeRight())
     }
 }
