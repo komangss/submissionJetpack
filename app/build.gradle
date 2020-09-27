@@ -62,6 +62,7 @@ dependencies {
 
     //architecture component
     implementation "androidx.lifecycle:lifecycle-viewmodel:$archLifecycleVersion"
+    debugImplementation 'androidx.fragment:fragment-testing:1.2.5'
 }
 repositories {
     mavenCentral()
