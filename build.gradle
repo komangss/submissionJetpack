@@ -25,6 +25,7 @@ buildscript {
         mockitoVersion = '3.5.13'
         mockitoKotlinVersion = '2.2.0'
         archCoreTesting = '2.1.0'
+        androidxTestRunner = '1.3.0'
 
         archLifecycleVersion = '2.2.0'
 

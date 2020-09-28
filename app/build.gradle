@@ -59,12 +59,22 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:$archCoreTesting"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
 
+    androidTestImplementation"androidx.test:runner:$androidxTestRunner"
+
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     //architecture component
     implementation "androidx.lifecycle:lifecycle-viewmodel:$archLifecycleVersion"
     debugImplementation 'androidx.fragment:fragment-testing:1.2.5'
 }
+
 repositories {
     mavenCentral()
+}
+
+// Fix Bug - from issue https://github.com/android/android-test/issues/472
+configurations.all {
+    resolutionStrategy {
+        force "androidx.test:monitor:${rootProject.androidxTestRunner}"
+    }
 }
