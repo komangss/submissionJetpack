@@ -58,6 +58,7 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:$mockitoVersion"
     testImplementation "androidx.arch.core:core-testing:$archCoreTesting"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation 'androidx.test:core-ktx:1.3.0'
 
     androidTestImplementation"androidx.test:runner:$androidxTestRunner"
 

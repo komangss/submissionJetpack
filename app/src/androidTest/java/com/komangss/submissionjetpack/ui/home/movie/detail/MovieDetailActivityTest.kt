@@ -1,13 +1,14 @@
 package com.komangss.submissionjetpack.ui.home.movie.detail
 
 import android.content.Intent
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.rule.ActivityTestRule
 import com.komangss.submissionjetpack.R
+import com.komangss.submissionjetpack.ui.home.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
@@ -21,26 +22,25 @@ class MovieDetailActivityTest {
 
     private val dummyMovie = DomainModelDataGenerator.generateDummyMovies()[0]
 
-        @get:Rule
-        val activityTestRule : ActivityTestRule<MovieDetailActivity> =
-            ActivityTestRule(
-                MovieDetailActivity::class.java,
-                true,
-                false
-            )
+    @get:Rule
+    val rule = lazyActivityScenarioRule<MovieDetailActivity>(launchActivity = false)
 
     @Before
     fun setUp() {
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
-        val intent = Intent()
-        intent.putExtra(EXTRA_MOVIE_ID, dummyMovie.id)
-        activityTestRule.launchActivity(intent)
     }
 
     @Test
     fun testMovieTitleShowUp() {
+        val intent = Intent(
+            ApplicationProvider.getApplicationContext(), MovieDetailActivity::class.java
+        ).putExtra(EXTRA_MOVIE_ID, dummyMovie.id)
+
+        rule.launch(intent)
+
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_title))
             .check(ViewAssertions.matches(withText(dummyMovie.title)))
+
     }
 
     @After
