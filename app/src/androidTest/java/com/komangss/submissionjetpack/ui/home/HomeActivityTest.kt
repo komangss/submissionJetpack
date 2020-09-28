@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.ui.home.home
+package com.komangss.submissionjetpack.ui.home
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeLeft
@@ -6,8 +6,7 @@ import androidx.test.espresso.action.ViewActions.swipeRight
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.ui.home.HomeActivity
-import com.komangss.submissionjetpack.ui.home.rule.lazyActivityScenarioRule
+import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import org.junit.Rule
 import org.junit.Test
 

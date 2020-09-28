@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.ui.home.rule
+package com.komangss.submissionjetpack.ui.rule
 
 import android.app.Activity
 import android.content.Intent

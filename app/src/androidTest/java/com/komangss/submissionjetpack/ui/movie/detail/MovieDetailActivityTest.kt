@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.ui.home.movie.detail
+package com.komangss.submissionjetpack.ui.movie.detail
 
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -8,8 +8,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.ui.home.rule.lazyActivityScenarioRule
-import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
+import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
