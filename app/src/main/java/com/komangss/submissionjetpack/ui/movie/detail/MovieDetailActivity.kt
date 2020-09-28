@@ -2,6 +2,7 @@ package com.komangss.submissionjetpack.ui.movie.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -20,13 +21,13 @@ class MovieDetailActivity : AppCompatActivity() {
         val viewModel =
             ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
 
-        viewModel.detailMovie(movieId).observe(this, Observer {
+        viewModel.detailMovie(movieId).observe(this, {
             tv_activity_movie_detail_movie_title.text = it.title
             tv_activity_movie_detail_movie_description.text = it.description
             tv_activity_movie_detail_movie_rating_movie.text = it.rating
-            Glide.with(this@MovieDetailActivity)
-                .load(resources.getDrawable(it.image))
-                .into(image_view_activity_movie_detail_movie_poster)
+//            Glide.with(this@MovieDetailActivity)
+//                .load(ResourcesCompat.getDrawable(it.image))
+//                .into(image_view_activity_movie_detail_movie_poster)
         })
     }
 

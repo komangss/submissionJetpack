@@ -3,6 +3,7 @@ package com.komangss.submissionjetpack.business.datasource.network
 import android.os.Handler
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
+import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.utils.JsonHelper
 
 class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHelper){
@@ -36,7 +37,11 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
     }
 
     fun getMovieById(id : Int, callback : LoadMovieByIdCallback) {
-        handler.postDelayed({callback.onMovieReceived(jsonHelper.loadMovieById(id))}, SERVICE_LATENCY_IN_MILLIS)
+        EspressoIdlingResources.increment()
+        handler.postDelayed({
+            callback.onMovieReceived(jsonHelper.loadMovieById(id))
+            EspressoIdlingResources.decrement()
+        }, SERVICE_LATENCY_IN_MILLIS)
     }
 
     interface LoadMovieByIdCallback {
