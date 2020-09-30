@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
-@Entity(tableName = "movie")
+@Entity(tableName = "movie_entity")
 @Parcelize
 data class MovieEntity(
     @PrimaryKey(autoGenerate = true)
