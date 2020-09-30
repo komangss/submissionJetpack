@@ -1,12 +1,14 @@
 package com.komangss.submissionjetpack.framework.cache.model
 
-// TODO : Make this entity using room's entity
-
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
+@Entity(tableName = "movie")
 @Parcelize
 data class MovieEntity(
+    @PrimaryKey(autoGenerate = true)
     val id : Int,
     val title : String,
     val director: String,
