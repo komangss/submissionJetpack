@@ -22,7 +22,11 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
     private val handler = Handler()
 
     fun getAllMovies(callback: LoadMoviesCallback) {
-        handler.postDelayed({callback.onMoviesReceived(jsonHelper.loadMovies())}, SERVICE_LATENCY_IN_MILLIS)
+//        EspressoIdlingResource.increment()
+//        val resultCourse = MutableLiveData<ApiResponse<List<CourseResponse>>>()
+        handler.postDelayed({
+
+        }, SERVICE_LATENCY_IN_MILLIS)
     }
 
     interface LoadMoviesCallback {
