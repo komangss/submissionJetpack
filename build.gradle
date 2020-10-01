@@ -28,6 +28,7 @@ buildscript {
         androidxTestRunner = '1.3.0'
 
         archLifecycleVersion = '2.2.0'
+        roomVersion = '2.2.5'
 
         materialVersion = '1.2.1'
         recyclerViewVersion = '1.1.0'
