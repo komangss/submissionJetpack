@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
@@ -42,7 +43,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
                 item_movie_tvshow_tv_description.text = movie.description
 
                 Glide.with(context)
-                    .load(resources.getDrawable(movie.image))
+                    .load(resources.getIdentifier(movie.image, "drawable", BuildConfig.APPLICATION_ID))
                     .into(item_movie_tvshow_image_view_poster)
 
                 setOnClickListener {
@@ -54,4 +55,5 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
         }
     }
+
 }
