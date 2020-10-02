@@ -2,13 +2,10 @@ package com.komangss.submissionjetpack.framework.cache.dao
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 
-
+@Dao
 interface CatalogDao {
     @WorkerThread
     @Query("SELECT * FROM movie_entity")

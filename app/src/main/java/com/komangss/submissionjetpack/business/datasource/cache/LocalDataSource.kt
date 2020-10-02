@@ -23,4 +23,5 @@ class LocalDataSource private constructor(
 
     fun getAllMovies(): LiveData<List<MovieEntity>> = catalogDao.getMovies()
 
+    fun insertMovies(movies: List<MovieEntity>) = catalogDao.insertMovies(movies)
 }

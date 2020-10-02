@@ -8,10 +8,7 @@ import com.komangss.submissionjetpack.framework.cache.dao.CatalogDao
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 
 @Database(entities = [MovieEntity::class], version = 1)
-abstract class CatalogDatabase
-private constructor(
-    private val context: Context
-) : RoomDatabase() {
+abstract class CatalogDatabase : RoomDatabase() {
     abstract val catalogDao: CatalogDao
     companion object {
         private var INSTANCE: CatalogDatabase? = null
@@ -22,7 +19,7 @@ private constructor(
                 if (instance == null) {
                     instance =
                         Room.databaseBuilder(
-                            context.applicationContext,
+                            context,
                             CatalogDatabase::class.java,
                             "catalog_database"
                         )

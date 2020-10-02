@@ -1,8 +1,11 @@
 package com.komangss.submissionjetpack.business.datasource.network
 
 import android.os.Handler
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.utils.JsonHelper
 
@@ -21,12 +24,14 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
 
     private val handler = Handler()
 
-    fun getAllMovies(callback: LoadMoviesCallback) {
-//        EspressoIdlingResource.increment()
-//        val resultCourse = MutableLiveData<ApiResponse<List<CourseResponse>>>()
+    fun getAllMovies() : LiveData<ApiResponse<List<MovieResponse>>> {
+        EspressoIdlingResources.increment()
+        val resultMovie = MutableLiveData<ApiResponse<List<MovieResponse>>>()
         handler.postDelayed({
-
+            resultMovie.value = ApiResponse.success(jsonHelper.loadMovies())
+            EspressoIdlingResources.decrement()
         }, SERVICE_LATENCY_IN_MILLIS)
+        return resultMovie
     }
 
     interface LoadMoviesCallback {

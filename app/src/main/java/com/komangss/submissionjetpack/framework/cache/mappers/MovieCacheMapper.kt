@@ -4,7 +4,7 @@ import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.util.EntityMapper
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 
-class CacheMapper : EntityMapper<MovieEntity, Movie> {
+class MovieCacheMapper : EntityMapper<MovieEntity, Movie> {
     override fun mapFromEntity(entity: MovieEntity): Movie {
         return Movie(
             id = entity.id,
@@ -27,5 +27,13 @@ class CacheMapper : EntityMapper<MovieEntity, Movie> {
             releaseDate = domainModel.releaseDate,
             rating = domainModel.rating
         )
+    }
+
+    fun cacheListToMovieList(oldData :  List<MovieEntity>) : List<Movie> {
+        val list : ArrayList<Movie> = ArrayList()
+        for (entity in oldData) {
+            list.add(mapFromEntity(entity))
+        }
+        return list
     }
 }

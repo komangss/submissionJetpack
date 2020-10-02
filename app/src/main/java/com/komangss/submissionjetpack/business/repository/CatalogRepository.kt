@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.LocalDataSource
-import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.framework.cache.mappers.CacheMapper
+import com.komangss.submissionjetpack.framework.cache.mappers.MovieCacheMapper
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.network.mappers.MovieNetworkMapper
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
@@ -22,6 +22,7 @@ private constructor(
     private val catalogRemoteDataSource: CatalogRemoteDataSource,
     private val catalogLocalDataSource: LocalDataSource,
     private val networkMapper: MovieNetworkMapper,
+    private val cacheMapper: MovieCacheMapper,
     private val appExecutors: AppExecutors
 ) : CatalogDataSource {
     companion object {
@@ -32,45 +33,50 @@ private constructor(
             catalogRemoteDataSource: CatalogRemoteDataSource,
             catalogLocalDataSource: LocalDataSource,
             networkMapper: MovieNetworkMapper,
+            cacheMapper: MovieCacheMapper,
             appExecutors: AppExecutors
         ): CatalogRepository =
             instance ?: synchronized(this) {
                 instance ?: CatalogRepository(
-                    catalogRemoteDataSource, catalogLocalDataSource, networkMapper, appExecutors
+                    catalogRemoteDataSource, catalogLocalDataSource, networkMapper, cacheMapper, appExecutors
                 )
             }
     }
 
-    override fun getAllMovies(): LiveData<Resource<List<MovieEntity>>> {
-        return object : NetworkBoundResource<List<MovieEntity>, List<MovieResponse>>(appExecutors) {
+    override fun getAllMovies(): LiveData<Resource<List<Movie>>> {
+        return object : NetworkBoundResource<List<Movie>, List<MovieResponse>, List<MovieEntity>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<MovieEntity>> =
                 catalogLocalDataSource.getAllMovies()
 
             override fun shouldFetch(data: List<MovieEntity>?): Boolean =
                 (data == null) || (data.isEmpty())
 
-            override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>> {
-//                catalogRemoteDataSource.getAllMovies()
-            }
+            override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>> =
+                catalogRemoteDataSource.getAllMovies()
 
             override fun saveCallResult(data: List<MovieResponse>) {
-                TODO("Not yet implemented")
+                val movieEntities: MutableList<MovieEntity> = ArrayList()
+                for (movieResponse in data) {
+                    movieEntities.add(
+                        MovieEntity(
+                            movieResponse.id,
+                            movieResponse.title,
+                            movieResponse.director,
+                            movieResponse.description,
+                            movieResponse.image,
+                            movieResponse.releaseDate,
+                            movieResponse.rating
+                        )
+                    )
+                    catalogLocalDataSource.insertMovies(movieEntities)
+                }
             }
+
+            override fun mapFromLocalTypeToResult(data: List<MovieEntity>): List<Movie> =
+                cacheMapper.cacheListToMovieList(data)
+
         }.asLiveData()
     }
-
-//    override fun getAllMovies(): LiveData<List<Movie>> {
-//        val movieResults = MutableLiveData<List<Movie>>()
-//        catalogRemoteDataSource.getAllMovies(object : CatalogRemoteDataSource.LoadMoviesCallback {
-//            override fun onMoviesReceived(movieResponses: List<MovieResponse>) {
-//                movieResults.postValue(
-//                    networkMapper.responseListToMovieList(movieResponses)
-//                )
-//            }
-//
-//        })
-//        return movieResults
-//    }
 
     override fun getAllTvShows(): LiveData<List<TvShowEntity>> {
         val tvShowResults = MutableLiveData<List<TvShowEntity>>()
