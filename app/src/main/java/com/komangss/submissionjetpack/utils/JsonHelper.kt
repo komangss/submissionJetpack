@@ -38,7 +38,7 @@ class JsonHelper(private val context: Context) {
                         movie.getString("title"),
                         movie.getString("director"),
                         movie.getString("description"),
-                        movie.getInt("image"),
+                        movie.getString("image"),
                         movie.getString("date"),
                         movie.getString("rating")
                     )
@@ -86,7 +86,7 @@ class JsonHelper(private val context: Context) {
                     movie.getString("title"),
                     movie.getString("director"),
                     movie.getString("description"),
-                    movie.getInt("image"),
+                    movie.getString("image"),
                     movie.getString("date"),
                     movie.getString("rating")
                 )
