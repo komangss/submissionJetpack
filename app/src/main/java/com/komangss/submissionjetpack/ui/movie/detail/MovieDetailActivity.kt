@@ -6,6 +6,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_movie_detail.*
@@ -25,9 +26,9 @@ class MovieDetailActivity : AppCompatActivity() {
             tv_activity_movie_detail_movie_title.text = it.title
             tv_activity_movie_detail_movie_description.text = it.description
             tv_activity_movie_detail_movie_rating_movie.text = it.rating
-//            Glide.with(this@MovieDetailActivity)
-//                .load(ResourcesCompat.getDrawable(it.image))
-//                .into(image_view_activity_movie_detail_movie_poster)
+            Glide.with(this@MovieDetailActivity)
+                .load(resources.getIdentifier(it.image, "drawable", BuildConfig.APPLICATION_ID))
+                .into(image_view_activity_movie_detail_movie_poster)
         })
     }
 
