@@ -3,7 +3,7 @@ package com.komangss.submissionjetpack.business.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
-import com.komangss.submissionjetpack.business.datasource.cache.LocalDataSource
+import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.cache.mappers.MovieCacheMapper
@@ -20,7 +20,7 @@ import com.komangss.submissionjetpack.vo.Resource
 class CatalogRepository
 private constructor(
     private val catalogRemoteDataSource: CatalogRemoteDataSource,
-    private val catalogLocalDataSource: LocalDataSource,
+    private val catalogLocalDataSource: CatalogLocalDataSource,
     private val networkMapper: MovieNetworkMapper,
     private val cacheMapper: MovieCacheMapper,
     private val appExecutors: AppExecutors
@@ -31,7 +31,7 @@ private constructor(
 
         fun getInstance(
             catalogRemoteDataSource: CatalogRemoteDataSource,
-            catalogLocalDataSource: LocalDataSource,
+            catalogLocalDataSource: CatalogLocalDataSource,
             networkMapper: MovieNetworkMapper,
             cacheMapper: MovieCacheMapper,
             appExecutors: AppExecutors

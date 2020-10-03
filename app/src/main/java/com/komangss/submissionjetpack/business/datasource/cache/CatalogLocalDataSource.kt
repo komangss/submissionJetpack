@@ -5,16 +5,16 @@ import com.komangss.submissionjetpack.framework.cache.dao.CatalogDao
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 
 
-class LocalDataSource private constructor(
+class CatalogLocalDataSource private constructor(
     private val catalogDao: CatalogDao
 ) {
     companion object {
-        private var INSTANCE: LocalDataSource? = null
-        fun getInstance(catalogDao: CatalogDao): LocalDataSource {
+        private var INSTANCE: CatalogLocalDataSource? = null
+        fun getInstance(catalogDao: CatalogDao): CatalogLocalDataSource {
             synchronized(this) {
                 var instance = INSTANCE
                 if (instance == null) {
-                    instance = LocalDataSource(catalogDao)
+                    instance = CatalogLocalDataSource(catalogDao)
                 }
                 return instance
             }
