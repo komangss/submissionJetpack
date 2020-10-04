@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
+import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
+import com.komangss.submissionjetpack.vo.Resource
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -15,8 +18,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 
+
+@Suppress("UNCHECKED_CAST")
 @RunWith(MockitoJUnitRunner::class)
 class MovieViewModelTest {
 
@@ -39,17 +45,16 @@ class MovieViewModelTest {
 
     @Test
     fun getMovies() {
-//        val dummyMovies = DomainModelDataGenerator.generateDummyMovies()
-//        val movies = MutableLiveData<List<Movie>>()
-//        movies.value = dummyMovies
-//
-//        `when`(catalogRepository.getAllMovies()).thenReturn(movies)
-//        val movieList = viewModel.getMovies().value
-//        verify(catalogRepository).getAllMovies()
-//        assertNotNull(movieList)
-//        assertEquals(16, movieList?.size)
-//
-//        viewModel.getMovies().observeForever(observer)
-//        verify(observer).onChanged(dummyMovies)
+        val dummyListMovies = DomainModelDataGenerator.generateDummyMovies()
+        val movies = MutableLiveData<Resource<List<Movie>>>()
+        movies.value = Resource.Success(dummyListMovies)
+
+        `when`(catalogRepository.getAllMovies()).thenReturn(movies)
+        val movieList = viewModel.getMovies().value
+        val observer : Observer<Resource<List<Movie>>> = mock(Observer::class.java) as Observer<Resource<List<Movie>>>
+        verify(catalogRepository).getAllMovies()
+
+        viewModel.getMovies().observeForever(observer)
+        verify(observer).onChanged(movieList)
     }
 }

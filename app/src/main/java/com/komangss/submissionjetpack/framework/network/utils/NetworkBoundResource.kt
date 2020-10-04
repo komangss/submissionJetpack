@@ -4,15 +4,14 @@ import androidx.lifecycle.LiveData
 
 import androidx.lifecycle.MediatorLiveData
 import com.komangss.submissionjetpack.utils.AppExecutors
-import com.komangss.submissionjetpack.vo.Resource
-import com.komangss.submissionjetpack.vo.Status
+import com.komangss.submissionjetpack.vo.*
 
-abstract class NetworkBoundResource<ResultType, RemoteDataType, LocalDataType>(private val mExecutors: AppExecutors) {
+abstract class NetworkBoundResource<ResultType : Any, RemoteDataType, LocalDataType>(private val mExecutors: AppExecutors) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 
     init {
-        result.value = Resource.empty(null)
+        result.value = Resource.InProgress
 
         @Suppress("LeakingThis")
         val dbSource = loadFromDB()
@@ -23,7 +22,7 @@ abstract class NetworkBoundResource<ResultType, RemoteDataType, LocalDataType>(p
                 fetchFromNetwork(dbSource)
             } else {
                 result.addSource(dbSource) { newData ->
-                    result.value = Resource.success(mapFromLocalTypeToResult(newData))
+                    result.value = Resource.Success(mapFromLocalTypeToResult(newData))
                 }
             }
         }
@@ -39,40 +38,38 @@ abstract class NetworkBoundResource<ResultType, RemoteDataType, LocalDataType>(p
 
     protected abstract fun saveCallResult(data: RemoteDataType)
 
-    protected abstract fun mapFromLocalTypeToResult(data: LocalDataType) : ResultType
+    protected abstract fun mapFromLocalTypeToResult(data: LocalDataType): ResultType
 
     private fun fetchFromNetwork(dbSource: LiveData<LocalDataType>) {
 
         val apiResponse = createCall()
 
-        result.addSource(dbSource) { newData ->
-            result.value = Resource.empty(mapFromLocalTypeToResult(newData))
+        result.addSource(dbSource) {
+            result.value = Resource.InProgress
         }
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
             when (response.status) {
-                Status.SUCCESS ->
+                Status.SUCCESS -> {
                     mExecutors.diskIO().execute {
-                        saveCallResult(response.body)
+                        response.body?.let { saveCallResult(it) }
                         mExecutors.mainThread().execute {
                             result.addSource(loadFromDB()) { newData ->
-                                result.value = Resource.success(mapFromLocalTypeToResult(newData))
+                                result.value = Resource.Success(mapFromLocalTypeToResult(newData))
                             }
                         }
                     }
-                Status.EMPTY -> mExecutors.mainThread().execute {
-                    result.addSource(loadFromDB()) { newData ->
-                        result.value = Resource.success(mapFromLocalTypeToResult(newData))
-                    }
                 }
-                Status.ERROR -> {
-                    onFetchFailed()
-                    result.addSource(dbSource) { newData ->
-                        result.value = Resource.error(response.message, mapFromLocalTypeToResult(newData))
-                    }
+                Status.ERROR -> mExecutors.mainThread().execute {
+                    result.value = response.exception?.let { Resource.Error(it) }
+                }
+
+                Status.EMPTY -> {
+                    result.value = response.exception?.let { Resource.Error(it) }
                 }
             }
+
         }
     }
 

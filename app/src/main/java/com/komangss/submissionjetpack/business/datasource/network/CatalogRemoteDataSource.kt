@@ -28,7 +28,11 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
         EspressoIdlingResources.increment()
         val resultMovie = MutableLiveData<ApiResponse<List<MovieResponse>>>()
         handler.postDelayed({
-            resultMovie.value = ApiResponse.success(jsonHelper.loadMovies())
+            try {
+                resultMovie.value = ApiResponse.success(jsonHelper.loadMovies())
+            } catch (e : Exception) {
+                resultMovie.value = ApiResponse.error(e)
+            }
             EspressoIdlingResources.decrement()
         }, SERVICE_LATENCY_IN_MILLIS)
         return resultMovie

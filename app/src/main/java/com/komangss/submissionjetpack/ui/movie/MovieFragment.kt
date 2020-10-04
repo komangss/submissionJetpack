@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
-import com.komangss.submissionjetpack.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie.*
 
 class MovieFragment : Fragment() {
@@ -35,20 +34,20 @@ class MovieFragment : Fragment() {
             val movieAdapter = MovieAdapter()
             fragment_movie_progress_bar.visibility = View.VISIBLE
             viewModel.getMovies().observe(viewLifecycleOwner, {
-                when (it.status) {
-//                    TODO : Fix what happen when data received
-                    Status.SUCCESS -> {
-                        fragment_movie_progress_bar.visibility = View.GONE
-                        it.data?.let { movieList -> movieAdapter.setMovies(movieList) }
-                        movieAdapter.notifyDataSetChanged()
-                    }
-                    Status.ERROR -> {
-
-                    }
-                    Status.EMPTY -> {
-
-                    }
-                }
+////                when (it.status) {
+//////                    TODO : Fix what happen when data received
+////                    Status.SUCCESS -> {
+////                        fragment_movie_progress_bar.visibility = View.GONE
+////                        it.data?.let { movieList -> movieAdapter.setMovies(movieList) }
+////                        movieAdapter.notifyDataSetChanged()
+////                    }
+////                    Status.ERROR -> {
+////
+////                    }
+////                    Status.EMPTY -> {
+////
+////                    }
+//                }
 
 
             })
