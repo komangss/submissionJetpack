@@ -6,9 +6,9 @@ import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.vo.Resource
 
 interface CatalogDataSource {
-    fun getAllMovies() : LiveData<Resource<List<Movie>>>
+    suspend fun getAllMovies() : Resource<List<Movie>>
 
-    fun getAllTvShows() : LiveData<List<TvShowEntity>>
-
-    fun getMovieById(id : Int) : LiveData<Movie>
+//    fun getAllTvShows() : LiveData<List<TvShowEntity>>
+//
+//    fun getMovieById(id : Int) : LiveData<Movie>
 }

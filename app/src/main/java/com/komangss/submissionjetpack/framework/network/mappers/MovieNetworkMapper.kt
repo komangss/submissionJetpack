@@ -7,25 +7,37 @@ import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 class MovieNetworkMapper : ResponseMapper<MovieResponse, Movie> {
     override fun mapFromResponse(response: MovieResponse): Movie {
         return Movie(
+            popularity = response.popularity,
+            voteCount = response.voteCount,
+            isVideo = response.isVideo,
+            posterUrlPath = response.posterUrlPath,
             id = response.id,
+            backdropUrlPath = response.backdropUrlPath,
+            originalLanguage = response.originalLanguage,
+            originalTitle = response.originalTitle,
+            genreIds = response.genreIds,
             title = response.title,
-            director = response.director,
+            voteAverage = response.voteAverage,
             description = response.description,
-            image = response.image,
-            releaseDate = response.releaseDate,
-            rating = response.rating
+            releaseDate = response.releaseDate
         )
     }
 
     override fun mapToResponse(domainModel: Movie): MovieResponse {
         return MovieResponse(
+            popularity = domainModel.popularity,
+            voteCount = domainModel.voteCount,
+            isVideo = domainModel.isVideo,
+            posterUrlPath = domainModel.posterUrlPath,
             id = domainModel.id,
+            backdropUrlPath = domainModel.backdropUrlPath,
+            originalLanguage = domainModel.originalLanguage,
+            originalTitle = domainModel.originalTitle,
+            genreIds = domainModel.genreIds,
             title = domainModel.title,
-            director = domainModel.director,
+            voteAverage = domainModel.voteAverage,
             description = domainModel.description,
-            image = domainModel.image,
-            releaseDate = domainModel.releaseDate,
-            rating = domainModel.rating
+            releaseDate = domainModel.releaseDate
         )
     }
 

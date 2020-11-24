@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
+import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.android.synthetic.main.fragment_movie.*
 
 class MovieFragment : Fragment() {
@@ -33,21 +34,21 @@ class MovieFragment : Fragment() {
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             val movieAdapter = MovieAdapter()
             fragment_movie_progress_bar.visibility = View.VISIBLE
-            viewModel.getMovies().observe(viewLifecycleOwner, {
-////                when (it.status) {
-//////                    TODO : Fix what happen when data received
-////                    Status.SUCCESS -> {
-////                        fragment_movie_progress_bar.visibility = View.GONE
-////                        it.data?.let { movieList -> movieAdapter.setMovies(movieList) }
-////                        movieAdapter.notifyDataSetChanged()
-////                    }
-////                    Status.ERROR -> {
-////
-////                    }
-////                    Status.EMPTY -> {
-////
-////                    }
-//                }
+            viewModel.movieList.observe(viewLifecycleOwner, {
+                when (it) {
+//                    TODO : Fix what happen when data received
+                    is Resource.Success -> {
+                        fragment_movie_progress_bar.visibility = View.GONE
+                        movieAdapter.setMovies(it.data)
+                        movieAdapter.notifyDataSetChanged()
+                    }
+                    is Resource.Error -> {
+
+                    }
+                    Resource.InProgress -> {
+
+                    }
+                }
 
 
             })
@@ -58,25 +59,5 @@ class MovieFragment : Fragment() {
                 adapter = movieAdapter
             }
         }
-
-        Log.d(
-            "MyTag",
-            "alita : ${R.drawable.poster_alita}\n" +
-                    "aquaman : ${R.drawable.poster_aquaman}\n" +
-                    "bohemian : ${R.drawable.poster_bohemian} \n" +
-                    "creed 2 : ${R.drawable.poster_creed} \n" +
-                    "the crimes : ${R.drawable.poster_crimes} \n" +
-                    "glass : ${R.drawable.poster_glass} \n" +
-                    "how to : ${R.drawable.poster_how_to_train} \n" +
-                    "avenger : ${R.drawable.poster_infinity_war} \n" +
-                    "master : ${R.drawable.poster_master_z} \n" +
-                    "mortal : ${R.drawable.poster_mortal_engines} \n" +
-                    "overlord : ${R.drawable.poster_overlord} \n" +
-                    "ralph : ${R.drawable.poster_ralph} \n" +
-                    "robin : ${R.drawable.poster_robin_hood} \n" +
-                    "serenity : ${R.drawable.poster_serenity} \n" +
-                    "spider : ${R.drawable.poster_spiderman} \n" +
-                    "t34 : ${R.drawable.poster_t34} \n"
-        )
     }
 }

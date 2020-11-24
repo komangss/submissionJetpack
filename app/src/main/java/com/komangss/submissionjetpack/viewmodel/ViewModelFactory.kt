@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.di.Injection
 import com.komangss.submissionjetpack.ui.movie.MovieViewModel
-import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailViewModel
+//import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailViewModel
 
 class ViewModelFactory private constructor(private val catalogRepository: CatalogRepository) :
     ViewModelProvider.NewInstanceFactory() {
@@ -27,9 +27,9 @@ class ViewModelFactory private constructor(private val catalogRepository: Catalo
             modelClass.isAssignableFrom(MovieViewModel::class.java) -> {
                 MovieViewModel(catalogRepository) as T
             }
-            modelClass.isAssignableFrom(MovieDetailViewModel::class.java) -> {
-                MovieDetailViewModel(catalogRepository) as T
-            }
+//            modelClass.isAssignableFrom(MovieDetailViewModel::class.java) -> {
+//                MovieDetailViewModel(catalogRepository) as T
+//            }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
     }
