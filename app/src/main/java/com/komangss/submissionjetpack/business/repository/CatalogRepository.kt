@@ -10,6 +10,11 @@ import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
 import com.komangss.submissionjetpack.utils.AppExecutors
 import com.komangss.submissionjetpack.vo.Resource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class CatalogRepository
 private constructor(
@@ -37,19 +42,22 @@ private constructor(
             }
     }
 
-//    TODO : make this method return flow
 //    TODO : cache the result from remote
-    override suspend fun getAllMovies(): Resource<List<Movie>> {
-        return when (val movieApiResponse = catalogRemoteDataSource.getAllMovies()) {
-            is ApiResponse.Success -> {
-                Resource.Success(networkMapper.responseListToMovieList(movieApiResponse.value.results))
+    @ExperimentalCoroutinesApi
+    override suspend fun getAllMovies(): Flow<Resource<List<Movie>>> {
+        return flow {
+            emit(Resource.InProgress)
+            when (val movieApiResponse = catalogRemoteDataSource.getAllMovies()) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(networkMapper.responseListToMovieList(movieApiResponse.value.results)))
+                }
+                is ApiResponse.GenericError -> {
+                    val code = movieApiResponse.code
+                    val error = movieApiResponse.error
+                    emit(Resource.Error(code, error))
+                }
+                ApiResponse.NetworkError -> emit(Resource.Error(0, ErrorResponse("Unknown Error")))
             }
-            is ApiResponse.GenericError -> {
-                val code = movieApiResponse.code
-                val error = movieApiResponse.error
-                Resource.Error(code, error)
-            }
-            ApiResponse.NetworkError -> Resource.Error(0, ErrorResponse("Unknown Error"))
         }
     }
 

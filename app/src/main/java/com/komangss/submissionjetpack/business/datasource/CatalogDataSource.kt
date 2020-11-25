@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.vo.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface CatalogDataSource {
-    suspend fun getAllMovies() : Resource<List<Movie>>
+    suspend fun getAllMovies() : Flow<Resource<List<Movie>>>
 
 //    fun getAllTvShows() : LiveData<List<TvShowEntity>>
 //
