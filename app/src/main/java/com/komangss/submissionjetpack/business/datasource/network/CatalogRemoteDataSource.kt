@@ -6,6 +6,8 @@ import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.framework.network.utils.safeApiCall
 //import com.komangss.submissionjetpack.utils.JsonHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 
 class CatalogRemoteDataSource private constructor(private val catalogServices: CatalogServices){
     companion object {
@@ -23,7 +25,8 @@ class CatalogRemoteDataSource private constructor(private val catalogServices: C
 //    private val handler = Handler()
 
 //    TODO : Add Idling Resource
-    suspend fun getAllMovies() : ApiResponse<MovieResultResponse> {
+    @ExperimentalCoroutinesApi
+    suspend fun getAllMovies() : Flow<ApiResponse<MovieResultResponse>> {
 //        EspressoIdlingResources.increment()
 //        val movieListResult = catalogServices.getMovies(BuildConfig.TMDB_API_KEY)
 //        return try {

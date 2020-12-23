@@ -4,25 +4,20 @@ import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.framework.cache.mappers.MovieCacheMapper
-import com.komangss.submissionjetpack.framework.network.mappers.MovieNetworkMapper
-import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
-import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
-import com.komangss.submissionjetpack.utils.AppExecutors
+import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import com.komangss.submissionjetpack.framework.mapper.MapperInterface
+import com.komangss.submissionjetpack.framework.network.model.MovieResponse
+import com.komangss.submissionjetpack.framework.network.utils.networkBoundResource
 import com.komangss.submissionjetpack.vo.Resource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 
 class CatalogRepository
 private constructor(
     private val catalogRemoteDataSource : CatalogRemoteDataSource,
     private val catalogLocalDataSource: CatalogLocalDataSource,
-    private val networkMapper: MovieNetworkMapper,
-    private val cacheMapper: MovieCacheMapper,
-    private val appExecutors: AppExecutors
+    private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>
 ) : CatalogDataSource {
     companion object {
         @Volatile
@@ -31,34 +26,29 @@ private constructor(
         fun getInstance(
             catalogRemoteDataSource: CatalogRemoteDataSource,
             catalogLocalDataSource: CatalogLocalDataSource,
-            networkMapper: MovieNetworkMapper,
-            cacheMapper: MovieCacheMapper,
-            appExecutors: AppExecutors
+            mapperInterface: MapperInterface<Movie, MovieEntity, MovieResponse>
         ): CatalogRepository =
             instance ?: synchronized(this) {
                 instance ?: CatalogRepository(
-                    catalogRemoteDataSource, catalogLocalDataSource, networkMapper, cacheMapper, appExecutors
+                    catalogRemoteDataSource, catalogLocalDataSource, mapperInterface
                 )
             }
     }
 
 //    TODO : cache the result from remote
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun getAllMovies(): Flow<Resource<List<Movie>>> {
-        return flow {
-            emit(Resource.InProgress)
-            when (val movieApiResponse = catalogRemoteDataSource.getAllMovies()) {
-                is ApiResponse.Success -> {
-                    emit(Resource.Success(networkMapper.responseListToMovieList(movieApiResponse.value.results)))
-                }
-                is ApiResponse.GenericError -> {
-                    val code = movieApiResponse.code
-                    val error = movieApiResponse.error
-                    emit(Resource.Error(code, error))
-                }
-                ApiResponse.NetworkError -> emit(Resource.Error(0, ErrorResponse("Unknown Error")))
-            }
-        }
+        return networkBoundResource(
+            fetchFromLocal = { catalogLocalDataSource.getAllMovies() },
+            shouldFetchFromRemote = { it == null},
+            fetchFromRemote = { catalogRemoteDataSource.getAllMovies()},
+            processRemoteResponse = { },
+            saveRemoteData = {
+                catalogLocalDataSource.insertMovies(catalogMovieMapper.responsesToEntities(it.results))
+            },
+            mapFromCache = {catalogMovieMapper.entitiesToDomains(it)}
+        )
     }
 
 //    override fun getAllTvShows(): LiveData<List<TvShowEntity>> {

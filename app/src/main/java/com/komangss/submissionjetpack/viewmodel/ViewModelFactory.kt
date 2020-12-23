@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.di.Injection
 import com.komangss.submissionjetpack.ui.movie.MovieViewModel
-//import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailViewModel
 
 class ViewModelFactory private constructor(private val catalogRepository: CatalogRepository) :
     ViewModelProvider.NewInstanceFactory() {

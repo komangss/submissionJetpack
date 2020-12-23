@@ -1,16 +1,12 @@
 package com.komangss.submissionjetpack.ui.movie
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
-//import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
-//import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {

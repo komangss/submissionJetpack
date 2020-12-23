@@ -1,8 +1,6 @@
 package com.komangss.submissionjetpack.business.datasource
 
-import androidx.lifecycle.LiveData
 import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.flow.Flow
 

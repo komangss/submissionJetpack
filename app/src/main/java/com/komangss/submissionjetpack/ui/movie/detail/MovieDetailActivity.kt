@@ -1,21 +1,16 @@
-//package com.komangss.submissionjetpack.ui.movie.detail
-//
-//import androidx.appcompat.app.AppCompatActivity
-//import android.os.Bundle
-//import androidx.core.content.res.ResourcesCompat
-//import androidx.lifecycle.Observer
-//import androidx.lifecycle.ViewModelProvider
-//import com.bumptech.glide.Glide
-//import com.komangss.submissionjetpack.BuildConfig
-//import com.komangss.submissionjetpack.R
-//import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
-//import kotlinx.android.synthetic.main.activity_movie_detail.*
-//
-//class MovieDetailActivity : AppCompatActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_movie_detail)
-//
+package com.komangss.submissionjetpack.ui.movie.detail
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import com.komangss.submissionjetpack.R
+
+class MovieDetailActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_movie_detail)
+    }
+
 //        val movieId = intent.getIntExtra(EXTRA_MOVIE_ID, -1)
 //
 //        val factory = ViewModelFactory.getInstance(this)
@@ -35,4 +30,4 @@
 //    companion object {
 //        const val EXTRA_MOVIE_ID = "extra_movie_id"
 //    }
-//}
+}

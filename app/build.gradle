@@ -68,7 +68,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     //architecture component
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$archLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
     debugImplementation 'androidx.fragment:fragment-testing:1.2.5'
     //Room
     implementation "androidx.room:room-runtime:$roomVersion"
