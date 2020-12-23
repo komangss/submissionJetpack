@@ -1,8 +1,8 @@
 package com.komangss.submissionjetpack.business.datasource.cache
 
-import androidx.lifecycle.LiveData
 import com.komangss.submissionjetpack.framework.cache.dao.CatalogDao
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import kotlinx.coroutines.flow.Flow
 
 
 class CatalogLocalDataSource private constructor(
@@ -21,7 +21,7 @@ class CatalogLocalDataSource private constructor(
         }
     }
 
-    fun getAllMovies(): LiveData<List<MovieEntity>> = catalogDao.getMovies()
+    fun getAllMovies(): Flow<List<MovieEntity>> = catalogDao.getMovies()
 
-    fun insertMovies(movies: List<MovieEntity>) = catalogDao.insertMovies(movies)
+    suspend fun insertMovies(movies: List<MovieEntity>) = catalogDao.insertMovies(movies)
 }
