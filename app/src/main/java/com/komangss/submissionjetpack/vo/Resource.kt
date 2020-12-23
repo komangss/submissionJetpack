@@ -1,12 +1,13 @@
 package com.komangss.submissionjetpack.vo
 
-data class Resource<T>(val status: Status, val data: T?, val message: String?) {
-//  TODO : Fix result status
-    companion object {
-        fun <T> success(data: T?): Resource<T> = Resource(Status.SUCCESS, data, null)
+import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
 
-        fun <T> error(msg: String?, data: T?): Resource<T> = Resource(Status.ERROR, data, msg)
-
-        fun <T> empty(data: T?): Resource<T> = Resource(Status.EMPTY, data, null)
-    }
+// Handling Result, More at : https://medium.com/androiddevelopers/sealed-with-a-class-a906f28ab7b5
+sealed class Resource<out T : Any> {
+    data class Success<out T : Any>(val data : T) : Resource<T>()
+    data class Error(
+        val code: Int? = null,
+        val error: ErrorResponse? = null
+    ) : Resource<Nothing>()
+    object InProgress : Resource<Nothing>()
 }

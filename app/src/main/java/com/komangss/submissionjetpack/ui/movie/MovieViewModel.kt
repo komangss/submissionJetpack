@@ -1,12 +1,17 @@
 package com.komangss.submissionjetpack.ui.movie
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.vo.Resource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 
 class MovieViewModel(private val catalogRepository: CatalogRepository) : ViewModel() {
-    fun getMovies() : LiveData<Resource<List<Movie>>> =
-        catalogRepository.getAllMovies()
+    @InternalCoroutinesApi
+    @ExperimentalCoroutinesApi
+    val movieList : LiveData<Resource<List<Movie>>> = liveData {
+        emitSource(catalogRepository.getAllMovies().asLiveData())
+    }
+
 }

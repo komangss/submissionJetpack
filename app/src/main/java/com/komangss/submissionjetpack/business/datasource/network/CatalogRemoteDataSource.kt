@@ -1,59 +1,64 @@
 package com.komangss.submissionjetpack.business.datasource.network
 
-import android.os.Handler
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.komangss.submissionjetpack.framework.network.model.MovieResponse
-import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
+import com.komangss.submissionjetpack.framework.network.services.CatalogServices
 import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
-import com.komangss.submissionjetpack.utils.EspressoIdlingResources
-import com.komangss.submissionjetpack.utils.JsonHelper
+import com.komangss.submissionjetpack.framework.network.utils.safeApiCall
+//import com.komangss.submissionjetpack.utils.JsonHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 
-class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHelper){
+class CatalogRemoteDataSource private constructor(private val catalogServices: CatalogServices){
     companion object {
-        private const val SERVICE_LATENCY_IN_MILLIS: Long = 2000
+//        private const val SERVICE_LATENCY_IN_MILLIS: Long = 2000
 
         @Volatile
         private var instance: CatalogRemoteDataSource? = null
 
-        fun getInstance(helper: JsonHelper): CatalogRemoteDataSource =
+        fun getInstance(catalogServices: CatalogServices): CatalogRemoteDataSource =
             instance ?: synchronized(this) {
-                instance ?: CatalogRemoteDataSource(helper)
+                instance ?: CatalogRemoteDataSource(catalogServices)
             }
     }
 
-    private val handler = Handler()
+//    private val handler = Handler()
 
-    fun getAllMovies() : LiveData<ApiResponse<List<MovieResponse>>> {
-        EspressoIdlingResources.increment()
-        val resultMovie = MutableLiveData<ApiResponse<List<MovieResponse>>>()
-        handler.postDelayed({
-            resultMovie.value = ApiResponse.success(jsonHelper.loadMovies())
-            EspressoIdlingResources.decrement()
-        }, SERVICE_LATENCY_IN_MILLIS)
-        return resultMovie
-    }
-
-    interface LoadMoviesCallback {
-        fun onMoviesReceived(movieResponses: List<MovieResponse>)
-    }
-
-    fun getAllTvShows(callback : LoadTvShowsCallback) {
-        handler.postDelayed({callback.onTvShowsReceived(jsonHelper.loadTvShow())}, SERVICE_LATENCY_IN_MILLIS)
-    }
-    interface LoadTvShowsCallback {
-        fun onTvShowsReceived(tvShowsResponse : List<TvShowResponse>)
+//    TODO : Add Idling Resource
+    @ExperimentalCoroutinesApi
+    suspend fun getAllMovies() : Flow<ApiResponse<MovieResultResponse>> {
+//        EspressoIdlingResources.increment()
+//        val movieListResult = catalogServices.getMovies(BuildConfig.TMDB_API_KEY)
+//        return try {
+//            if (movieListResult.isSuccessful || movieListResult.code() == 200) {
+//                EspressoIdlingResources.decrement()
+//                return movieListResult.body() // TODO : Remove non null asserted call
+//            } else {
+//                EspressoIdlingResources.decrement()
+//                return null
+//            }
+//        } catch (exception : Exception) {
+//
+//        }
+        return safeApiCall(Dispatchers.IO) {catalogServices.getMovies()}
     }
 
-    fun getMovieById(id : Int, callback : LoadMovieByIdCallback) {
-        EspressoIdlingResources.increment()
-        handler.postDelayed({
-            callback.onMovieReceived(jsonHelper.loadMovieById(id))
-            EspressoIdlingResources.decrement()
-        }, SERVICE_LATENCY_IN_MILLIS)
-    }
-
-    interface LoadMovieByIdCallback {
-        fun onMovieReceived(movieResponse: MovieResponse)
-    }
+//    fun getAllTvShows(callback : LoadTvShowsCallback) {
+//        handler.postDelayed({callback.onTvShowsReceived(jsonHelper.loadTvShow())}, SERVICE_LATENCY_IN_MILLIS)
+//    }
+//    interface LoadTvShowsCallback {
+//        fun onTvShowsReceived(tvShowsResponse : List<TvShowResponse>)
+//    }
+//
+//    fun getMovieById(id : Int, callback : LoadMovieByIdCallback) {
+//        EspressoIdlingResources.increment()
+//        handler.postDelayed({
+//            callback.onMovieReceived(jsonHelper.loadMovieById(id))
+//            EspressoIdlingResources.decrement()
+//        }, SERVICE_LATENCY_IN_MILLIS)
+//    }
+//
+//    interface LoadMovieByIdCallback {
+//        fun onMovieReceived(movieResponse: MovieResponse)
+//    }
 }

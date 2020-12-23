@@ -1,16 +1,12 @@
 package com.komangss.submissionjetpack.ui.movie
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
-import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
@@ -43,14 +39,14 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
                 item_movie_tvshow_tv_description.text = movie.description
 
                 Glide.with(context)
-                    .load(resources.getIdentifier(movie.image, "drawable", BuildConfig.APPLICATION_ID))
+                    .load("https://image.tmdb.org/t/p/original/${movie.posterUrlPath}")
                     .into(item_movie_tvshow_image_view_poster)
 
-                setOnClickListener {
-                    val intent = Intent(context, MovieDetailActivity::class.java)
-                    intent.putExtra(EXTRA_MOVIE_ID, movie.id)
-                    context.startActivity(intent)
-                }
+//                setOnClickListener {
+//                    val intent = Intent(context, MovieDetailActivity::class.java)
+//                    intent.putExtra(EXTRA_MOVIE_ID, movie.id)
+//                    context.startActivity(intent)
+//                }
             }
 
         }

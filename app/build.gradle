@@ -16,6 +16,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        buildConfigField ("String", "TMDB_API_KEY", TMDB_API_KEY)
     }
 
     buildTypes {
@@ -66,12 +68,21 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     //architecture component
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$archLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
     debugImplementation 'androidx.fragment:fragment-testing:1.2.5'
     //Room
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
+
+//    Retrofit Dependency
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation 'com.squareup.moshi:moshi:1.8.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
 }
 
 repositories {
