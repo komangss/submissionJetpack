@@ -9,7 +9,7 @@ data class Movie(
     val title : String,
     val director: String,
     val description : String,
-    val image : Int,
+    val imageUrl : String,
     val releaseDate : String,
     val rating : String
 ) : Parcelable

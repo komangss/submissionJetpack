@@ -52,7 +52,7 @@ class MovieDetailViewModelTest {
             dummyMovie.description,
             viewModel.detailMovie(dummyMovie.id).value?.description
         )
-        assertEquals(dummyMovie.image, viewModel.detailMovie(dummyMovie.id).value?.image)
+        assertEquals(dummyMovie.imageUrl, viewModel.detailMovie(dummyMovie.id).value?.imageUrl)
         assertEquals(
             dummyMovie.releaseDate,
             viewModel.detailMovie(dummyMovie.id).value?.releaseDate

@@ -11,7 +11,7 @@ class CacheMapper : EntityMapper<MovieEntity, Movie> {
             title = entity.title,
             director = entity.director,
             description = entity.description,
-            image = entity.image,
+            imageUrl = entity.image,
             releaseDate = entity.releaseDate,
             rating = entity.rating
         )
@@ -23,7 +23,7 @@ class CacheMapper : EntityMapper<MovieEntity, Movie> {
             title = domainModel.title,
             director = domainModel.director,
             description = domainModel.description,
-            image = domainModel.image,
+            image = domainModel.imageUrl,
             releaseDate = domainModel.releaseDate,
             rating = domainModel.rating
         )

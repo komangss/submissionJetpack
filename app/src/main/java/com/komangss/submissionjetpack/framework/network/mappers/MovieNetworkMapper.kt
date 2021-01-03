@@ -11,7 +11,7 @@ class MovieNetworkMapper : ResponseMapper<MovieResponse, Movie> {
             title = response.title,
             director = response.director,
             description = response.description,
-            image = response.image,
+            imageUrl = response.image,
             releaseDate = response.releaseDate,
             rating = response.rating
         )
@@ -23,7 +23,7 @@ class MovieNetworkMapper : ResponseMapper<MovieResponse, Movie> {
             title = domainModel.title,
             director = domainModel.director,
             description = domainModel.description,
-            image = domainModel.image,
+            image = domainModel.imageUrl,
             releaseDate = domainModel.releaseDate,
             rating = domainModel.rating
         )
