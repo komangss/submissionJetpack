@@ -32,19 +32,19 @@ class FakeCatalogRepository(
         val tvShowResults = MutableLiveData<List<TvShowEntity>>()
         catalogRemoteDataSource.getAllTvShows(object : CatalogRemoteDataSource.LoadTvShowsCallback {
             override fun onTvShowsReceived(tvShowsResponse: List<TvShowResponse>) {
-                val tvShowResponseList = ArrayList<TvShowEntity>()
-                for (response in tvShowsResponse) {
-                    val tvShow = TvShowEntity (
-                        response.id,
-                        response.title,
-                        response.description,
-                        response.image,
-                        response.releaseDate,
-                        response.rating
-                    )
-                    tvShowResponseList.add(tvShow)
-                }
-                tvShowResults.postValue(tvShowResponseList)
+//                val tvShowResponseList = ArrayList<TvShowEntity>()
+//                for (response in tvShowsResponse) {
+//                    val tvShow = TvShowEntity (
+//                        response.id,
+//                        response.title,
+//                        response.description,
+//                        response.image,
+//                        response.releaseDate,
+//                        response.rating
+//                    )
+//                    tvShowResponseList.add(tvShow)
+//                }
+//                tvShowResults.postValue(tvShowResponseList)
             }
 
         })
