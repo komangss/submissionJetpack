@@ -63,7 +63,7 @@ class JsonHelper(private val context: Context) {
                         tvShow.getInt("id"),
                         tvShow.getString("title"),
                         tvShow.getString("description"),
-                        tvShow.getInt("image"),
+                        tvShow.getString("image"),
                         tvShow.getString("date"),
                         tvShow.getString("rating")
                     )
