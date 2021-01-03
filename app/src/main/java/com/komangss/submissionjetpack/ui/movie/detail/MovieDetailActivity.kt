@@ -21,7 +21,7 @@ class MovieDetailActivity : AppCompatActivity() {
         val viewModel =
             ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
 
-        viewModel.detailMovie(movieId).observe(this, {
+        viewModel.detailMovie(movieId).observe(this, Observer {
             tv_activity_movie_detail_movie_title.text = it.title
             tv_activity_movie_detail_movie_description.text = it.description
             tv_activity_movie_detail_movie_rating_movie.text = it.rating
