@@ -47,4 +47,12 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
     interface LoadMovieByIdCallback {
         fun onMovieReceived(movieResponse: MovieResponse)
     }
+    
+    fun getTvShowById(id : Int, onTvShowReceived : (tvShowResponse: TvShowResponse) -> Unit) {
+        EspressoIdlingResources.increment()
+        handler.postDelayed({
+            jsonHelper.loadTvShowById(id)?.let { onTvShowReceived(it) }
+            EspressoIdlingResources.decrement()
+        }, SERVICE_LATENCY_IN_MILLIS)
+    }
 }

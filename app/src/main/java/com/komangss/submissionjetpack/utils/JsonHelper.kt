@@ -96,4 +96,29 @@ class JsonHelper(private val context: Context) {
         }
         return result
     }
+
+    fun loadTvShowById(id: Int): TvShowResponse? {
+        val tvShowResponseList = ArrayList<TvShowResponse>()
+        try {
+            val responseObject = JSONObject(parsingFileToString("TvShowResponse.json").toString())
+            val listArray = responseObject.getJSONArray("tvShows")
+            for (i in 0 until listArray.length()) {
+                val tvShow = listArray.getJSONObject(i)
+
+                tvShowResponseList.add(
+                    TvShowResponse(
+                        tvShow.getInt("id"),
+                        tvShow.getString("title"),
+                        tvShow.getString("description"),
+                        tvShow.getString("image"),
+                        tvShow.getString("releaseDate"),
+                        tvShow.getString("rating")
+                    )
+                )
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        return tvShowResponseList.firstOrNull { it.id == id }
+    }
 }
