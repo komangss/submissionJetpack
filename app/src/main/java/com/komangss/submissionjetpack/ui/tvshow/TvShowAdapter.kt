@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.ui.tvshow
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.TvShow
+import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity
+import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity.Companion.EXTRA_TV_SHOW_ID
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
@@ -43,9 +46,12 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
                     .load(resources.getIdentifier(tvShow.image, "drawable", BuildConfig.APPLICATION_ID))
                     .into(item_movie_tvshow_image_view_poster)
 
+                setOnClickListener {
+                    val intent = Intent(context, TvShowDetailActivity::class.java)
+                    intent.putExtra(EXTRA_TV_SHOW_ID, tvShow.id)
+                    context.startActivity(intent)
+                }
             }
-
-//            TODO : Create Detail TvShow
         }
     }
 }
