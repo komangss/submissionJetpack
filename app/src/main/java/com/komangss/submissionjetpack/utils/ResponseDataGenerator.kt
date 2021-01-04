@@ -296,22 +296,8 @@ object ResponseDataGenerator {
         )
     }
 
-    fun getMovieById(id: Int): MovieResponse? {
-        for (movie in generateDummyMovies()) {
-            if (id == movie.id) {
-                return movie
-            }
-        }
-        return null
-    }
+    fun getMovieById(id: Int): MovieResponse? = generateDummyMovies().firstOrNull { id == it.id }
 
-    fun getTvShowById(id: Int): TvShowResponse? {
-        for (movie in generateDummyTvShows()) {
-            if (id == movie.id) {
-                return movie
-            }
-        }
-        return null
-    }
+    fun getTvShowById(id: Int): TvShowResponse? = generateDummyTvShows().firstOrNull { id == it.id }
 
 }
