@@ -2,7 +2,7 @@ package com.komangss.submissionjetpack.business.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
-import com.komangss.submissionjetpack.framework.network.mappers.MovieNetworkMapper
+import com.komangss.submissionjetpack.framework.network.mappers.NetworkMapper
 import com.komangss.submissionjetpack.utils.ResponseDataGenerator
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil
 import com.nhaarman.mockitokotlin2.*
@@ -18,7 +18,7 @@ class CatalogRepositoryTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val remote = mock(CatalogRemoteDataSource::class.java)
-    private val networkMapper = MovieNetworkMapper()
+    private val networkMapper = NetworkMapper()
     private val catalogRepository = FakeCatalogRepository(remote, networkMapper)
 
     private val movieResponses = ResponseDataGenerator.generateDummyMovies()
