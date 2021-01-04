@@ -38,7 +38,7 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
     fun getMovieById(id: Int, onMovieReceived: (movieResponse: MovieResponse) -> Unit) {
         EspressoIdlingResources.increment()
         handler.postDelayed({
-            onMovieReceived(jsonHelper.loadMovieById(id))
+            jsonHelper.loadMovieById(id)?.let { onMovieReceived(it) }
             EspressoIdlingResources.decrement()
         }, SERVICE_LATENCY_IN_MILLIS)
     }

@@ -6,7 +6,6 @@ import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
-import java.lang.NullPointerException
 
 class JsonHelper(private val context: Context) {
 
@@ -75,26 +74,30 @@ class JsonHelper(private val context: Context) {
         return tvShowResponseList
     }
 
-    fun loadMovieById(id: Int): MovieResponse {
-        val fileName = parsingFileToString("movie_$id.json")
-        var result = MovieResponse()
-        if (fileName != null) {
-            try {
-                val movie = JSONObject(fileName)
-                result =  MovieResponse(
-                    movie.getInt("id"),
-                    movie.getString("title"),
-                    movie.getString("director"),
-                    movie.getString("description"),
-                    movie.getString("image"),
-                    movie.getString("date"),
-                    movie.getString("rating")
+    fun loadMovieById(id: Int): MovieResponse? {
+        val movieResponseList = ArrayList<MovieResponse>()
+        try {
+            val responseObject = JSONObject(parsingFileToString("MovieResponse.json").toString())
+            val listArray = responseObject.getJSONArray("movies")
+            for (i in 0 until listArray.length()) {
+                val movie = listArray.getJSONObject(i)
+
+                movieResponseList.add(
+                    MovieResponse(
+                        movie.getInt("id"),
+                        movie.getString("title"),
+                        movie.getString("director"),
+                        movie.getString("description"),
+                        movie.getString("image"),
+                        movie.getString("date"),
+                        movie.getString("rating")
+                    )
                 )
-            } catch (e : NullPointerException) {
-                throw e
             }
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
-        return result
+        return movieResponseList.firstOrNull { it.id == id }
     }
 
     fun loadTvShowById(id: Int): TvShowResponse? {
