@@ -1,6 +1,5 @@
 package com.komangss.submissionjetpack.utils
 
-import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 

@@ -7,8 +7,6 @@ import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteD
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.network.mappers.NetworkMapper
-import com.komangss.submissionjetpack.framework.network.model.MovieResponse
-import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 
 class CatalogRepository
 private constructor(

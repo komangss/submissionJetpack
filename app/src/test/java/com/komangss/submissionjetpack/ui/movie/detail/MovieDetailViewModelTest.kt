@@ -3,7 +3,6 @@ package com.komangss.submissionjetpack.ui.movie.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.DomainModelDataGenerator

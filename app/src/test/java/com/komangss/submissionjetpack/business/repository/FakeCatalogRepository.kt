@@ -3,13 +3,10 @@ package com.komangss.submissionjetpack.business.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
-import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.network.mappers.NetworkMapper
-import com.komangss.submissionjetpack.framework.network.model.MovieResponse
-import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 
 class FakeCatalogRepository(
     private val catalogRemoteDataSource: CatalogRemoteDataSource,

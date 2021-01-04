@@ -1,6 +1,5 @@
 package com.komangss.submissionjetpack.utils
 
-import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
 
 object DomainModelDataGenerator {

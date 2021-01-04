@@ -13,17 +13,17 @@ class LazyActivityScenarioRule<A : Activity> : ExternalResource {
 
     constructor(launchActivity: Boolean, startActivityIntentSupplier: () -> Intent) {
         this.launchActivity = launchActivity
-        scenarioSupplier = { ActivityScenario.launch<A>(startActivityIntentSupplier()) }
+        scenarioSupplier = { ActivityScenario.launch(startActivityIntentSupplier()) }
     }
 
     constructor(launchActivity: Boolean, startActivityIntent: Intent) {
         this.launchActivity = launchActivity
-        scenarioSupplier = { ActivityScenario.launch<A>(startActivityIntent) }
+        scenarioSupplier = { ActivityScenario.launch(startActivityIntent) }
     }
 
     constructor(launchActivity: Boolean, startActivityClass: Class<A>) {
         this.launchActivity = launchActivity
-        scenarioSupplier = { ActivityScenario.launch<A>(startActivityClass) }
+        scenarioSupplier = { ActivityScenario.launch(startActivityClass) }
     }
 
     private var launchActivity: Boolean
@@ -47,7 +47,7 @@ class LazyActivityScenarioRule<A : Activity> : ExternalResource {
     fun launch(newIntent: Intent? = null) {
         if (scenarioLaunched) throw IllegalStateException("Scenario has already been launched!")
 
-        newIntent?.let { scenarioSupplier = { ActivityScenario.launch<A>(it) } }
+        newIntent?.let { scenarioSupplier = { ActivityScenario.launch(it) } }
 
         scenario = scenarioSupplier()
         scenarioLaunched = true
