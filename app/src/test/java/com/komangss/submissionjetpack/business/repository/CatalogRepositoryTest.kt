@@ -42,21 +42,21 @@ class CatalogRepositoryTest {
     fun getAllTvShows() {
         doAnswer { tvShowResponse }.`when`(remote).getAllTvShows(any())
 
-        val tvShowEntities = LiveDataTestUtil.getValue(catalogRepository.getAllTvShows())
+        val tvShowResults = LiveDataTestUtil.getValue(catalogRepository.getAllTvShows())
         verify(remote).getAllTvShows(any())
-        Assert.assertNotNull(tvShowEntities)
-        Assert.assertEquals(tvShowResponse.size.toLong(), tvShowEntities.size.toLong())
+        Assert.assertNotNull(tvShowResults)
+        Assert.assertEquals(tvShowResponse.size.toLong(), tvShowResults.size.toLong())
     }
 
     @Test
     fun getMovieById() {
         doAnswer { movieResponse }.`when`(remote).getMovieById(eq(movieId), any())
 
-        val movieEntity = LiveDataTestUtil.getValue(catalogRepository.getMovieById(movieId))
+        val movieResult = LiveDataTestUtil.getValue(catalogRepository.getMovieById(movieId))
 
         verify(remote, times(1)).getMovieById(eq(movieId), any())
 
-        Assert.assertNotNull(movieEntity)
-        Assert.assertEquals(movieEntity.id, movieId)
+        Assert.assertNotNull(movieResult)
+        Assert.assertEquals(movieResult.id, movieId)
     }
 }
