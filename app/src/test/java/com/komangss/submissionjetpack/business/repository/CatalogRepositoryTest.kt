@@ -22,11 +22,13 @@ class CatalogRepositoryTest {
     private val catalogRepository = FakeCatalogRepository(remote, networkMapper)
 
     private val movieResponses = ResponseDataGenerator.generateDummyMovies()
-    private val tvShowResponse = ResponseDataGenerator.generateDummyTvShows()
+    private val tvShowResponses = ResponseDataGenerator.generateDummyTvShows()
 
-    private val movieId = movieResponses[0].id
+    private val dummyMovieId = movieResponses[0].id
+    private val dummyTvShowId = tvShowResponses[0].id
 
-    private val movieResponse = ResponseDataGenerator.getMovieById(movieId)
+    private val movieResponse = ResponseDataGenerator.getMovieById(dummyMovieId)
+    private val tvShowResponse = ResponseDataGenerator.getTvShowById(dummyTvShowId)
 
     @Test
     fun getAllMovies() {
@@ -40,23 +42,36 @@ class CatalogRepositoryTest {
 
     @Test
     fun getAllTvShows() {
-        doAnswer { tvShowResponse }.`when`(remote).getAllTvShows(any())
+        doAnswer { tvShowResponses }.`when`(remote).getAllTvShows(any())
 
         val tvShowResults = LiveDataTestUtil.getValue(catalogRepository.getAllTvShows())
         verify(remote).getAllTvShows(any())
         Assert.assertNotNull(tvShowResults)
-        Assert.assertEquals(tvShowResponse.size.toLong(), tvShowResults.size.toLong())
+        Assert.assertEquals(tvShowResponses.size.toLong(), tvShowResults.size.toLong())
     }
 
     @Test
     fun getMovieById() {
-        doAnswer { movieResponse }.`when`(remote).getMovieById(eq(movieId), any())
+        doAnswer { movieResponse }.`when`(remote).getMovieById(eq(dummyMovieId), any())
 
-        val movieResult = LiveDataTestUtil.getValue(catalogRepository.getMovieById(movieId))
+        val movieResult = LiveDataTestUtil.getValue(catalogRepository.getMovieById(dummyMovieId))
 
-        verify(remote, times(1)).getMovieById(eq(movieId), any())
+        verify(remote, times(1)).getMovieById(eq(dummyMovieId), any())
 
         Assert.assertNotNull(movieResult)
-        Assert.assertEquals(movieResult.id, movieId)
+        Assert.assertEquals(movieResult.id, dummyMovieId)
+    }
+
+
+    @Test
+    fun getTvShowById() {
+        doAnswer { tvShowResponse }.`when`(remote).getTvShowById(eq(dummyTvShowId), any())
+
+        val tvShowResult = LiveDataTestUtil.getValue(catalogRepository.getTvShowById(dummyTvShowId))
+
+        verify(remote, times(1)).getTvShowById(eq(dummyTvShowId), any())
+
+        Assert.assertNotNull(tvShowResult)
+        Assert.assertEquals(tvShowResult.id, dummyTvShowId)
     }
 }
