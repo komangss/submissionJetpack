@@ -30,11 +30,7 @@ class CatalogRepositoryTest {
 
     @Test
     fun getAllMovies() {
-        doAnswer { invocation ->
-            (invocation.arguments[0] as CatalogRemoteDataSource.LoadMoviesCallback)
-                .onMoviesReceived(movieResponses)
-            null
-        }.`when`(remote).getAllMovies(any())
+        doAnswer { movieResponses }.`when`(remote).getAllMovies(any())
 
         val movieList = LiveDataTestUtil.getValue(catalogRepository.getAllMovies())
         verify(remote).getAllMovies(any())
@@ -44,11 +40,7 @@ class CatalogRepositoryTest {
 
     @Test
     fun getAllTvShows() {
-        doAnswer { invocation ->
-            (invocation.arguments[0] as CatalogRemoteDataSource.LoadTvShowsCallback)
-                .onTvShowsReceived(tvShowResponse)
-            null
-        }.`when`(remote).getAllTvShows(any())
+        doAnswer { tvShowResponse }.`when`(remote).getAllTvShows(any())
 
         val tvShowEntities = LiveDataTestUtil.getValue(catalogRepository.getAllTvShows())
         verify(remote).getAllTvShows(any())
@@ -58,13 +50,7 @@ class CatalogRepositoryTest {
 
     @Test
     fun getMovieById() {
-        doAnswer { invocation ->
-            if (movieResponse != null) {
-                (invocation.arguments[1] as CatalogRemoteDataSource.LoadMovieByIdCallback)
-                    .onMovieReceived(movieResponse)
-            }
-            null
-        }.`when`(remote).getMovieById(eq(movieId), any())
+        doAnswer { movieResponse }.`when`(remote).getMovieById(eq(movieId), any())
 
         val movieEntity = LiveDataTestUtil.getValue(catalogRepository.getMovieById(movieId))
 
