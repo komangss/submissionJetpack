@@ -30,37 +30,29 @@ private constructor(
 
     override fun getAllMovies(): LiveData<List<Movie>> {
         val movieResults = MutableLiveData<List<Movie>>()
-        catalogRemoteDataSource.getAllMovies(object : CatalogRemoteDataSource.LoadMoviesCallback {
-            override fun onMoviesReceived(movieResponses: List<MovieResponse>) {
-                movieResults.postValue(
-                    networkMapper.movieResponseListToMovieList(movieResponses)
-                )
-            }
-
-        })
+        catalogRemoteDataSource.getAllMovies {
+            movieResults.postValue(
+                networkMapper.movieResponseListToMovieList(it)
+            )
+        }
         return movieResults
     }
 
     override fun getAllTvShows(): LiveData<List<TvShow>> {
         val tvShowResults = MutableLiveData<List<TvShow>>()
-        catalogRemoteDataSource.getAllTvShows(object : CatalogRemoteDataSource.LoadTvShowsCallback {
-            override fun onTvShowsReceived(tvShowsResponse: List<TvShowResponse>) {
-                tvShowResults.postValue(
-                    networkMapper.tvShowResponseListToDomain(tvShowsResponse)
-                )
-            }
-        })
+        catalogRemoteDataSource.getAllTvShows {
+            tvShowResults.postValue(
+                networkMapper.tvShowResponseListToDomain(it)
+            )
+        }
         return tvShowResults
     }
 
     override fun getMovieById(id : Int) : MutableLiveData<Movie> {
         val movieResult = MutableLiveData<Movie>()
-        catalogRemoteDataSource.getMovieById(id, object : CatalogRemoteDataSource.LoadMovieByIdCallback {
-            override fun onMovieReceived(movieResponse: MovieResponse) {
-                movieResult.postValue(networkMapper.movieResponseToDomain(movieResponse))
-            }
-
-        })
+        catalogRemoteDataSource.getMovieById(id) {
+            movieResult.postValue(networkMapper.movieResponseToDomain(it))
+        }
         return movieResult
     }
 

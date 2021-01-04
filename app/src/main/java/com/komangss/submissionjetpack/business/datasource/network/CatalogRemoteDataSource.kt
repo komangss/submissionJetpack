@@ -6,7 +6,7 @@ import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.utils.JsonHelper
 
-class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHelper){
+class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHelper) {
     companion object {
         private const val SERVICE_LATENCY_IN_MILLIS: Long = 2000
 
@@ -21,34 +21,29 @@ class CatalogRemoteDataSource private constructor(private val jsonHelper: JsonHe
 
     private val handler = Handler()
 
-    fun getAllMovies(callback: LoadMoviesCallback) {
-        handler.postDelayed({callback.onMoviesReceived(jsonHelper.loadMovies())}, SERVICE_LATENCY_IN_MILLIS)
+    fun getAllMovies(onMoviesReceived: (movieResponses: List<MovieResponse>) -> Unit) {
+        handler.postDelayed(
+            { onMoviesReceived(jsonHelper.loadMovies()) },
+            SERVICE_LATENCY_IN_MILLIS
+        )
     }
 
-    interface LoadMoviesCallback {
-        fun onMoviesReceived(movieResponses: List<MovieResponse>)
+    fun getAllTvShows(onTvShowsReceived : (tvShowsResponse: List<TvShowResponse>) -> Unit) {
+        handler.postDelayed(
+            { onTvShowsReceived(jsonHelper.loadTvShow()) },
+            SERVICE_LATENCY_IN_MILLIS
+        )
     }
 
-    fun getAllTvShows(callback : LoadTvShowsCallback) {
-        handler.postDelayed({callback.onTvShowsReceived(jsonHelper.loadTvShow())}, SERVICE_LATENCY_IN_MILLIS)
-    }
-    interface LoadTvShowsCallback {
-        fun onTvShowsReceived(tvShowsResponse : List<TvShowResponse>)
-    }
-
-    fun getMovieById(id : Int, callback : LoadMovieByIdCallback) {
+    fun getMovieById(id: Int, onMovieReceived: (movieResponse: MovieResponse) -> Unit) {
         EspressoIdlingResources.increment()
         handler.postDelayed({
-            callback.onMovieReceived(jsonHelper.loadMovieById(id))
+            onMovieReceived(jsonHelper.loadMovieById(id))
             EspressoIdlingResources.decrement()
         }, SERVICE_LATENCY_IN_MILLIS)
     }
 
-    interface LoadMovieByIdCallback {
-        fun onMovieReceived(movieResponse: MovieResponse)
-    }
-    
-    fun getTvShowById(id : Int, onTvShowReceived : (tvShowResponse: TvShowResponse) -> Unit) {
+    fun getTvShowById(id: Int, onTvShowReceived: (tvShowResponse: TvShowResponse) -> Unit) {
         EspressoIdlingResources.increment()
         handler.postDelayed({
             jsonHelper.loadTvShowById(id)?.let { onTvShowReceived(it) }
