@@ -33,8 +33,10 @@ class MovieFragment : Fragment() {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             val movieAdapter = MovieAdapter()
+
             fragment_movie_progress_bar.visibility = View.VISIBLE
-            viewModel.getMovies().observe(viewLifecycleOwner, Observer {
+
+            viewModel.getMovies().observe(viewLifecycleOwner, {
                 fragment_movie_progress_bar.visibility = View.GONE
                 movieAdapter.setMovies(it)
                 movieAdapter.notifyDataSetChanged()
@@ -47,12 +49,6 @@ class MovieFragment : Fragment() {
             }
         }
 
-//        Log.d("MyTag",
-//                "alita : ${R.drawable.poster_alita}\n" +
-//                "aquaman : ${R.drawable.poster_aquaman}\n" +
-//                "bohemian : ${R.drawable.poster_bohemian} \n" +
-//                "creed 2 : ${R.drawable.poster_creed} \n" +
-//                "the crimes : ${R.drawable.poster_crimes} \n"
 //        )
     }
 }
