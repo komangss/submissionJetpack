@@ -11,4 +11,6 @@ interface CatalogDataSource {
     fun getAllTvShows() : LiveData<List<TvShow>>
 
     fun getMovieById(id : Int) : LiveData<Movie>
+
+    fun getTvShowById(id : Int) : LiveData<TvShow>
 }

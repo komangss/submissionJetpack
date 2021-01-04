@@ -52,4 +52,12 @@ class FakeCatalogRepository(
         })
         return movieResult
     }
+
+    override fun getTvShowById(id: Int): LiveData<TvShow> {
+        val tvShowResult = MutableLiveData<TvShow>()
+        catalogRemoteDataSource.getTvShowById(id) {
+            tvShowResult.postValue(networkMapper.tvShowResponseToDomain(it))
+        }
+        return tvShowResult
+    }
 }
