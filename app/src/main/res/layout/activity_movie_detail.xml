@@ -45,7 +45,7 @@
 
             <TextView
                 android:layout_marginTop="8dp"
-                android:text="@string/activity_movie_detail_rating"
+                android:text="@string/rating"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_activity_movie_detail_movie_title"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             android:id="@+id/image_view_activity_movie_detail_movie_poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/activity_movie_detail_poster" />
+            android:contentDescription="@string/poster" />
     </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.Guideline
