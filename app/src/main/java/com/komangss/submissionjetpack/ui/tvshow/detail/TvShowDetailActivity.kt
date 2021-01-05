@@ -14,7 +14,7 @@ class TvShowDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_show_detail)
 
-        supportActionBar?.title = "Tv Show"
+        supportActionBar?.title = getString(R.string.tvshow)
 
         val tvShowId = intent.getIntExtra(EXTRA_TV_SHOW_ID, -1)
 

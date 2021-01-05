@@ -15,7 +15,7 @@ class MovieDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
-        supportActionBar?.title = "Movie"
+        supportActionBar?.title = getString(R.string.movie)
 
         val movieId = intent.getIntExtra(EXTRA_MOVIE_ID, -1)
 
