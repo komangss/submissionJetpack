@@ -4,15 +4,12 @@ import com.komangss.submissionjetpack.framework.network.model.MovieResultRespons
 import com.komangss.submissionjetpack.framework.network.services.CatalogServices
 import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.framework.network.utils.safeApiCall
-//import com.komangss.submissionjetpack.utils.JsonHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 class CatalogRemoteDataSource private constructor(private val catalogServices: CatalogServices){
     companion object {
-//        private const val SERVICE_LATENCY_IN_MILLIS: Long = 2000
-
         @Volatile
         private var instance: CatalogRemoteDataSource? = null
 
@@ -22,43 +19,31 @@ class CatalogRemoteDataSource private constructor(private val catalogServices: C
             }
     }
 
-//    private val handler = Handler()
-
-//    TODO : Add Idling Resource
     @ExperimentalCoroutinesApi
     suspend fun getAllMovies() : Flow<ApiResponse<MovieResultResponse>> {
-//        EspressoIdlingResources.increment()
-//        val movieListResult = catalogServices.getMovies(BuildConfig.TMDB_API_KEY)
-//        return try {
-//            if (movieListResult.isSuccessful || movieListResult.code() == 200) {
-//                EspressoIdlingResources.decrement()
-//                return movieListResult.body() // TODO : Remove non null asserted call
-//            } else {
-//                EspressoIdlingResources.decrement()
-//                return null
-//            }
-//        } catch (exception : Exception) {
-//
-//        }
         return safeApiCall(Dispatchers.IO) {catalogServices.getMovies()}
     }
 
-//    fun getAllTvShows(callback : LoadTvShowsCallback) {
-//        handler.postDelayed({callback.onTvShowsReceived(jsonHelper.loadTvShow())}, SERVICE_LATENCY_IN_MILLIS)
-//    }
-//    interface LoadTvShowsCallback {
-//        fun onTvShowsReceived(tvShowsResponse : List<TvShowResponse>)
+//    fun getAllTvShows(onTvShowsReceived : (tvShowsResponse: List<TvShowResponse>) -> Unit) {
+//        handler.postDelayed(
+//            { onTvShowsReceived(jsonHelper.loadTvShow()) },
+//            SERVICE_LATENCY_IN_MILLIS
+//        )
 //    }
 //
-//    fun getMovieById(id : Int, callback : LoadMovieByIdCallback) {
+//    fun getMovieById(id: Int, onMovieReceived: (movieResponse: MovieResponse) -> Unit) {
 //        EspressoIdlingResources.increment()
 //        handler.postDelayed({
-//            callback.onMovieReceived(jsonHelper.loadMovieById(id))
+//            jsonHelper.loadMovieById(id)?.let { onMovieReceived(it) }
 //            EspressoIdlingResources.decrement()
 //        }, SERVICE_LATENCY_IN_MILLIS)
 //    }
 //
-//    interface LoadMovieByIdCallback {
-//        fun onMovieReceived(movieResponse: MovieResponse)
+//    fun getTvShowById(id: Int, onTvShowReceived: (tvShowResponse: TvShowResponse) -> Unit) {
+//        EspressoIdlingResources.increment()
+//        handler.postDelayed({
+//            jsonHelper.loadTvShowById(id)?.let { onTvShowReceived(it) }
+//            EspressoIdlingResources.decrement()
+//        }, SERVICE_LATENCY_IN_MILLIS)
 //    }
 }

@@ -35,4 +35,30 @@ constructor(
             mapFromCache = {catalogMovieMapper.entitiesToDomains(it)}
         )
     }
+
+    override fun getAllTvShows(): LiveData<List<TvShow>> {
+        val tvShowResults = MutableLiveData<List<TvShow>>()
+        catalogRemoteDataSource.getAllTvShows {
+            tvShowResults.postValue(
+                networkMapper.tvShowResponseListToDomain(it)
+            )
+        }
+        return tvShowResults
+    }
+
+    override fun getMovieById(id : Int) : MutableLiveData<Movie> {
+        val movieResult = MutableLiveData<Movie>()
+        catalogRemoteDataSource.getMovieById(id) {
+            movieResult.postValue(networkMapper.movieResponseToDomain(it))
+        }
+        return movieResult
+    }
+
+    override fun getTvShowById(id: Int): LiveData<TvShow> {
+        val tvShowResult = MutableLiveData<TvShow>()
+        catalogRemoteDataSource.getTvShowById(id) {
+            tvShowResult.postValue(networkMapper.tvShowResponseToDomain(it))
+        }
+        return tvShowResult
+    }
 }

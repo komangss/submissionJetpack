@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.tvshow.detail.TvShowDetailActivity" />
         <activity android:name=".ui.movie.detail.MovieDetailActivity" />
         <activity android:name=".ui.home.HomeActivity">
             <intent-filter>
