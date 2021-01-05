@@ -8,7 +8,6 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.ui.movie.MovieFragment
 import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,14 +19,14 @@ class TvShowFragmentTest {
 
     @Test
     fun testRecyclerViewIsDisplayed() {
-        launchFragmentInContainer<MovieFragment>()
+        launchFragmentInContainer<TvShowFragment>()
         Espresso.onView(ViewMatchers.withId(R.id.fragment_tvshow_rv_tvshow))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
     fun testTotalItemMatches() {
-        launchFragmentInContainer<MovieFragment>()
+        launchFragmentInContainer<TvShowFragment>()
         Espresso.onView(ViewMatchers.withId(R.id.fragment_tvshow_rv_tvshow)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(dummyTvShowSize)
         )
