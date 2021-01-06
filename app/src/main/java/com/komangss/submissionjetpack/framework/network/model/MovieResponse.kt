@@ -1,10 +1,7 @@
 package com.komangss.submissionjetpack.framework.network.model
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
 data class MovieResponse(
     @SerializedName("popularity")
     val popularity: Double,
@@ -32,20 +29,4 @@ data class MovieResponse(
     val description: String,
     @SerializedName("release_date")
     val releaseDate: String
-) : Parcelable {
-    constructor() : this (
-        0.0,
-        0,
-        false,
-        "",
-        0,
-        "",
-        "",
-        "",
-        null,
-        "",
-    0.0,
-    "",
-    ""
-    )
-}
+)
