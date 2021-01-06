@@ -1,10 +1,17 @@
 package com.komangss.submissionjetpack.business.domain.model
 
 data class TvShow (
-    val id : Int,
-    val title : String,
-    val description : String,
-    val image : String,
-    val releaseDate : String,
-    val rating : String
+    val backdropUrlPath: String,
+    val releaseDate: String,
+    val genreIds: List<Int>?,
+    val id: Int,
+    val name: String,
+    val originalCountry : List<String>?,
+    val originalLanguage: String,
+    val originalName: String,
+    val description: String,
+    val popularity: Double,
+    val posterUrlPath: String,
+    val voteAverage: Double,
+    val voteCount: Int
 )
