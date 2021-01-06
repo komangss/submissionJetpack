@@ -45,13 +45,13 @@ class MovieDetailViewModelTest {
         val observer: Observer<Movie> = mock(Observer::class.java) as Observer<Movie>
         viewModel.detailMovie(dummyMovie.id).observeForever(observer)
         verify(catalogRepository).getMovieById(dummyMovie.id)
-        assertEquals(dummyMovie.id, viewModel.detailMovie(dummyMovie.id).value?.id)
-        assertEquals(dummyMovie.title, viewModel.detailMovie(dummyMovie.id).value?.title)
+        assertEquals(dummyMovie.id, viewModel.detailMovie(dummyMovie.id).value.id)
+        assertEquals(dummyMovie.title, viewModel.detailMovie(dummyMovie.id).value.title)
         assertEquals(
             dummyMovie.description,
-            viewModel.detailMovie(dummyMovie.id).value?.description
+            viewModel.detailMovie(dummyMovie.id).value.description
         )
-        assertEquals(dummyMovie.imageUrl, viewModel.detailMovie(dummyMovie.id).value?.imageUrl)
+        assertEquals(dummyMovie.posterUrlPath, viewModel.detailMovie(dummyMovie.id).value.imageUrl)
         assertEquals(
             dummyMovie.releaseDate,
             viewModel.detailMovie(dummyMovie.id).value?.releaseDate

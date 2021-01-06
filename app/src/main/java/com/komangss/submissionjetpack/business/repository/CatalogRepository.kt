@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.business.repository
 
+import androidx.lifecycle.LiveData
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
@@ -13,7 +14,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.framework.network.mappers.NetworkMapper
 
 class CatalogRepository
 private constructor(
@@ -37,7 +37,6 @@ private constructor(
             }
     }
 
-//    TODO : cache the result from remote
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun getAllMovies(): Flow<Resource<List<Movie>>> {

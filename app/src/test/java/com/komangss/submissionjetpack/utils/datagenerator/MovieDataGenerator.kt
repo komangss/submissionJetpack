@@ -1,8 +1,6 @@
 package com.komangss.submissionjetpack.utils.datagenerator
 
-import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
-import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

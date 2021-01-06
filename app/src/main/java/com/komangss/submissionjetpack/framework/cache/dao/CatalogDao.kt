@@ -14,6 +14,4 @@ interface CatalogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovies(movies: List<MovieEntity>): LongArray
 
-    @Delete
-    fun deleteMovie(movie: MovieEntity): Int
 }

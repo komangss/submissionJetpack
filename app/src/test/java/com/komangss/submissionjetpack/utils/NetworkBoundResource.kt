@@ -12,11 +12,10 @@ inline fun <DB : Any, REMOTE : Any, DOMAIN : Any> networkBoundResourceNoResultIn
     crossinline fetchFromLocal: () -> Flow<DB>,
     crossinline shouldFetchFromRemote : (DB?) -> Boolean = { true },
     crossinline fetchFromRemote : suspend () -> Flow<ApiResponse<REMOTE>>,
-    crossinline processRemoteResponse : (response : ApiResponse.Success<REMOTE>) -> Unit = { Unit },
-    crossinline saveRemoteData: suspend (REMOTE) -> Unit = { Unit },
+    crossinline processRemoteResponse : (response : ApiResponse.Success<REMOTE>) -> Unit = { },
+    crossinline saveRemoteData: suspend (REMOTE) -> Unit = { },
     crossinline mapFromCache : (DB) -> DOMAIN
-) = flow<Resource<DOMAIN>> {
-//    emit(Resource.InProgress)
+) = flow {
 
     val localData = fetchFromLocal().first()
 
