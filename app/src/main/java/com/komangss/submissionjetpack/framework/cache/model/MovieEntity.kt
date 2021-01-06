@@ -1,12 +1,9 @@
 package com.komangss.submissionjetpack.framework.cache.model
 
-import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
 
 @Entity(tableName = "movie_entity")
-@Parcelize
 data class MovieEntity(
     val popularity: Double,
     val voteCount: Int,
@@ -22,4 +19,4 @@ data class MovieEntity(
     val voteAverage: Double,
     val description: String,
     val releaseDate: String
-) : Parcelable
+)
