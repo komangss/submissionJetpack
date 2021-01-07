@@ -2,6 +2,7 @@ package com.komangss.submissionjetpack.business.datasource.cache
 
 import com.komangss.submissionjetpack.framework.cache.dao.CatalogDao
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -24,4 +25,8 @@ class CatalogLocalDataSource private constructor(
     fun getAllMovies(): Flow<List<MovieEntity>> = catalogDao.getMovies()
 
     suspend fun insertMovies(movies: List<MovieEntity>) = catalogDao.insertMovies(movies)
+
+    fun getAllTvShows(): Flow<List<TvShowEntity>> = catalogDao.getTvShows()
+
+    suspend fun insertTvShows(tvShows: List<TvShowEntity>) = catalogDao.insertTvShows(tvShows)
 }
