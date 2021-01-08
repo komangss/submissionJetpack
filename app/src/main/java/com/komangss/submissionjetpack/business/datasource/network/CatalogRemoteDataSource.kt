@@ -1,6 +1,8 @@
 package com.komangss.submissionjetpack.business.datasource.network
 
 import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowResultResponse
 import com.komangss.submissionjetpack.framework.network.services.CatalogServices
 import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.framework.network.utils.safeApiCall
@@ -24,12 +26,10 @@ class CatalogRemoteDataSource private constructor(private val catalogServices: C
         return safeApiCall(Dispatchers.IO) {catalogServices.getMovies()}
     }
 
-//    fun getAllTvShows(onTvShowsReceived : (tvShowsResponse: List<TvShowResponse>) -> Unit) {
-//        handler.postDelayed(
-//            { onTvShowsReceived(jsonHelper.loadTvShow()) },
-//            SERVICE_LATENCY_IN_MILLIS
-//        )
-//    }
+    @ExperimentalCoroutinesApi
+    suspend fun getAllTvShows() : Flow<ApiResponse<TvShowResultResponse>> {
+        return safeApiCall(Dispatchers.IO) {catalogServices.getTvShows()}
+    }
 //
 //    fun getMovieById(id: Int, onMovieReceived: (movieResponse: MovieResponse) -> Unit) {
 //        EspressoIdlingResources.increment()
