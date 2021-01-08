@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 interface CatalogDataSource {
     suspend fun getAllMovies() : Flow<Resource<List<Movie>>>
 
-    fun getAllTvShows() : LiveData<List<TvShow>>
+    fun getAllTvShows() : Flow<Resource<List<TvShow>>>
 
-    fun getMovieById(id : Int) : LiveData<Movie>
+//    fun getMovieById(id : Int) : LiveData<Movie>
 
-    fun getTvShowById(id : Int) : LiveData<TvShow>
+//    fun getTvShowById(id : Int) : LiveData<TvShow>
 }
