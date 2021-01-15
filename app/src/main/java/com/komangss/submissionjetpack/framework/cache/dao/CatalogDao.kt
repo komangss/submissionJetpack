@@ -20,6 +20,6 @@ interface CatalogDao {
     fun getTvShows(): Flow<List<TvShowEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTvShows(movies: List<TvShowEntity>): LongArray
+    suspend fun insertTvShows(tvShows: List<TvShowEntity>): LongArray
 
 }
