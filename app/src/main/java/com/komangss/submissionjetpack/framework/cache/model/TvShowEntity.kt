@@ -3,7 +3,7 @@ package com.komangss.submissionjetpack.framework.cache.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName= "tv_show_entity")
+@Entity(tableName = "tv_show_entity")
 data class TvShowEntity (
     val backdropUrlPath: String,
     val releaseDate: String,
