@@ -1,11 +1,10 @@
 package com.komangss.submissionjetpack.business.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
+import com.komangss.submissionjetpack.business.domain.model.MovieDetail
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.mapper.MapperInterface
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
@@ -16,11 +15,15 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
+import com.komangss.submissionjetpack.framework.network.model.MovieDetailResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class CatalogRepository
 private constructor(
-    private val catalogRemoteDataSource : CatalogRemoteDataSource,
+    private val catalogRemoteDataSource: CatalogRemoteDataSource,
     private val catalogLocalDataSource: CatalogLocalDataSource,
     private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
     private val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
@@ -32,12 +35,12 @@ private constructor(
         fun getInstance(
             catalogRemoteDataSource: CatalogRemoteDataSource,
             catalogLocalDataSource: CatalogLocalDataSource,
-            mapperInterface: MapperInterface<Movie, MovieEntity, MovieResponse>,
-             catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
+            catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
+            catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
         ): CatalogRepository =
             instance ?: synchronized(this) {
                 instance ?: CatalogRepository(
-                    catalogRemoteDataSource, catalogLocalDataSource, mapperInterface,
+                    catalogRemoteDataSource, catalogLocalDataSource, catalogMovieMapper,
                     catalogTvShowMapper
                 )
             }
@@ -48,41 +51,64 @@ private constructor(
     override suspend fun getAllMovies(): Flow<Resource<List<Movie>>> {
         return networkBoundResource(
             fetchFromLocal = { catalogLocalDataSource.getAllMovies() },
-            shouldFetchFromRemote = { it == null},
-            fetchFromRemote = { catalogRemoteDataSource.getAllMovies()},
+            shouldFetchFromRemote = { it === null },
+            fetchFromRemote = { catalogRemoteDataSource.getAllMovies() },
             processRemoteResponse = { },
             saveRemoteData = {
                 catalogLocalDataSource.insertMovies(catalogMovieMapper.responsesToEntities(it.results))
             },
-            mapFromCache = {catalogMovieMapper.entitiesToDomains(it)}
+            mapFromCache = { catalogMovieMapper.entitiesToDomains(it) }
         )
     }
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
-    override fun getAllTvShows(): Flow<Resource<List<TvShow>>> {
+    override suspend fun getAllTvShows(): Flow<Resource<List<TvShow>>> {
         return networkBoundResource(
-            fetchFromRemote = {catalogRemoteDataSource.getAllTvShows()},
-            shouldFetchFromRemote = {it == null},
-            fetchFromLocal = {catalogLocalDataSource.getAllTvShows() },
+            fetchFromRemote = { catalogRemoteDataSource.getAllTvShows() },
+            shouldFetchFromRemote = { it === null },
+            fetchFromLocal = { catalogLocalDataSource.getAllTvShows() },
             processRemoteResponse = {},
             saveRemoteData = {
                 catalogLocalDataSource.insertTvShows(catalogTvShowMapper.responsesToEntities(it.results))
             },
-            mapFromCache = {catalogTvShowMapper.entitiesToDomains(it)}
+            mapFromCache = { catalogTvShowMapper.entitiesToDomains(it) }
         )
     }
 
-//    override fun getMovieById(id : Int) : MutableLiveData<Movie> {
-//        val movieResult = MutableLiveData<Movie>()
-//        catalogRemoteDataSource.getMovieById(id, object : CatalogRemoteDataSource.LoadMovieByIdCallback {
-//            override fun onMovieReceived(movieResponse: MovieResponse) {
-//                movieResult.postValue(networkMapper.mapFromResponse(movieResponse))
-//            }
-//
-//        })
-//        return movieResult
-//    }
+    @ExperimentalCoroutinesApi
+    override suspend fun getMovieById(id: Int): Flow<Resource<MovieDetail>> = flow {
+        catalogRemoteDataSource.getMovieById(id).collect {
+            when (it) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(movieDetailResponseToDomain(it.value)))
+                }
+                is ApiResponse.GenericError -> emit(Resource.Error(it.code, it.error))
+                ApiResponse.NetworkError -> emit(Resource.Error())
+            }
+        }
+    }
+
+
+    private fun movieDetailResponseToDomain(response : MovieDetailResponse) : MovieDetail {
+        return MovieDetail(
+            adult = response.adult,
+            backdropPath = response.backdropPath,
+            genres = response.genres,
+            id = response.id,
+            originalLanguage = response.originalLanguage,
+            description = response.description,
+            popularity = response.popularity,
+            releaseDate = response.releaseDate,
+            status = response.status,
+            tagLine = response.tagLine,
+            title = response.title,
+            video = response.video,
+            voteAverage = response.voteAverage,
+            voteCount = response.voteCount
+        )
+    }
+
 
 //    override fun getTvShowById(id: Int): LiveData<TvShow> {
 //        val tvShowResult = MutableLiveData<TvShow>()
