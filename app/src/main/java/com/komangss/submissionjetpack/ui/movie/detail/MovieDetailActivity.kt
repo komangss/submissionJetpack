@@ -2,15 +2,19 @@ package com.komangss.submissionjetpack.ui.movie.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
+import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class MovieDetailActivity : AppCompatActivity() {
+    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
@@ -24,14 +28,36 @@ class MovieDetailActivity : AppCompatActivity() {
             ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
 
         viewModel.detailMovie(movieId).observe(this, {
-            tv_activity_movie_detail_movie_title.text = it.title
-            tv_activity_movie_detail_movie_description.text = it.description
-            tv_activity_movie_detail_movie_rating_movie.text = it.rating
-            Glide.with(this@MovieDetailActivity)
-                .load(resources.getIdentifier(it.imageUrl, "drawable", BuildConfig.APPLICATION_ID))
-                .into(image_view_activity_movie_detail_movie_poster)
+            when (it) {
+                is Resource.Success -> {
+                    tv_activity_movie_detail_movie_title.text = it.data.title
+                    tv_activity_movie_detail_movie_description.text = it.data.description
+                    tv_activity_movie_detail_movie_rating_movie.text =
+                        it.data.voteAverage.toString()
 
-            supportActionBar?.title = it.title
+                    Glide.with(this@MovieDetailActivity)
+                        .load("https://image.tmdb.org/t/p/original/${it.data.posterPath}")
+                        .into(image_view_activity_movie_detail_movie_poster)
+
+                    Glide.with(this@MovieDetailActivity)
+                        .load("https://image.tmdb.org/t/p/original/${it.data.backdropPath}")
+                        .fitCenter()
+                        .centerCrop()
+                        .into(image_view_activity_movie_detail_movie_backdrop)
+
+                    supportActionBar?.title = it.data.title
+                }
+                is Resource.Error -> {
+                    Toast.makeText(
+                        this@MovieDetailActivity,
+                        it.error?.errorDescription,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                Resource.InProgress -> {
+                    Toast.makeText(this@MovieDetailActivity, "progress", Toast.LENGTH_LONG).show()
+                }
+            }
         })
     }
 
