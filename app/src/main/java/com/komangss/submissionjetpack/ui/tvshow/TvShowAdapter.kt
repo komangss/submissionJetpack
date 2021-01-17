@@ -39,11 +39,11 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
     class TvShowViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         fun bind(tvShow : TvShow) {
             with(itemView) {
-                item_movie_tvshow_tv_item_title.text = tvShow.title
+                item_movie_tvshow_tv_item_title.text = tvShow.name
                 item_movie_tvshow_tv_description.text = tvShow.description
 
                 Glide.with(context)
-                    .load(resources.getIdentifier(tvShow.image, "drawable", BuildConfig.APPLICATION_ID))
+                    .load("https://image.tmdb.org/t/p/original/${tvShow.posterUrlPath}")
                     .into(item_movie_tvshow_image_view_poster)
 
                 setOnClickListener {

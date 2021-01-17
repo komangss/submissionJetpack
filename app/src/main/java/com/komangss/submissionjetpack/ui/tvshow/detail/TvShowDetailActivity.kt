@@ -22,16 +22,16 @@ class TvShowDetailActivity : AppCompatActivity() {
         val viewModel =
             ViewModelProvider(this, factory)[TvShowDetailViewModel::class.java]
 
-        viewModel.getTvShowById(tvShowId).observe(this, {
-            tv_activity_tv_show_detail_tv_show_title.text = it.title
-            tv_activity_tv_show_detail_tv_show_description.text = it.description
-            tv_activity_tv_show_detail_tv_show_rating_tv_show.text = it.rating
-            Glide.with(this@TvShowDetailActivity)
-                .load(resources.getIdentifier(it.image, "drawable", BuildConfig.APPLICATION_ID))
-                .into(image_view_activity_tv_show_detail_tv_show_poster)
-
-            supportActionBar?.title = it.title
-        })
+//        viewModel.getTvShowById(tvShowId).observe(this, {
+//            tv_activity_tv_show_detail_tv_show_title.text = it.title
+//            tv_activity_tv_show_detail_tv_show_description.text = it.description
+//            tv_activity_tv_show_detail_tv_show_rating_tv_show.text = it.rating
+//            Glide.with(this@TvShowDetailActivity)
+//                .load(resources.getIdentifier(it.image, "drawable", BuildConfig.APPLICATION_ID))
+//                .into(image_view_activity_tv_show_detail_tv_show_poster)
+//
+//            supportActionBar?.title = it.title
+//        })
     }
 
     companion object {
