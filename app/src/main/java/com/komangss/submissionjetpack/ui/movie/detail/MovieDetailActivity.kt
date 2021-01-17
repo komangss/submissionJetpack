@@ -32,8 +32,10 @@ class MovieDetailActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     tv_activity_movie_detail_movie_title.text = it.data.title
                     tv_activity_movie_detail_movie_description.text = it.data.description
-                    tv_activity_movie_detail_movie_rating_movie.text =
-                        it.data.voteAverage.toString()
+                    val voteAverage = it.data.voteAverage?.div(2)?.toFloat()
+                    if (voteAverage != null) {
+                        item_movie_tvshow_rating_bar.rating = voteAverage
+                    }
 
                     Glide.with(this@MovieDetailActivity)
                         .load("https://image.tmdb.org/t/p/original/${it.data.posterPath}")
@@ -55,7 +57,11 @@ class MovieDetailActivity : AppCompatActivity() {
                     ).show()
                 }
                 Resource.InProgress -> {
-                    Toast.makeText(this@MovieDetailActivity, "progress", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MovieDetailActivity,
+                        "Load From Network...",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         })
