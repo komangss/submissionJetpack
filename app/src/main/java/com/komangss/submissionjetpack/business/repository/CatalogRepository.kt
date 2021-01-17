@@ -89,10 +89,10 @@ private constructor(
         }
     }
 
-
     private fun movieDetailResponseToDomain(response : MovieDetailResponse) : MovieDetail {
         return MovieDetail(
             adult = response.adult,
+            posterPath = response.posterPath,
             backdropPath = response.backdropPath,
             genres = response.genres,
             id = response.id,
