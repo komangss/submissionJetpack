@@ -1,16 +1,32 @@
 package com.komangss.submissionjetpack.ui.movie.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.komangss.submissionjetpack.business.domain.model.Movie
+import androidx.lifecycle.asLiveData
+import com.komangss.submissionjetpack.business.domain.model.MovieDetail
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.MainCoroutineRule
+import com.komangss.submissionjetpack.vo.Resource
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class MovieDetailViewModelTest {
 
@@ -18,43 +34,70 @@ class MovieDetailViewModelTest {
     @JvmField
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel : MovieDetailViewModel
-    private lateinit var dummyMovie : Movie
-    private val catalogRepository = mock(CatalogRepository::class.java)
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
-//    @Before
-//    fun setUp() {
-//        viewModel = MovieDetailViewModel(catalogRepository)
-//        dummyMovie = Movie(
-//            1,
-//            "Alita : Battle Angel",
-//            "Robert Rodriguez",
-//            "When Alita awakens with no memory of who she is in a future world she does not recognize, she is taken in by Ido, a compassionate doctor who realizes that somewhere in this abandoned cyborg shell is the heart and soul of a young woman with an extraordinary past.",
-//            "poster_alita",
-//            "2019",
-//            "67"
-//        )
-//    }
+    private lateinit var viewModel: MovieDetailViewModel
+    private lateinit var dummyMovie: MovieDetail
 
-//    @Suppress("UNCHECKED_CAST")
-//    @Test
-//    fun detailMovie() {
-//        val mutableMovie = MutableLiveData<Movie>()
-//        mutableMovie.value = DomainModelDataGenerator.getMovieById(dummyMovie.id)
-//        `when`(catalogRepository.getMovieById(dummyMovie.id)).thenReturn(mutableMovie)
-//        val observer: Observer<Movie> = mock(Observer::class.java) as Observer<Movie>
-//        viewModel.detailMovie(dummyMovie.id).observeForever(observer)
-//        verify(catalogRepository).getMovieById(dummyMovie.id)
-//        assertEquals(dummyMovie.id, viewModel.detailMovie(dummyMovie.id).value.id)
-//        assertEquals(dummyMovie.title, viewModel.detailMovie(dummyMovie.id).value.title)
-//        assertEquals(
-//            dummyMovie.description,
-//            viewModel.detailMovie(dummyMovie.id).value.description
-//        )
-//        assertEquals(dummyMovie.posterUrlPath, viewModel.detailMovie(dummyMovie.id).value.imageUrl)
-//        assertEquals(
-//            dummyMovie.releaseDate,
-//            viewModel.detailMovie(dummyMovie.id).value?.releaseDate
-//        )
-//    }
+    @ExperimentalCoroutinesApi
+    private fun MainCoroutineRule.runBlockingTest(block: suspend () -> Unit) =
+        this.testDispatcher.runBlockingTest {
+            block()
+        }
+
+    @Before
+    fun setUp() {
+        dummyMovie = DomainModelDataGenerator.getMovieById()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun detailMovie() {
+        mainCoroutineRule.runBlockingTest {
+            val dummyMovieDetailResult = flow {
+                emit(Resource.Success(dummyMovie))
+            }
+            val repo = mock<CatalogRepository> {
+                onBlocking { getMovieById(dummyMovie.id!!) } doReturn dummyMovieDetailResult
+            }
+
+            viewModel = MovieDetailViewModel(repo)
+
+
+            assertEquals(
+                Resource.InProgress,
+                viewModel.detailMovie(dummyMovie.id!!).getOrAwaitValue()
+            )
+        }
+    }
+
+
+    /* Copyright 2019 Google LLC.
+       SPDX-License-Identifier: Apache-2.0 */
+    fun <T> LiveData<T>.getOrAwaitValue(
+        time: Long = 2,
+        timeUnit: TimeUnit = TimeUnit.SECONDS
+    ): T {
+        var data: T? = null
+        val latch = CountDownLatch(1)
+        val observer = object : Observer<T> {
+            override fun onChanged(o: T?) {
+                data = o
+                latch.countDown()
+                this@getOrAwaitValue.removeObserver(this)
+            }
+        }
+
+        this.observeForever(observer)
+
+        // Don't wait indefinitely if the LiveData is not set.
+        if (!latch.await(time, timeUnit)) {
+            throw TimeoutException("LiveData value was never set.")
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        return data as T
+    }
 }
