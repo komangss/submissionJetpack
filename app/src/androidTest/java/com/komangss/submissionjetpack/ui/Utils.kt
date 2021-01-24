@@ -8,7 +8,7 @@ object Utils {
     fun getJsonFromAssets(context: Context, fileName: String): String? {
         val jsonString: String
         jsonString = try {
-            val `is`: InputStream = context.getAssets().open(fileName)
+            val `is`: InputStream = context.assets.open(fileName)
             val size: Int = `is`.available()
             val buffer = ByteArray(size)
             `is`.read(buffer)

@@ -1,7 +1,6 @@
 package com.komangss.submissionjetpack.framework.network.model
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
 
 data class TvShowDetailResponse (
     @SerializedName("backdrop_path")

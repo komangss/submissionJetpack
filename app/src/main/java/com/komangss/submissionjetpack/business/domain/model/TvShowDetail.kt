@@ -3,7 +3,6 @@ package com.komangss.submissionjetpack.business.domain.model
 import com.komangss.submissionjetpack.framework.network.model.Genres
 import com.komangss.submissionjetpack.framework.network.model.Network
 import com.komangss.submissionjetpack.framework.network.model.SpokenLanguage
-import java.util.*
 
 data class TvShowDetail (
     val backdropPath: String?,

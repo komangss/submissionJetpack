@@ -16,7 +16,6 @@ import com.komangss.submissionjetpack.ui.Utils
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity.Companion.EXTRA_TV_SHOW_ID
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
-import kotlinx.android.synthetic.main.activity_tv_show_detail.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
