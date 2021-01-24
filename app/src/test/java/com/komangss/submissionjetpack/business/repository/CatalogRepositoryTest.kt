@@ -6,6 +6,7 @@ import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalData
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
+import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
@@ -31,11 +32,13 @@ class CatalogRepositoryTest {
     private val catalogRemoteDataSource = mock(CatalogRemoteDataSource::class.java)
     private val catalogLocalDataSource = mock(CatalogLocalDataSource::class.java)
     private val catalogMovieMapper = CatalogMovieMapper()
+    private val catalogTvShowMapper = CatalogTvShowMapper()
 
     private val catalogRepository = FakeCatalogRepository(
         catalogRemoteDataSource,
         catalogLocalDataSource,
-        catalogMovieMapper
+        catalogMovieMapper,
+        catalogTvShowMapper
     )
 
     private val movieDataGenerator = MovieDataGenerator()
@@ -65,6 +68,7 @@ class CatalogRepositoryTest {
             verify(catalogLocalDataSource).getAllMovies()
             Assert.assertNotNull(movieListResult)
             Assert.assertEquals(dummyMovieResult, movieListResult)
+
         }
 
 

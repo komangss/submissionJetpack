@@ -1,16 +1,22 @@
 package com.komangss.submissionjetpack.ui.tvshow.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import com.komangss.submissionjetpack.business.domain.model.TvShow
+import com.komangss.submissionjetpack.business.domain.model.TvShowDetail
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
+import com.komangss.submissionjetpack.utils.MainCoroutineRule
+import com.komangss.submissionjetpack.vo.Resource
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
 
 class TvShowDetailViewModelTest {
 
@@ -18,38 +24,40 @@ class TvShowDetailViewModelTest {
     @JvmField
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel : TvShowDetailViewModel
-    private lateinit var dummyTvShow : TvShow
-    private val catalogRepository = Mockito.mock(CatalogRepository::class.java)
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
+    @ExperimentalCoroutinesApi
+    private fun MainCoroutineRule.runBlockingTest(block: suspend () -> Unit) =
+        this.testDispatcher.runBlockingTest {
+            block()
+        }
+
+    private lateinit var viewModel: TvShowDetailViewModel
+    private lateinit var dummyTvShow: TvShowDetail
 
     @Before
     fun setUp() {
-        viewModel = TvShowDetailViewModel(catalogRepository)
-        dummyTvShow = DomainModelDataGenerator.generateDummyTvShows()[0]
+        dummyTvShow = DomainModelDataGenerator.getTvShowById()
     }
 
-    @Suppress("UNCHECKED_CAST")
+    @ExperimentalCoroutinesApi
     @Test
     fun detailTvShow() {
-        val mutableTvShow = MutableLiveData<TvShow>()
-        mutableTvShow.value = DomainModelDataGenerator.getTvShowById(dummyTvShow.id)
-        Mockito.`when`(catalogRepository.getTvShowById(dummyTvShow.id)).thenReturn(mutableTvShow)
-        val observer: Observer<TvShow> = Mockito.mock(Observer::class.java) as Observer<TvShow>
-        viewModel.getTvShowById(dummyTvShow.id).observeForever(observer)
-        Mockito.verify(catalogRepository).getTvShowById(dummyTvShow.id)
-        Assert.assertEquals(dummyTvShow.id, viewModel.getTvShowById(dummyTvShow.id).value?.id)
-        Assert.assertEquals(dummyTvShow.title, viewModel.getTvShowById(dummyTvShow.id).value?.title)
-        Assert.assertEquals(
-            dummyTvShow.description,
-            viewModel.getTvShowById(dummyTvShow.id).value?.description
-        )
-        Assert.assertEquals(
-            dummyTvShow.image,
-            viewModel.getTvShowById(dummyTvShow.id).value?.image
-        )
-        Assert.assertEquals(
-            dummyTvShow.releaseDate,
-            viewModel.getTvShowById(dummyTvShow.id).value?.releaseDate
-        )
+        mainCoroutineRule.runBlockingTest {
+            val dummyTvShowResult = flowOf(Resource.Success(dummyTvShow))
+
+            val repo = mock<CatalogRepository> {
+                onBlocking { getTvShowById(dummyTvShow.id!!) } doReturn dummyTvShowResult
+            }
+
+            viewModel = TvShowDetailViewModel(repo)
+
+            Assert.assertEquals(
+                dummyTvShowResult.first(),
+                viewModel.detailTvShow(dummyTvShow.id!!).getOrAwaitValue()
+            )
+        }
     }
 }

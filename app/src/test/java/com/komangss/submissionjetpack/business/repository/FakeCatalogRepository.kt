@@ -1,65 +1,145 @@
 package com.komangss.submissionjetpack.business.repository
 
-import androidx.lifecycle.LiveData
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
+import com.komangss.submissionjetpack.business.domain.model.MovieDetail
+import com.komangss.submissionjetpack.business.domain.model.TvShow
+import com.komangss.submissionjetpack.business.domain.model.TvShowDetail
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.MapperInterface
+import com.komangss.submissionjetpack.framework.network.model.MovieDetailResponse
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
-import com.komangss.submissionjetpack.utils.networkBoundResourceNoResultInProgress
+import com.komangss.submissionjetpack.framework.network.model.TvShowDetailResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
+import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
+import com.komangss.submissionjetpack.framework.network.utils.networkBoundResource
+import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 
 class FakeCatalogRepository
 constructor(
-    private val catalogRemoteDataSource : CatalogRemoteDataSource,
+    private val catalogRemoteDataSource: CatalogRemoteDataSource,
     private val catalogLocalDataSource: CatalogLocalDataSource,
-    private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>
+    private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
+    private val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
 ) : CatalogDataSource {
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun getAllMovies(): Flow<Resource<List<Movie>>> {
-        return networkBoundResourceNoResultInProgress(
+        return networkBoundResource(
             fetchFromLocal = { catalogLocalDataSource.getAllMovies() },
-            shouldFetchFromRemote = { it == null},
-            fetchFromRemote = { catalogRemoteDataSource.getAllMovies()},
+            shouldFetchFromRemote = { it === null },
+            fetchFromRemote = { catalogRemoteDataSource.getAllMovies() },
             processRemoteResponse = { },
             saveRemoteData = {
                 catalogLocalDataSource.insertMovies(catalogMovieMapper.responsesToEntities(it.results))
             },
-            mapFromCache = {catalogMovieMapper.entitiesToDomains(it)}
+            mapFromCache = { catalogMovieMapper.entitiesToDomains(it) }
         )
     }
 
-    override fun getAllTvShows(): LiveData<List<TvShow>> {
-        val tvShowResults = MutableLiveData<List<TvShow>>()
-        catalogRemoteDataSource.getAllTvShows {
-            tvShowResults.postValue(
-                networkMapper.tvShowResponseListToDomain(it)
-            )
-        }
-        return tvShowResults
+    @InternalCoroutinesApi
+    @ExperimentalCoroutinesApi
+    override suspend fun getAllTvShows(): Flow<Resource<List<TvShow>>> {
+        return networkBoundResource(
+            fetchFromRemote = { catalogRemoteDataSource.getAllTvShows() },
+            shouldFetchFromRemote = { it === null },
+            fetchFromLocal = { catalogLocalDataSource.getAllTvShows() },
+            processRemoteResponse = {},
+            saveRemoteData = {
+                catalogLocalDataSource.insertTvShows(catalogTvShowMapper.responsesToEntities(it.results))
+            },
+            mapFromCache = { catalogTvShowMapper.entitiesToDomains(it) }
+        )
     }
 
-    override fun getMovieById(id : Int) : MutableLiveData<Movie> {
-        val movieResult = MutableLiveData<Movie>()
-        catalogRemoteDataSource.getMovieById(id) {
-            movieResult.postValue(networkMapper.movieResponseToDomain(it))
+    @ExperimentalCoroutinesApi
+    override suspend fun getMovieById(id: Int): Flow<Resource<MovieDetail>> = flow {
+        EspressoIdlingResources.increment()
+        catalogRemoteDataSource.getMovieById(id).collect {
+            when (it) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(movieDetailResponseToDomain(it.value)))
+                    EspressoIdlingResources.decrement()
+                }
+                is ApiResponse.GenericError -> {
+                    emit(Resource.Error(it.code, it.error))
+                    EspressoIdlingResources.decrement()
+                }
+                ApiResponse.NetworkError -> {
+                    emit(Resource.Error())
+                    EspressoIdlingResources.decrement()
+                }
+            }
         }
-        return movieResult
     }
 
-    override fun getTvShowById(id: Int): LiveData<TvShow> {
-        val tvShowResult = MutableLiveData<TvShow>()
-        catalogRemoteDataSource.getTvShowById(id) {
-            tvShowResult.postValue(networkMapper.tvShowResponseToDomain(it))
+    @ExperimentalCoroutinesApi
+    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShowDetail>> = flow {
+        catalogRemoteDataSource.getTvShowById(id).collect {
+            EspressoIdlingResources.increment()
+            when (it) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(tvShowDetailResponseToDomain(it.value)))
+                }
+                is ApiResponse.GenericError -> {
+                    emit(Resource.Error(it.code, it.error))
+                    EspressoIdlingResources.decrement()
+                }
+                ApiResponse.NetworkError -> {
+                    emit(Resource.Error())
+                    EspressoIdlingResources.decrement()
+                }
+            }
         }
-        return tvShowResult
+    }
+
+    private fun tvShowDetailResponseToDomain(response: TvShowDetailResponse): TvShowDetail {
+        return TvShowDetail(
+            response.backdropPath,
+            response.firstAirDate,
+            response.genres,
+            response.homepage,
+            response.id,
+            response.name,
+            response.networks,
+            response.description,
+            response.popularity,
+            response.posterPath,
+            response.spokenLanguages,
+            response.status,
+            response.voteAverage,
+            response.voteCount
+        )
+    }
+
+    private fun movieDetailResponseToDomain(response: MovieDetailResponse): MovieDetail {
+        return MovieDetail(
+            adult = response.adult,
+            posterPath = response.posterPath,
+            backdropPath = response.backdropPath,
+            genres = response.genres,
+            id = response.id,
+            originalLanguage = response.originalLanguage,
+            description = response.description,
+            popularity = response.popularity,
+            releaseDate = response.releaseDate,
+            status = response.status,
+            tagLine = response.tagLine,
+            title = response.title,
+            video = response.video,
+            voteAverage = response.voteAverage,
+            voteCount = response.voteCount
+        )
     }
 }
