@@ -12,7 +12,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class MovieDetailViewModel (private val catalogRepository: CatalogRepository) : ViewModel() {
     @ExperimentalCoroutinesApi
     fun detailMovie(id : Int) : LiveData<Resource<MovieDetail>> = liveData {
-        emit(Resource.InProgress)
         emitSource(catalogRepository.getMovieById(id).asLiveData())
     }
 }

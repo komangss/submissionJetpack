@@ -1,15 +1,18 @@
 package com.komangss.submissionjetpack.ui.tvshow.detail
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
+import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.android.synthetic.main.activity_tv_show_detail.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class TvShowDetailActivity : AppCompatActivity() {
+    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tv_show_detail)
@@ -22,16 +25,44 @@ class TvShowDetailActivity : AppCompatActivity() {
         val viewModel =
             ViewModelProvider(this, factory)[TvShowDetailViewModel::class.java]
 
-//        viewModel.getTvShowById(tvShowId).observe(this, {
-//            tv_activity_tv_show_detail_tv_show_title.text = it.title
-//            tv_activity_tv_show_detail_tv_show_description.text = it.description
-//            tv_activity_tv_show_detail_tv_show_rating_tv_show.text = it.rating
-//            Glide.with(this@TvShowDetailActivity)
-//                .load(resources.getIdentifier(it.image, "drawable", BuildConfig.APPLICATION_ID))
-//                .into(image_view_activity_tv_show_detail_tv_show_poster)
-//
-//            supportActionBar?.title = it.title
-//        })
+        viewModel.detailTvShow(tvShowId).observe(this, {
+            when (it) {
+                is Resource.Success -> {
+                    tv_activity_tv_show_detail_tv_show_title.text = it.data.name
+                    tv_activity_tv_show_detail_tv_show_description.text = it.data.description
+                    val voteAverage = it.data.voteAverage?.div(2)?.toFloat()
+                    if (voteAverage != null) {
+                        item_tv_show_tvshow_rating_bar.rating = voteAverage
+                    }
+                    supportActionBar?.title = it.data.name
+
+                    Glide.with(this@TvShowDetailActivity)
+                        .load("https://image.tmdb.org/t/p/original/${it.data.posterPath}")
+                        .into(image_view_activity_tv_show_detail_tv_show_poster)
+
+                    Glide.with(this@TvShowDetailActivity)
+                        .load("https://image.tmdb.org/t/p/original/${it.data.backdropPath}")
+                        .fitCenter()
+                        .centerCrop()
+                        .into(image_view_activity_tv_show_detail_tv_show_backdrop)
+
+                }
+                is Resource.Error -> {
+                    Toast.makeText(
+                        this@TvShowDetailActivity,
+                        it.error?.errorDescription,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                Resource.InProgress -> {
+                    Toast.makeText(
+                        this@TvShowDetailActivity,
+                        "Load From Network...",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        })
     }
 
     companion object {

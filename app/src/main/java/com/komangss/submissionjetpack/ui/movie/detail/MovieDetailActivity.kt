@@ -1,11 +1,10 @@
 package com.komangss.submissionjetpack.ui.movie.detail
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.komangss.submissionjetpack.BuildConfig
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
