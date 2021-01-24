@@ -41,6 +41,7 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
             with(itemView) {
                 item_movie_tvshow_tv_item_title.text = tvShow.name
                 item_movie_tvshow_tv_description.text = tvShow.description
+                item_movie_tvshow_rating_bar.rating = tvShow.voteAverage.toFloat() / 2
 
                 Glide.with(context)
                     .load("https://image.tmdb.org/t/p/original/${tvShow.posterUrlPath}")
