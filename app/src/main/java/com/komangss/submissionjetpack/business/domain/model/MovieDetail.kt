@@ -1,7 +1,6 @@
 package com.komangss.submissionjetpack.business.domain.model
 
-import com.google.gson.annotations.SerializedName
-import com.komangss.submissionjetpack.framework.network.model.*
+import com.komangss.submissionjetpack.framework.network.model.Genres
 
 data class MovieDetail(
     val adult : Boolean?,
