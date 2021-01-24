@@ -14,10 +14,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import com.komangss.submissionjetpack.business.domain.model.TvShow
+import com.komangss.submissionjetpack.business.domain.model.TvShowDetail
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.network.model.MovieDetailResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowDetailResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
+import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
@@ -78,18 +81,68 @@ private constructor(
 
     @ExperimentalCoroutinesApi
     override suspend fun getMovieById(id: Int): Flow<Resource<MovieDetail>> = flow {
+        emit(Resource.InProgress)
+        EspressoIdlingResources.increment()
         catalogRemoteDataSource.getMovieById(id).collect {
             when (it) {
                 is ApiResponse.Success -> {
                     emit(Resource.Success(movieDetailResponseToDomain(it.value)))
+                    EspressoIdlingResources.decrement()
                 }
-                is ApiResponse.GenericError -> emit(Resource.Error(it.code, it.error))
-                ApiResponse.NetworkError -> emit(Resource.Error())
+                is ApiResponse.GenericError -> {
+                    emit(Resource.Error(it.code, it.error))
+                    EspressoIdlingResources.decrement()
+                }
+                ApiResponse.NetworkError -> {
+                    emit(Resource.Error())
+                    EspressoIdlingResources.decrement()
+                }
             }
         }
     }
 
-    private fun movieDetailResponseToDomain(response : MovieDetailResponse) : MovieDetail {
+    @ExperimentalCoroutinesApi
+    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShowDetail>> = flow {
+        emit(Resource.InProgress)
+        EspressoIdlingResources.increment()
+        catalogRemoteDataSource.getTvShowById(id).collect {
+            when (it) {
+                is ApiResponse.Success -> {
+                    emit(Resource.Success(tvShowDetailResponseToDomain(it.value)))
+                    EspressoIdlingResources.decrement()
+                }
+                is ApiResponse.GenericError -> {
+                    emit(Resource.Error(it.code, it.error))
+                    EspressoIdlingResources.decrement()
+                }
+                ApiResponse.NetworkError -> {
+                    emit(Resource.Error())
+                    EspressoIdlingResources.decrement()
+                }
+            }
+        }
+    }
+
+    private fun tvShowDetailResponseToDomain(response: TvShowDetailResponse): TvShowDetail {
+        return TvShowDetail(
+            response.backdropPath,
+            response.firstAirDate,
+            response.genres,
+            response.homepage,
+            response.id,
+            response.name,
+            response.networks,
+            response.description,
+            response.popularity,
+            response.posterPath,
+            response.spokenLanguages,
+            response.status,
+            response.voteAverage,
+            response.voteCount
+        )
+    }
+
+    private fun movieDetailResponseToDomain(response: MovieDetailResponse): MovieDetail {
         return MovieDetail(
             adult = response.adult,
             posterPath = response.posterPath,
@@ -108,13 +161,4 @@ private constructor(
             voteCount = response.voteCount
         )
     }
-
-
-//    override fun getTvShowById(id: Int): LiveData<TvShow> {
-//        val tvShowResult = MutableLiveData<TvShow>()
-//        catalogRemoteDataSource.getTvShowById(id) {
-//            tvShowResult.postValue(networkMapper.tvShowResponseToDomain(it))
-//        }
-//        return tvShowResult
-//    }
 }
