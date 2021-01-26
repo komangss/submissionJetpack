@@ -3,7 +3,7 @@ package com.komangss.submissionjetpack.ui.movie.detail
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.komangss.submissionjetpack.business.domain.model.MovieDetail
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
-import com.komangss.submissionjetpack.utils.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.vo.Resource
