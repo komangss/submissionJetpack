@@ -42,7 +42,7 @@ class TvShowDetailActivityTest {
         )
 
         val mapper = CatalogTvShowMapper()
-        val entities = mapper.responsesToEntities(tvShowResultResponse.results)
+        val entities = mapper.responsesToEntities(tvShowResultResponse.results ?: listOf())
 
         dummyTvShow = mapper.entitiesToDomains(entities)[0]
 

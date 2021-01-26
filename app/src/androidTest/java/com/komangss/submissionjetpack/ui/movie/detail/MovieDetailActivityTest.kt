@@ -44,7 +44,7 @@ class MovieDetailActivityTest {
         )
 
         val mapper = CatalogMovieMapper()
-        val entities = mapper.responsesToEntities(movieResultResponse.results)
+        val entities = mapper.responsesToEntities(movieResultResponse.results ?: listOf())
 
         dummyMovie = mapper.entitiesToDomains(entities)[0]
 
