@@ -54,11 +54,15 @@ private constructor(
     override suspend fun getAllMovies(): Flow<Resource<List<Movie>>> {
         return networkBoundResource(
             fetchFromLocal = { catalogLocalDataSource.getAllMovies() },
-            shouldFetchFromRemote = { it === null },
+            shouldFetchFromRemote = { it?.isEmpty() == true },
             fetchFromRemote = { catalogRemoteDataSource.getAllMovies() },
             processRemoteResponse = { },
-            saveRemoteData = {
-                catalogLocalDataSource.insertMovies(catalogMovieMapper.responsesToEntities(it.results))
+            saveRemoteData = { movieResultResponse ->
+                movieResultResponse.results?.let { movieResponse ->
+                    catalogMovieMapper.responsesToEntities(
+                        movieResponse
+                    )
+                }?.let { movieEntities -> catalogLocalDataSource.insertMovies(movieEntities) }
             },
             mapFromCache = { catalogMovieMapper.entitiesToDomains(it) }
         )
@@ -69,11 +73,15 @@ private constructor(
     override suspend fun getAllTvShows(): Flow<Resource<List<TvShow>>> {
         return networkBoundResource(
             fetchFromRemote = { catalogRemoteDataSource.getAllTvShows() },
-            shouldFetchFromRemote = { it === null },
+            shouldFetchFromRemote = { it?.isEmpty() == true },
             fetchFromLocal = { catalogLocalDataSource.getAllTvShows() },
             processRemoteResponse = {},
-            saveRemoteData = {
-                catalogLocalDataSource.insertTvShows(catalogTvShowMapper.responsesToEntities(it.results))
+            saveRemoteData = { tvShowResultResponse ->
+                tvShowResultResponse.results?.let { tvShowResponse ->
+                    catalogTvShowMapper.responsesToEntities(
+                        tvShowResponse
+                    )
+                }?.let { tvShowEntities -> catalogLocalDataSource.insertTvShows(tvShowEntities) }
             },
             mapFromCache = { catalogTvShowMapper.entitiesToDomains(it) }
         )
