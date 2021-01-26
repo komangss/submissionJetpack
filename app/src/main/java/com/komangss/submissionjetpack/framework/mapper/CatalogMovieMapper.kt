@@ -8,19 +8,19 @@ import java.util.regex.Pattern
 class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
     override fun responseToEntity(response: MovieResponse): MovieEntity {
         return MovieEntity(
-            popularity = response.popularity,
-            voteCount = response.voteCount,
-            isVideo = response.isVideo,
-            posterUrlPath = response.posterUrlPath,
-            id = response.id,
-            backdropUrlPath = response.backdropUrlPath,
-            originalLanguage = response.originalLanguage,
-            originalTitle = response.originalTitle,
+            popularity = response.popularity ?: 0.0,
+            voteCount = response.voteCount ?: -1,
+            isVideo = response.isVideo ?: false,
+            posterUrlPath = response.posterUrlPath ?: "",
+            id = response.id ?: -1,
+            backdropUrlPath = response.backdropUrlPath ?: "",
+            originalLanguage = response.originalLanguage ?: "",
+            originalTitle = response.originalTitle ?: "",
             genreIds = mapGenreIdsToEntity(response.genreIds),
-            title = response.title,
-            voteAverage = response.voteAverage,
-            description = response.description,
-            releaseDate = response.releaseDate
+            title = response.title ?: "",
+            voteAverage = response.voteAverage ?: -1.0,
+            description = response.description ?: "",
+            releaseDate = response.releaseDate ?: ""
         )
     }
 

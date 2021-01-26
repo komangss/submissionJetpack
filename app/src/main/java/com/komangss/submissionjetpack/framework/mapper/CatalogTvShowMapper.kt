@@ -8,19 +8,19 @@ import java.util.regex.Pattern
 class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse> {
     override fun responseToEntity(response: TvShowResponse): TvShowEntity {
         return TvShowEntity(
-            backdropUrlPath = response.backdropUrlPath,
-            releaseDate = response.releaseDate,
+            backdropUrlPath = response.backdropUrlPath ?: "",
+            releaseDate = response.releaseDate ?: "",
             genreIds = mapGenreIdsToEntity(response.genreIds),
-            id = response.id,
-            name = response.name,
+            id = response.id ?: -1,
+            name = response.name ?: "",
             originalCountry = response.originalCountry.toString(),
-            originalLanguage = response.originalLanguage,
-            originalName = response.originalName,
-            description = response.description,
-            popularity = response.popularity,
-            posterUrlPath = response.posterUrlPath,
-            voteAverage = response.voteAverage,
-            voteCount = response.voteCount
+            originalLanguage = response.originalLanguage ?: "",
+            originalName = response.originalName ?: "",
+            description = response.description ?: "",
+            popularity = response.popularity ?: -1.0,
+            posterUrlPath = response.posterUrlPath ?: "",
+            voteAverage = response.voteAverage ?: -1.0,
+            voteCount = response.voteCount ?: -1
         )
     }
 
