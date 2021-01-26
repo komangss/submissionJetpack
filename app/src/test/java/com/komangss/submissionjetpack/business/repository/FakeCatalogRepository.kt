@@ -41,8 +41,12 @@ constructor(
             shouldFetchFromRemote = { it === null },
             fetchFromRemote = { catalogRemoteDataSource.getAllMovies() },
             processRemoteResponse = { },
-            saveRemoteData = {
-                catalogLocalDataSource.insertMovies(catalogMovieMapper.responsesToEntities(it.results))
+            saveRemoteData = { movieResultResponse ->
+                movieResultResponse.results?.let { movieResponse ->
+                    catalogMovieMapper.responsesToEntities(
+                        movieResponse
+                    )
+                }?.let { movieEntities -> catalogLocalDataSource.insertMovies(movieEntities) }
             },
             mapFromCache = { catalogMovieMapper.entitiesToDomains(it) }
         )
@@ -56,8 +60,12 @@ constructor(
             shouldFetchFromRemote = { it === null },
             fetchFromLocal = { catalogLocalDataSource.getAllTvShows() },
             processRemoteResponse = {},
-            saveRemoteData = {
-                catalogLocalDataSource.insertTvShows(catalogTvShowMapper.responsesToEntities(it.results))
+            saveRemoteData = { tvShowResultResponse ->
+                tvShowResultResponse.results?.let { tvShowResponse ->
+                    catalogTvShowMapper.responsesToEntities(
+                        tvShowResponse
+                    )
+                }?.let { tvShowEntities -> catalogLocalDataSource.insertTvShows(tvShowEntities) }
             },
             mapFromCache = { catalogTvShowMapper.entitiesToDomains(it) }
         )
@@ -65,20 +73,17 @@ constructor(
 
     @ExperimentalCoroutinesApi
     override suspend fun getMovieById(id: Int): Flow<Resource<MovieDetail>> = flow {
-        EspressoIdlingResources.increment()
         catalogRemoteDataSource.getMovieById(id).collect {
+            emit(Resource.InProgress)
             when (it) {
                 is ApiResponse.Success -> {
                     emit(Resource.Success(movieDetailResponseToDomain(it.value)))
-                    EspressoIdlingResources.decrement()
                 }
                 is ApiResponse.GenericError -> {
                     emit(Resource.Error(it.code, it.error))
-                    EspressoIdlingResources.decrement()
                 }
                 ApiResponse.NetworkError -> {
                     emit(Resource.Error())
-                    EspressoIdlingResources.decrement()
                 }
             }
         }
@@ -87,18 +92,16 @@ constructor(
     @ExperimentalCoroutinesApi
     override suspend fun getTvShowById(id: Int): Flow<Resource<TvShowDetail>> = flow {
         catalogRemoteDataSource.getTvShowById(id).collect {
-            EspressoIdlingResources.increment()
+            emit(Resource.InProgress)
             when (it) {
                 is ApiResponse.Success -> {
                     emit(Resource.Success(tvShowDetailResponseToDomain(it.value)))
                 }
                 is ApiResponse.GenericError -> {
                     emit(Resource.Error(it.code, it.error))
-                    EspressoIdlingResources.decrement()
                 }
                 ApiResponse.NetworkError -> {
                     emit(Resource.Error())
-                    EspressoIdlingResources.decrement()
                 }
             }
         }
