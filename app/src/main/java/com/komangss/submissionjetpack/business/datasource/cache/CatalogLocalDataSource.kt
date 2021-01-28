@@ -29,4 +29,8 @@ class CatalogLocalDataSource private constructor(
     fun getAllTvShows(): Flow<List<TvShowEntity>> = catalogDao.getTvShows()
 
     suspend fun insertTvShows(tvShows: List<TvShowEntity>) = catalogDao.insertTvShows(tvShows)
+
+    suspend fun getMovieById(id : Int) = catalogDao.getMovieById(id)
+
+    suspend fun getTvShowById(id : Int) = catalogDao.getTvShowById(id)
 }
