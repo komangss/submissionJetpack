@@ -59,6 +59,14 @@ class TvShowDetailActivityTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_title))
             .check(ViewAssertions.matches(ViewMatchers.withText(dummyTvShow.name)))
+        Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_description))
+            .check(ViewAssertions.matches(ViewMatchers.withText(dummyTvShow.description)))
+
+        val voteAverageText = "${dummyTvShow.voteAverage.div(2).toFloat()} / 5"
+        Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_rating))
+            .check(ViewAssertions.matches(ViewMatchers.withText(voteAverageText)))
+
+
     }
 
     @After
