@@ -61,10 +61,19 @@
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:isIndicator="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.06"
+                app:layout_constraintStart_toEndOf="@+id/tv_activity_tv_show_detail_tv_show_rating"
+                app:layout_constraintTop_toBottomOf="@+id/tv_activity_tv_show_detail_tv_show_title" />
+
+            <TextView
+                android:id="@+id/tv_activity_tv_show_detail_tv_show_rating"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:text="5 / 5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_activity_tv_show_detail_tv_show_title"
-                android:isIndicator="true" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_activity_tv_show_detail_tv_show_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
