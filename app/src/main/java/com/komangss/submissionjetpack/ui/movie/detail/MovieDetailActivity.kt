@@ -32,17 +32,15 @@ class MovieDetailActivity : AppCompatActivity() {
                     tv_activity_movie_detail_movie_title.text = it.data.title
                     tv_activity_movie_detail_movie_description.text = it.data.description
                     val voteAverage = it.data.voteAverage?.div(2)?.toFloat()
-                    if (voteAverage != null) {
-                        item_movie_tvshow_rating_bar.rating = voteAverage
-                        tv_activity_movie_detail_movie_rating.text = "$voteAverage / 5"
-                    }
+                    item_movie_tvshow_rating_bar.rating = voteAverage
+                    tv_activity_movie_detail_movie_rating.text = "$voteAverage / 5"
 
                     Glide.with(this@MovieDetailActivity)
-                        .load("https://image.tmdb.org/t/p/original/${it.data.posterPath}")
+                        .load("https://image.tmdb.org/t/p/original/${it.data.posterUrlPath}")
                         .into(image_view_activity_movie_detail_movie_poster)
 
                     Glide.with(this@MovieDetailActivity)
-                        .load("https://image.tmdb.org/t/p/original/${it.data.backdropPath}")
+                        .load("https://image.tmdb.org/t/p/original/${it.data.backdropUrlPath}")
                         .fitCenter()
                         .centerCrop()
                         .into(image_view_activity_movie_detail_movie_backdrop)
