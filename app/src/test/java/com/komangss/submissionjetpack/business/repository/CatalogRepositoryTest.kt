@@ -14,6 +14,7 @@ import com.komangss.submissionjetpack.utils.datagenerator.ResponseDataGenerator.
 import com.komangss.submissionjetpack.utils.datagenerator.ResponseDataGenerator.provideDummyTvShowApiResponseSuccess
 import com.komangss.submissionjetpack.utils.datagenerator.ResponseDataGenerator.tvShowDetailResponseToDomain
 import com.komangss.submissionjetpack.vo.Resource
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -69,6 +70,8 @@ class CatalogRepositoryTest {
 
             val result = catalogRepository.getAllMovies().toList()
 
+            verify(catalogLocalDataSource).getAllMovies()
+
             Assert.assertEquals(result, listOf(Resource.InProgress, dummyMoviesResult))
 
         }
@@ -89,6 +92,8 @@ class CatalogRepositoryTest {
 
             val result = catalogRepository.getAllTvShows().toList()
 
+            verify(catalogLocalDataSource).getAllTvShows()
+
             Assert.assertEquals(result, listOf(Resource.InProgress, dummyTvShowsResult))
 
         }
@@ -100,6 +105,8 @@ class CatalogRepositoryTest {
     fun getMovieById() =
         mainCoroutineRule.runBlockingTest {
 
+            val id = provideDummyMovieApiResponseSuccess().value.id ?: 0
+
             val methodResult =
                 Resource.Success(
                     movieDetailResponseToDomain(provideDummyMovieApiResponseSuccess().value)
@@ -109,18 +116,11 @@ class CatalogRepositoryTest {
                 provideDummyMovieApiResponseSuccess()
             )
 
-            `when`(provideDummyMovieApiResponseSuccess().value.id?.let { id ->
-                catalogRemoteDataSource.getMovieById(
-                    id
-                )
-            })
+            `when`(catalogRemoteDataSource.getMovieById(id))
                 .thenReturn(movieApiResponseResultSuccess)
 
-            val result = provideDummyMovieApiResponseSuccess().value.id?.let { id ->
-                catalogRepository.getMovieById(
-                    id
-                ).toList()
-            }
+            val result = catalogRepository.getMovieById(id).toList()
+            verify(catalogRemoteDataSource).getMovieById(id)
 
             Assert.assertEquals(result, listOf(Resource.InProgress, methodResult))
 
@@ -131,32 +131,24 @@ class CatalogRepositoryTest {
     @ExperimentalCoroutinesApi
     @Test
     fun getTvShowById() =
-    mainCoroutineRule.runBlockingTest {
+        mainCoroutineRule.runBlockingTest {
+            val id = provideDummyTvShowApiResponseSuccess().value.id ?: 0
 
-        val methodResult =
-            Resource.Success(
-                tvShowDetailResponseToDomain(provideDummyTvShowApiResponseSuccess().value)
+            val methodResult =
+                Resource.Success(
+                    tvShowDetailResponseToDomain(provideDummyTvShowApiResponseSuccess().value)
+                )
+
+            val tvShowApiResponseResultSuccess = flowOf(
+                provideDummyTvShowApiResponseSuccess()
             )
 
-        val tvShowApiResponseResultSuccess = flowOf(
-            provideDummyTvShowApiResponseSuccess()
-        )
+            `when`(catalogRemoteDataSource.getTvShowById(id))
+                .thenReturn(tvShowApiResponseResultSuccess)
 
-        `when`(provideDummyTvShowApiResponseSuccess().value.id?.let { id ->
-            catalogRemoteDataSource.getTvShowById(
-                id
-            )
-        })
-            .thenReturn(tvShowApiResponseResultSuccess)
+            val result = catalogRepository.getTvShowById(id).toList()
+            verify(catalogRemoteDataSource).getTvShowById(id)
 
-        val result = provideDummyTvShowApiResponseSuccess().value.id?.let { id ->
-            catalogRepository.getTvShowById(
-                id
-            ).toList()
+            Assert.assertEquals(result, listOf(Resource.InProgress, methodResult))
         }
-
-        Assert.assertEquals(result, listOf(Resource.InProgress, methodResult))
-
-
-    }
 }
