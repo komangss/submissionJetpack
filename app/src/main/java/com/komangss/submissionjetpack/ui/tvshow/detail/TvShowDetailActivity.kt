@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.android.synthetic.main.activity_tv_show_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
 class TvShowDetailActivity : AppCompatActivity() {
     @ExperimentalCoroutinesApi
@@ -28,22 +30,29 @@ class TvShowDetailActivity : AppCompatActivity() {
         viewModel.detailTvShow(tvShowId).observe(this, {
             when (it) {
                 is Resource.Success -> {
-                    tv_activity_tv_show_detail_tv_show_title.text = it.data.name
-                    tv_activity_tv_show_detail_tv_show_description.text = it.data.description
-                    val voteAverage = it.data.voteAverage.div(2).toFloat()
+                    val tvShow = it.data
+                    tv_activity_tv_show_detail_tv_show_title.text = tvShow.name
+                    tv_activity_tv_show_detail_tv_show_description.text = tvShow.description
+                    val voteAverage = tvShow.voteAverage.div(2).toFloat()
                     item_tv_show_tvshow_rating_bar.rating = voteAverage
                     tv_activity_tv_show_detail_tv_show_rating.text = "$voteAverage / 5"
-                    supportActionBar?.title = it.data.name
+                    supportActionBar?.title = tvShow.name
 
                     Glide.with(this@TvShowDetailActivity)
-                        .load("https://image.tmdb.org/t/p/original/${it.data.posterUrlPath}")
+                        .load("https://image.tmdb.org/t/p/original/${tvShow.posterUrlPath}")
                         .into(image_view_activity_tv_show_detail_tv_show_poster)
 
                     Glide.with(this@TvShowDetailActivity)
-                        .load("https://image.tmdb.org/t/p/original/${it.data.backdropUrlPath}")
+                        .load("https://image.tmdb.org/t/p/original/${tvShow.backdropUrlPath}")
                         .fitCenter()
                         .centerCrop()
                         .into(image_view_activity_tv_show_detail_tv_show_backdrop)
+
+                    if(tvShow.isFavorite) {
+                        fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_favorite)
+                    } else {
+                        fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
+                    }
 
                 }
                 is Resource.Error -> {
@@ -62,6 +71,7 @@ class TvShowDetailActivity : AppCompatActivity() {
                 }
             }
         })
+
     }
 
     companion object {
