@@ -30,19 +30,17 @@ class TvShowDetailActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     tv_activity_tv_show_detail_tv_show_title.text = it.data.name
                     tv_activity_tv_show_detail_tv_show_description.text = it.data.description
-                    val voteAverage = it.data.voteAverage?.div(2)?.toFloat()
-                    if (voteAverage != null) {
-                        item_tv_show_tvshow_rating_bar.rating = voteAverage
-                        tv_activity_tv_show_detail_tv_show_rating.text = "$voteAverage / 5"
-                    }
+                    val voteAverage = it.data.voteAverage.div(2).toFloat()
+                    item_tv_show_tvshow_rating_bar.rating = voteAverage
+                    tv_activity_tv_show_detail_tv_show_rating.text = "$voteAverage / 5"
                     supportActionBar?.title = it.data.name
 
                     Glide.with(this@TvShowDetailActivity)
-                        .load("https://image.tmdb.org/t/p/original/${it.data.posterPath}")
+                        .load("https://image.tmdb.org/t/p/original/${it.data.posterUrlPath}")
                         .into(image_view_activity_tv_show_detail_tv_show_poster)
 
                     Glide.with(this@TvShowDetailActivity)
-                        .load("https://image.tmdb.org/t/p/original/${it.data.backdropPath}")
+                        .load("https://image.tmdb.org/t/p/original/${it.data.backdropUrlPath}")
                         .fitCenter()
                         .centerCrop()
                         .into(image_view_activity_tv_show_detail_tv_show_backdrop)
