@@ -33,6 +33,7 @@ class TvShowDetailActivity : AppCompatActivity() {
                     val voteAverage = it.data.voteAverage?.div(2)?.toFloat()
                     if (voteAverage != null) {
                         item_tv_show_tvshow_rating_bar.rating = voteAverage
+                        tv_activity_tv_show_detail_tv_show_rating.text = "$voteAverage / 5"
                     }
                     supportActionBar?.title = it.data.name
 

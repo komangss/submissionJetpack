@@ -34,6 +34,7 @@ class MovieDetailActivity : AppCompatActivity() {
                     val voteAverage = it.data.voteAverage?.div(2)?.toFloat()
                     if (voteAverage != null) {
                         item_movie_tvshow_rating_bar.rating = voteAverage
+                        tv_activity_movie_detail_movie_rating.text = "$voteAverage / 5"
                     }
 
                     Glide.with(this@MovieDetailActivity)
