@@ -110,4 +110,12 @@ private constructor(
             EspressoIdlingResources.decrement()
         }
     }
+
+    override suspend fun setTvShowFavorite(tvShow: TvShow) {
+        catalogLocalDataSource.updateTvShowFavorite(tvShow.id, !tvShow.isFavorite)
+    }
+
+    override suspend fun setMovieFavorite(movie: Movie) {
+        catalogLocalDataSource.updateMovieFavorite(movie.id, !movie.isFavorite)
+    }
 }
