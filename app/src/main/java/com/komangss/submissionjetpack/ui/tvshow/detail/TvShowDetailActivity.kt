@@ -59,6 +59,19 @@ class TvShowDetailActivity : AppCompatActivity() {
 
                     fab_activity_tv_show_detail_favorite.setOnClickListener {
                         isFav = !isFav
+                        if (isFav) {
+                            Toast.makeText(
+                                this@TvShowDetailActivity,
+                                "Added to Favorite List",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                this@TvShowDetailActivity,
+                                "Removed From Favorite List",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                         setFavorite()
                         lifecycleScope.launch {
                             viewModel.setFavorite(tvShow)
@@ -85,7 +98,7 @@ class TvShowDetailActivity : AppCompatActivity() {
     }
 
     private fun setFavorite() {
-        if(isFav) {
+        if (isFav) {
             fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_favorite)
         } else {
             fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
