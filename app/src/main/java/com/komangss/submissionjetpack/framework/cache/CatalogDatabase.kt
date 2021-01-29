@@ -8,7 +8,7 @@ import com.komangss.submissionjetpack.framework.cache.dao.CatalogDao
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 
-@Database(entities = [MovieEntity::class, TvShowEntity::class], version = 1, exportSchema = false)
+@Database(entities = [MovieEntity::class, TvShowEntity::class], version = 2, exportSchema = false)
 abstract class CatalogDatabase : RoomDatabase() {
     abstract val catalogDao: CatalogDao
     companion object {
