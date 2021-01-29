@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.flow
 
 object EntityModelDataGenerator {
     fun dummyMovieEntities(): Flow<List<MovieEntity>> = flow {
-        emit(provideDummyMovieList())
+        emit(provideDummyMovieEntities())
     }
 
-    fun provideDummyMovieList(): ArrayList<MovieEntity> {
+    fun provideDummyMovieEntities(): ArrayList<MovieEntity> {
         val dummyMovieList: ArrayList<MovieEntity> = ArrayList()
         dummyMovieList.add(
             MovieEntity(
@@ -33,10 +33,10 @@ object EntityModelDataGenerator {
     }
 
     fun dummyTvShowEntities(): Flow<List<TvShowEntity>> = flow {
-        emit(provideDummyTvShowList())
+        emit(provideDummyTvShowEntities())
     }
 
-    private fun provideDummyTvShowList(): ArrayList<TvShowEntity> {
+    fun provideDummyTvShowEntities(): ArrayList<TvShowEntity> {
         val dummyTvShowList: ArrayList<TvShowEntity> = ArrayList()
         dummyTvShowList.add(
             TvShowEntity(
