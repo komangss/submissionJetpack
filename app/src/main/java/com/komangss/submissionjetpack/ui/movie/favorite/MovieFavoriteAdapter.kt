@@ -26,7 +26,7 @@ class MovieFavoriteAdapter :
         }
     }
 
-    class MovieFavoriteViewHolder(private val v: View) : RecyclerView.ViewHolder(v) {
+    inner class MovieFavoriteViewHolder(private val v: View) : RecyclerView.ViewHolder(v) {
         fun bind(movie: Movie?) {
             with(v) {
                 if (movie != null) {
@@ -54,7 +54,6 @@ class MovieFavoriteAdapter :
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.items_movie_and_tvshow, parent, false)
         )
-
 
     override fun onBindViewHolder(holder: MovieFavoriteViewHolder, position: Int) {
         holder.bind(getItem(position))

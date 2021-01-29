@@ -5,7 +5,6 @@ import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import kotlinx.coroutines.flow.Flow
 
-
 class CatalogLocalDataSource private constructor(
     private val catalogDao: CatalogDao
 ) {
