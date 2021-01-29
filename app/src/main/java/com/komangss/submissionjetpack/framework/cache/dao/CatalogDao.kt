@@ -33,10 +33,10 @@ interface CatalogDao {
     suspend fun getTvShowById(id : Int) : Flow<TvShowEntity?>
 
     @Query("SELECT * FROM movie_entity WHERE isFavorite = 0")
-    suspend fun getFavoriteMovies() : DataSource<Int, MovieEntity>
+    suspend fun getFavoriteMovies() : DataSource.Factory<Int, MovieEntity>
 
     @Query("SELECT * FROM tv_show_entity WHERE isFavorite = 0")
-    suspend fun getFavoriteTvShows() : DataSource<Int, TvShowEntity>
+    suspend fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
 
     @Query("UPDATE movie_entity SET isFavorite = :isFavorite WHERE id = :id")
     suspend fun updateMovieFavorite(id : Int, isFavorite : Boolean): LongArray
