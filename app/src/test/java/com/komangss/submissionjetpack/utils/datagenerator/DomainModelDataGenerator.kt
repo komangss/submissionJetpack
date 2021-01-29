@@ -21,7 +21,8 @@ object DomainModelDataGenerator {
                 title = "Wonder Woman 1984",
                 voteAverage = 7.1,
                 description = "Wonder Woman comes into conflict with the Soviet Union during the Cold War in the 1980s and finds a formidable foe by the name of the Cheetah.",
-                releaseDate = "2020-12-16"
+                releaseDate = "2020-12-16",
+                isFavorite = false
             )
 
         )
@@ -45,7 +46,8 @@ object DomainModelDataGenerator {
                 popularity = 345.772,
                 posterUrlPath = "/2IWouZK4gkgHhJa3oyYuSWfSqbG.jpg",
                 voteAverage = 7.8,
-                voteCount = 5734
+                voteCount = 5734,
+                isFavorite = false
             )
         )
         return result

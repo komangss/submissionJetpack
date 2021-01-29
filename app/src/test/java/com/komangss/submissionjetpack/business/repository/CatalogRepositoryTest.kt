@@ -9,6 +9,7 @@ import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
+import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyMovieList
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -101,26 +102,17 @@ class CatalogRepositoryTest {
     fun getMovieById() =
         mainCoroutineRule.runBlockingTest {
 
-//            val id = provideDummyMovieApiResponseSuccess().value.id ?: 0
-//
-//            val methodResult =
-//                Resource.Success(
-//                    movieDetailResponseToDomain(provideDummyMovieApiResponseSuccess().value)
-//                )
-//
-//            val movieApiResponseResultSuccess = flowOf(
-//                provideDummyMovieApiResponseSuccess()
-//            )
-//
-//            `when`(catalogRemoteDataSource.getMovieById(id))
-//                .thenReturn(movieApiResponseResultSuccess)
-//
-//            val result = catalogRepository.getMovieById(id).toList()
-//            verify(catalogRemoteDataSource).getMovieById(id)
-//
-//            Assert.assertEquals(result, listOf(Resource.InProgress, methodResult))
-//
+            val expectedMovieResult = catalogMovieMapper.entityToDomain(provideDummyMovieList()[0])
 
+            val id = provideDummyMovieList()[0].id
+
+            `when`(catalogLocalDataSource.getMovieById(id))
+                .thenReturn(provideDummyMovieList()[0])
+
+            val result = catalogRepository.getMovieById(id).toList()
+            verify(catalogLocalDataSource).getMovieById(id)
+
+            Assert.assertEquals(result, listOf(Resource.InProgress, Resource.Success(expectedMovieResult)))
         }
 
 

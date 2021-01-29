@@ -10,7 +10,7 @@ object EntityModelDataGenerator {
         emit(provideDummyMovieList())
     }
 
-    private fun provideDummyMovieList(): ArrayList<MovieEntity> {
+    fun provideDummyMovieList(): ArrayList<MovieEntity> {
         val dummyMovieList: ArrayList<MovieEntity> = ArrayList()
         dummyMovieList.add(
             MovieEntity(

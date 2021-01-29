@@ -13,7 +13,6 @@ import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
 import com.komangss.submissionjetpack.framework.network.utils.networkBoundResource
-import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -70,27 +69,23 @@ constructor(
     @ExperimentalCoroutinesApi
     override suspend fun getMovieById(id: Int): Flow<Resource<Movie>> = flow {
         emit(Resource.InProgress)
-        EspressoIdlingResources.increment()
         val result = catalogLocalDataSource.getMovieById(id)
         if (result == null) {
             emit(Resource.Error(null, ErrorResponse("Data Not Found")))
         } else {
             emit(Resource.Success(catalogMovieMapper.entityToDomain(result)))
         }
-        EspressoIdlingResources.decrement()
     }
 
     @ExperimentalCoroutinesApi
     override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> = flow {
         emit(Resource.InProgress)
-        EspressoIdlingResources.increment()
         val result = catalogLocalDataSource.getTvShowById(id)
         if (result == null) {
             emit(Resource.Error(null, ErrorResponse("Data Not Found")))
         } else {
             emit(Resource.Success(catalogTvShowMapper.entityToDomain(result)))
         }
-        EspressoIdlingResources.decrement()
     }
     override fun getFavoriteMovies(): DataSource.Factory<Int, Movie> {
         return catalogLocalDataSource.getFavoriteMovies().map { catalogMovieMapper.entityToDomain(it) }
