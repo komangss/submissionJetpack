@@ -14,4 +14,8 @@ class TvShowDetailViewModel(private val catalogRepository: CatalogRepository) : 
     fun detailTvShow(id : Int) : LiveData<Resource<TvShow>> = liveData {
         emitSource(catalogRepository.getTvShowById(id).asLiveData())
     }
+
+    suspend fun setFavorite(tvShow: TvShow) {
+        catalogRepository.setTvShowFavorite(tvShow)
+    }
 }

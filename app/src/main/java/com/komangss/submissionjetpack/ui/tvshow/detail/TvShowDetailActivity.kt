@@ -54,6 +54,11 @@ class TvShowDetailActivity : AppCompatActivity() {
                         fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
                     }
 
+                    fab_activity_tv_show_detail_favorite.setOnClickListener {
+                        lifecycleScope.launch {
+                            viewModel.setFavorite(tvShow)
+                        }
+                    }
                 }
                 is Resource.Error -> {
                     Toast.makeText(
