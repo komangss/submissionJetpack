@@ -38,7 +38,7 @@ class CatalogLocalDataSource private constructor(
 
     suspend fun updateTvShowFavorite(id : Int, isFavorite : Boolean) = catalogDao.updateTvShowFavorite(id, isFavorite)
 
-    suspend fun getFavoriteMovies() = catalogDao.getFavoriteMovies()
+    fun getFavoriteMovies() = catalogDao.getFavoriteMovies()
 
-    suspend fun getFavoriteTvShows() = catalogDao.getFavoriteTvShows()
+    fun getFavoriteTvShows() = catalogDao.getFavoriteTvShows()
 }

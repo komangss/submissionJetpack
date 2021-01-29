@@ -33,11 +33,11 @@ interface CatalogDao {
     suspend fun getTvShowById(id : Int) : TvShowEntity?
 
     @WorkerThread
-    @Query("SELECT * FROM movie_entity WHERE isFavorite = 0")
+    @Query("SELECT * FROM movie_entity WHERE isFavorite = 1")
     fun getFavoriteMovies() : DataSource.Factory<Int, MovieEntity>
 
     @WorkerThread
-    @Query("SELECT * FROM tv_show_entity WHERE isFavorite = 0")
+    @Query("SELECT * FROM tv_show_entity WHERE isFavorite = 1")
     fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
 
     @Query("UPDATE movie_entity SET isFavorite = :isFavorite WHERE id = :id")

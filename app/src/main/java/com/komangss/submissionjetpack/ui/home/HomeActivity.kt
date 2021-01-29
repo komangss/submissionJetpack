@@ -1,8 +1,12 @@
 package com.komangss.submissionjetpack.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.komangss.submissionjetpack.R
+import com.komangss.submissionjetpack.ui.favorite.FavoriteActivity
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -17,4 +21,18 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.title = "Movie Catalog"
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_home, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_home_favorite -> {
+                startActivity(Intent(this@HomeActivity, FavoriteActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }

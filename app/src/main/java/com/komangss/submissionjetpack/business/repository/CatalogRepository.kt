@@ -18,7 +18,6 @@ import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class CatalogRepository
@@ -88,36 +87,36 @@ private constructor(
     override suspend fun getMovieById(id: Int): Flow<Resource<Movie>> = flow {
         emit(Resource.InProgress)
         EspressoIdlingResources.increment()
-        catalogLocalDataSource.getMovieById(id).collect {
-            if(it == null) {
-                emit(Resource.Error(null, ErrorResponse("Data Not Found")))
-            } else {
-                emit(Resource.Success(catalogMovieMapper.entityToDomain(it)))
-            }
-            EspressoIdlingResources.decrement()
+        val result = catalogLocalDataSource.getMovieById(id)
+        if (result == null) {
+            emit(Resource.Error(null, ErrorResponse("Data Not Found")))
+        } else {
+            emit(Resource.Success(catalogMovieMapper.entityToDomain(result)))
         }
+        EspressoIdlingResources.decrement()
     }
 
     @ExperimentalCoroutinesApi
     override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> = flow {
         emit(Resource.InProgress)
         EspressoIdlingResources.increment()
-        catalogLocalDataSource.getTvShowById(id).collect {
-            if(it == null) {
-                emit(Resource.Error(null, ErrorResponse("Data Not Found")))
-            } else {
-                emit(Resource.Success(catalogTvShowMapper.entityToDomain(it)))
-            }
-            EspressoIdlingResources.decrement()
+        val result = catalogLocalDataSource.getTvShowById(id)
+        if (result == null) {
+            emit(Resource.Error(null, ErrorResponse("Data Not Found")))
+        } else {
+            emit(Resource.Success(catalogTvShowMapper.entityToDomain(result)))
         }
+        EspressoIdlingResources.decrement()
     }
 
-    override suspend fun getFavoriteMovies(): DataSource.Factory<Int, Movie> {
-        return catalogLocalDataSource.getFavoriteMovies().map { catalogMovieMapper.entityToDomain(it) }
+    override fun getFavoriteMovies(): DataSource.Factory<Int, Movie> {
+        return catalogLocalDataSource.getFavoriteMovies()
+            .map { catalogMovieMapper.entityToDomain(it) }
     }
 
-    override suspend fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
-        return catalogLocalDataSource.getFavoriteTvShows().map { catalogTvShowMapper.entityToDomain(it) }
+    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
+        return catalogLocalDataSource.getFavoriteTvShows()
+            .map { catalogTvShowMapper.entityToDomain(it) }
     }
 
     override suspend fun setTvShowFavorite(tvShow: TvShow) {

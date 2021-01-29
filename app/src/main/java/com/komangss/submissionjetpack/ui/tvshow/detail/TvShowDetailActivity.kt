@@ -27,7 +27,9 @@ class TvShowDetailActivity : AppCompatActivity() {
         val viewModel =
             ViewModelProvider(this, factory)[TvShowDetailViewModel::class.java]
 
-        viewModel.detailTvShow(tvShowId).observe(this, {
+        viewModel.setTvShowId(tvShowId)
+
+        viewModel.tvShow.observe(this, {
             when (it) {
                 is Resource.Success -> {
                     val tvShow = it.data

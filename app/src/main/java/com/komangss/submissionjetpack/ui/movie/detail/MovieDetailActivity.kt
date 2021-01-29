@@ -31,7 +31,7 @@ class MovieDetailActivity : AppCompatActivity() {
                 is Resource.Success -> {
                     tv_activity_movie_detail_movie_title.text = it.data.title
                     tv_activity_movie_detail_movie_description.text = it.data.description
-                    val voteAverage = it.data.voteAverage?.div(2)?.toFloat()
+                    val voteAverage = it.data.voteAverage.div(2).toFloat()
                     item_movie_tvshow_rating_bar.rating = voteAverage
                     tv_activity_movie_detail_movie_rating.text = "$voteAverage / 5"
 

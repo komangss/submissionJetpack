@@ -8,6 +8,6 @@ import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 
 class MovieFavoriteViewModel(private val catalogRepository: CatalogRepository) : ViewModel() {
-    suspend fun getFavoriteMovies() : LiveData<PagedList<Movie>> =
+    fun getFavoriteMovies() : LiveData<PagedList<Movie>> =
         LivePagedListBuilder(catalogRepository.getFavoriteMovies(), 5).build()
 }
