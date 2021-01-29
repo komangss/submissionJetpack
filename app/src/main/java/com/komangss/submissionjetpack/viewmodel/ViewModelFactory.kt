@@ -7,8 +7,10 @@ import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.di.Injection
 import com.komangss.submissionjetpack.ui.movie.MovieViewModel
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailViewModel
+import com.komangss.submissionjetpack.ui.movie.favorite.MovieFavoriteViewModel
 import com.komangss.submissionjetpack.ui.tvshow.TvShowViewModel
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailViewModel
+import com.komangss.submissionjetpack.ui.tvshow.favorite.TvShowFavoriteViewModel
 
 class ViewModelFactory private constructor(private val catalogRepository: CatalogRepository) :
     ViewModelProvider.NewInstanceFactory() {
@@ -37,6 +39,12 @@ class ViewModelFactory private constructor(private val catalogRepository: Catalo
             }
             modelClass.isAssignableFrom(TvShowDetailViewModel::class.java) -> {
                 TvShowDetailViewModel(catalogRepository) as T
+            }
+            modelClass.isAssignableFrom(MovieFavoriteViewModel::class.java) -> {
+                MovieFavoriteViewModel(catalogRepository) as T
+            }
+            modelClass.isAssignableFrom(TvShowFavoriteViewModel::class.java) -> {
+                TvShowFavoriteViewModel(catalogRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
