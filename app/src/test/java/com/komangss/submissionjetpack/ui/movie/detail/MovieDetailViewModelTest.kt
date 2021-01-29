@@ -2,11 +2,11 @@ package com.komangss.submissionjetpack.ui.movie.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.komangss.submissionjetpack.business.domain.model.MovieDetail
+import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
+import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -33,7 +33,7 @@ class MovieDetailViewModelTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: MovieDetailViewModel
-    private lateinit var dummyMovie: MovieDetail
+    private lateinit var dummyMovie: Movie
 
     @ExperimentalCoroutinesApi
     private fun MainCoroutineRule.runBlockingTest(block: suspend () -> Unit) =
@@ -42,33 +42,34 @@ class MovieDetailViewModelTest {
         }
 
     @Mock
-    private lateinit var observer: Observer<Resource<MovieDetail>>
+    private lateinit var observer: Observer<Resource<Movie>>
 
     @Before
     fun setUp() {
-        dummyMovie = DomainModelDataGenerator.getMovieById()
+        dummyMovie = DomainModelDataGenerator.generateDummyMovies()[0]
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun detailMovie() {
         mainCoroutineRule.runBlockingTest {
-            observer = Mockito.mock(Observer::class.java) as Observer<Resource<MovieDetail>>
-            val dummyMovieDetailResult = flowOf(Resource.Success(dummyMovie))
+            observer = Mockito.mock(Observer::class.java) as Observer<Resource<Movie>>
+            val dummyMovieResult = flowOf(Resource.Success(dummyMovie))
             val repo = mock<CatalogRepository> {
-                onBlocking { getMovieById(dummyMovie.id!!) } doReturn dummyMovieDetailResult
+                onBlocking { getMovieById(dummyMovie.id) } doReturn dummyMovieResult
             }
 
             viewModel = MovieDetailViewModel(repo)
+            viewModel.setMovieId(dummyMovie.id)
 
             assertEquals(
-                dummyMovieDetailResult.first(),
-                viewModel.detailMovie(dummyMovie.id!!).getOrAwaitValue()
+                dummyMovieResult.first(),
+                viewModel.movie.getOrAwaitValue()
             )
 
-            viewModel.detailMovie(dummyMovie.id!!).observeForever(observer)
+            viewModel.movie.observeForever(observer)
 
-            verify(observer).onChanged(dummyMovieDetailResult.first())
+            verify(observer).onChanged(dummyMovieResult.first())
         }
     }
 }

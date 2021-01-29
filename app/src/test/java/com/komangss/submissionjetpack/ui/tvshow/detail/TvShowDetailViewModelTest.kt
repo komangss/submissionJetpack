@@ -2,8 +2,7 @@ package com.komangss.submissionjetpack.ui.tvshow.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.komangss.submissionjetpack.business.domain.model.MovieDetail
-import com.komangss.submissionjetpack.business.domain.model.TvShowDetail
+import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
@@ -16,7 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,38 +39,38 @@ class TvShowDetailViewModelTest {
         }
 
     @Mock
-    private lateinit var observer: Observer<Resource<TvShowDetail>>
+    private lateinit var observer: Observer<Resource<TvShow>>
 
     private lateinit var viewModel: TvShowDetailViewModel
-    private lateinit var dummyTvShow: TvShowDetail
+    private lateinit var dummyTvShow: TvShow
 
     @Before
     fun setUp() {
-        dummyTvShow = DomainModelDataGenerator.getTvShowById()
+        dummyTvShow = DomainModelDataGenerator.generateDummyTvShows()[0]
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun detailTvShow() {
         mainCoroutineRule.runBlockingTest {
-
-            observer = Mockito.mock(Observer::class.java) as Observer<Resource<TvShowDetail>>
+            observer = Mockito.mock(Observer::class.java) as Observer<Resource<TvShow>>
 
             val dummyTvShowResult = flowOf(Resource.Success(dummyTvShow))
 
             val repo = mock<CatalogRepository> {
-                onBlocking { getTvShowById(dummyTvShow.id!!) } doReturn dummyTvShowResult
+                onBlocking { getTvShowById(dummyTvShow.id) } doReturn dummyTvShowResult
             }
 
             viewModel = TvShowDetailViewModel(repo)
+            viewModel.setTvShowId(dummyTvShow.id)
 
-            Assert.assertEquals(
+            assertEquals(
                 dummyTvShowResult.first(),
-                viewModel.detailTvShow(dummyTvShow.id!!).getOrAwaitValue()
+                viewModel.tvShow.getOrAwaitValue()
             )
 
 
-            viewModel.detailTvShow(dummyTvShow.id!!).observeForever(observer)
+            viewModel.tvShow.observeForever(observer)
 
             verify(observer).onChanged(dummyTvShowResult.first())
         }

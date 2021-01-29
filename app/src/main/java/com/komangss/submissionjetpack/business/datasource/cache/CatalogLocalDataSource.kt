@@ -5,7 +5,6 @@ import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import kotlinx.coroutines.flow.Flow
 
-
 class CatalogLocalDataSource private constructor(
     private val catalogDao: CatalogDao
 ) {
@@ -29,4 +28,20 @@ class CatalogLocalDataSource private constructor(
     fun getAllTvShows(): Flow<List<TvShowEntity>> = catalogDao.getTvShows()
 
     suspend fun insertTvShows(tvShows: List<TvShowEntity>) = catalogDao.insertTvShows(tvShows)
+
+    suspend fun getMovieById(id : Int) = catalogDao.getMovieById(id)
+
+    suspend fun getTvShowById(id : Int) = catalogDao.getTvShowById(id)
+
+    suspend fun updateMovieFavorite(movie : MovieEntity) {
+        catalogDao.insertMovie(movie)
+    }
+
+    suspend fun updateTvShowFavorite(tvShow : TvShowEntity) {
+        catalogDao.insertTvShow(tvShow)
+    }
+
+    fun getFavoriteMovies() = catalogDao.getFavoriteMovies()
+
+    fun getFavoriteTvShows() = catalogDao.getFavoriteTvShows()
 }

@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">submissionJetpack</string>
     <string name="movie">Movie</string>
+    <string name="favorite_movie">Favorite Movie</string>
     <string name="tvshow">Tv Show</string>
+    <string name="favorite_tvshow">Favorite Tv Show</string>
     <string name="this_is_content_description">this is content description</string>
     <string name="poster">Poster</string>
     <string name="activity_movie_detail_description">Movie Description :</string>
     <string name="activity_tv_show_detail_description">Tv Show Description :</string>
+    <string name="favorite">Favorite Catalog</string>
 </resources>

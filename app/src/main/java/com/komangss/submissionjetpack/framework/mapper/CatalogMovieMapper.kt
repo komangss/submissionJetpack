@@ -38,7 +38,8 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
             title = entity.title,
             voteAverage = entity.voteAverage,
             description = entity.description,
-            releaseDate = entity.releaseDate
+            releaseDate = entity.releaseDate,
+            isFavorite = entity.isFavorite
         )
     }
 
@@ -66,5 +67,24 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
 
     override fun responsesToEntities(responses: List<MovieResponse>): List<MovieEntity> {
         return responses.map { responseToEntity(it) }
+    }
+
+    override fun domainToEntity(d: Movie): MovieEntity {
+        return MovieEntity(
+            popularity = d.popularity,
+            voteCount = d.voteCount,
+            isVideo = d.isVideo,
+            posterUrlPath = d.posterUrlPath,
+            id = d.id,
+            backdropUrlPath = d.backdropUrlPath,
+            originalLanguage = d.originalLanguage,
+            originalTitle = d.originalTitle,
+            genreIds = d.genreIds.toString(),
+            title = d.title,
+            voteAverage = d.voteAverage,
+            description = d.description,
+            releaseDate = d.releaseDate,
+            isFavorite = d.isFavorite
+        )
     }
 }

@@ -33,7 +33,7 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             name = entity.name,
 
 //            TODO : string to list of string
-            originalCountry = listOf("test"),
+            originalCountry = listOf("en"),
 
             originalLanguage = entity.originalLanguage,
             originalName = entity.originalName,
@@ -41,7 +41,8 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             popularity = entity.popularity,
             posterUrlPath = entity.posterUrlPath,
             voteAverage = entity.voteAverage,
-            voteCount = entity.voteCount
+            voteCount = entity.voteCount,
+            isFavorite = entity.isFavorite
         )
     }
 
@@ -70,5 +71,24 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             }
             result
         }
+    }
+
+    override fun domainToEntity(d: TvShow): TvShowEntity {
+        return TvShowEntity(
+            backdropUrlPath = d.backdropUrlPath,
+            releaseDate = d.releaseDate,
+            genreIds = d.genreIds.toString(),
+            id = d.id,
+            name = d.name,
+            originalCountry = listOf("en").toString(),
+            originalLanguage = d.originalLanguage,
+            originalName = d.originalName,
+            description = d.description,
+            popularity = d.popularity,
+            posterUrlPath = d.posterUrlPath,
+            voteAverage = d.voteAverage,
+            voteCount = d.voteCount,
+            isFavorite = d.isFavorite
+        )
     }
 }

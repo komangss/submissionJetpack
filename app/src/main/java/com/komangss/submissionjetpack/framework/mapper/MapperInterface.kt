@@ -7,8 +7,8 @@ interface MapperInterface<Domain,  DB, Remote> {
 
 //    Note :  We Don't have insert to remote so we don;t need this
 //    fun domainToResponse(d :  Domain) : Remote
-//    Note :  We Don't have insert to db so we don;t need this
-//    fun domainToEntity( d : Domain ) : DB
+
+    fun domainToEntity( d : Domain ) : DB
 
     fun entitiesToDomains(entities: List<DB>): List<Domain>
 
