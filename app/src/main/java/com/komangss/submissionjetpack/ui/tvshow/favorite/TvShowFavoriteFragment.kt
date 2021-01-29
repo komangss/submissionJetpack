@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
+import kotlinx.android.synthetic.main.fragment_tv_show_favorite.*
 
 class TvShowFavoriteFragment : Fragment() {
     override fun onCreateView(
@@ -25,7 +27,15 @@ class TvShowFavoriteFragment : Fragment() {
 
             val adapter = TvShowFavoriteAdapter()
 
-//            viewModel.getFavoriteTvShows()
+            viewModel.getFavoriteTvShows().observe(viewLifecycleOwner, {
+                adapter.submitList(it)
+            })
+
+            with(fragment_tvshow_favorite_rv_tvshow) {
+                layoutManager = LinearLayoutManager(context)
+                setHasFixedSize(true)
+                setAdapter(adapter)
+            }
         }
     }
 }
