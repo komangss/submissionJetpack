@@ -27,21 +27,23 @@ interface CatalogDao {
     suspend fun insertTvShows(tvShows: List<TvShowEntity>): LongArray
 
     @Query("SELECT * FROM movie_entity WHERE id = :id")
-    suspend fun getMovieById(id : Int) : Flow<MovieEntity?>
+    suspend fun getMovieById(id : Int) : MovieEntity?
 
     @Query("SELECT * FROM tv_show_entity WHERE id = :id")
-    suspend fun getTvShowById(id : Int) : Flow<TvShowEntity?>
+    suspend fun getTvShowById(id : Int) : TvShowEntity?
 
+    @WorkerThread
     @Query("SELECT * FROM movie_entity WHERE isFavorite = 0")
-    suspend fun getFavoriteMovies() : DataSource.Factory<Int, MovieEntity>
+    fun getFavoriteMovies() : DataSource.Factory<Int, MovieEntity>
 
+    @WorkerThread
     @Query("SELECT * FROM tv_show_entity WHERE isFavorite = 0")
-    suspend fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
+    fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
 
     @Query("UPDATE movie_entity SET isFavorite = :isFavorite WHERE id = :id")
-    suspend fun updateMovieFavorite(id : Int, isFavorite : Boolean): LongArray
+    suspend fun updateMovieFavorite(id : Int, isFavorite : Boolean)
 
     @Query("UPDATE movie_entity SET isFavorite = :isFavorite WHERE id = :id")
-    suspend fun updateTvShowFavorite(id : Int, isFavorite : Boolean): LongArray
+    suspend fun updateTvShowFavorite(id : Int, isFavorite : Boolean)
 
 }
