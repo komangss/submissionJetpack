@@ -90,7 +90,7 @@ class MovieDetailActivity : AppCompatActivity() {
                 Resource.InProgress -> {
                     Toast.makeText(
                         this@MovieDetailActivity,
-                        "Load From Network...",
+                        "Loading...",
                         Toast.LENGTH_LONG
                     ).show()
                 }

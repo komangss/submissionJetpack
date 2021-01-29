@@ -88,7 +88,7 @@ class TvShowDetailActivity : AppCompatActivity() {
                 Resource.InProgress -> {
                     Toast.makeText(
                         this@TvShowDetailActivity,
-                        "Load From Network...",
+                        "Loading...",
                         Toast.LENGTH_LONG
                     ).show()
                 }
