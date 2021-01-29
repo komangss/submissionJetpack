@@ -11,8 +11,8 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        view_pager.adapter = sectionsPagerAdapter
-        tabs.setupWithViewPager(view_pager)
+        view_pager_activity_home.adapter = sectionsPagerAdapter
+        tabs_activity_home.setupWithViewPager(view_pager_activity_home)
         supportActionBar?.elevation = 0f
         supportActionBar?.title = "Movie Catalog"
     }
