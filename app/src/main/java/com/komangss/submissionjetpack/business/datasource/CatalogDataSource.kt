@@ -3,6 +3,8 @@ package com.komangss.submissionjetpack.business.datasource
 import androidx.paging.DataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
+import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +24,7 @@ interface CatalogDataSource {
     @ExperimentalCoroutinesApi
     suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>>
 
-    fun getFavoriteMovies() : DataSource.Factory<Int, Movie>
+    fun getFavoriteMovies() : DataSource.Factory<Int, MovieEntity>
 
-    fun getFavoriteTvShows() : DataSource.Factory<Int, TvShow>
+    fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
 }

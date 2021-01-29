@@ -87,12 +87,13 @@ constructor(
             emit(Resource.Success(catalogTvShowMapper.entityToDomain(result)))
         }
     }
-    override fun getFavoriteMovies(): DataSource.Factory<Int, Movie> {
-        return catalogLocalDataSource.getFavoriteMovies().map { catalogMovieMapper.entityToDomain(it) }
+
+    override fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {
+        return catalogLocalDataSource.getFavoriteMovies()
     }
 
-    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
-        return catalogLocalDataSource.getFavoriteTvShows().map { catalogTvShowMapper.entityToDomain(it) }
+    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShowEntity> {
+        return catalogLocalDataSource.getFavoriteTvShows()
     }
 
     override suspend fun setTvShowFavorite(tvShow: TvShow) {

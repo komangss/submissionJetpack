@@ -1,18 +1,24 @@
 package com.komangss.submissionjetpack.business.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.DataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
+import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
+import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
+import com.komangss.submissionjetpack.utils.PagedListUtil
 import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyTvShowEntities
 import com.komangss.submissionjetpack.vo.Resource
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -139,4 +145,33 @@ class CatalogRepositoryTest {
                 listOf(Resource.InProgress, Resource.Success(expectedTvShowResult))
             )
         }
+
+        @Test
+        fun getFavoriteMovies() {
+            val dataSourceFactory = mock<DataSource.Factory<Int, MovieEntity>>()
+            `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactory)
+            catalogRepository.getFavoriteMovies()
+
+            val movieEntities = Resource.Success(PagedListUtil.mockPagedList(
+                provideDummyMovieEntities()
+            ))
+
+            verify(catalogLocalDataSource).getFavoriteMovies()
+            assertNotNull(movieEntities)
+        }
+
+
+    @Test
+    fun getFavoriteTvShows() {
+        val dataSourceFactory = mock<DataSource.Factory<Int, TvShowEntity>>()
+        `when`(catalogLocalDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactory)
+        catalogRepository.getFavoriteTvShows()
+
+        val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(
+            provideDummyTvShowEntities()
+        ))
+
+        verify(catalogLocalDataSource).getFavoriteTvShows()
+        assertNotNull(tvShowEntities)
+    }
 }

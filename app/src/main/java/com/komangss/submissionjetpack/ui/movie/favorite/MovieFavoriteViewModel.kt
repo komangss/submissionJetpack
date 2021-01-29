@@ -6,8 +6,13 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
+import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 
 class MovieFavoriteViewModel(private val catalogRepository: CatalogRepository) : ViewModel() {
-    fun getFavoriteMovies() : LiveData<PagedList<Movie>> =
-        LivePagedListBuilder(catalogRepository.getFavoriteMovies(), 5).build()
+    //    map disini untuk mecegah error saat unit test di repo
+    val mapper = CatalogMovieMapper()
+    fun getFavoriteMovies(): LiveData<PagedList<Movie>> =
+        LivePagedListBuilder(
+            catalogRepository.getFavoriteMovies().map { mapper.entityToDomain(it) }, 5
+        ).build()
 }

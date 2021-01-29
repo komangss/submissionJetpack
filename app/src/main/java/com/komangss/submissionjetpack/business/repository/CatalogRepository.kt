@@ -109,14 +109,12 @@ private constructor(
         EspressoIdlingResources.decrement()
     }
 
-    override fun getFavoriteMovies(): DataSource.Factory<Int, Movie> {
+    override fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {
         return catalogLocalDataSource.getFavoriteMovies()
-            .map { catalogMovieMapper.entityToDomain(it) }
     }
 
-    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
+    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShowEntity> {
         return catalogLocalDataSource.getFavoriteTvShows()
-            .map { catalogTvShowMapper.entityToDomain(it) }
     }
 
     override suspend fun setTvShowFavorite(tvShow: TvShow) {
