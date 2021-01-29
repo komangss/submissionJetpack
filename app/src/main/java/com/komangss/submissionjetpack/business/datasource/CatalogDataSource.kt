@@ -1,5 +1,7 @@
 package com.komangss.submissionjetpack.business.datasource
 
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.vo.Resource
@@ -20,4 +22,8 @@ interface CatalogDataSource {
 
     @ExperimentalCoroutinesApi
     suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>>
+
+    suspend fun getFavoriteMovies() : LiveData<PagedList<Resource<List<Movie>>>>
+
+    suspend fun getFavoriteTvShows() : LiveData<PagedList<Resource<List<TvShow>>>>
 }
