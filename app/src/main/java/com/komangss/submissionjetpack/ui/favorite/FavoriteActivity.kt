@@ -1,8 +1,10 @@
 package com.komangss.submissionjetpack.ui.favorite
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.komangss.submissionjetpack.R
+import com.komangss.submissionjetpack.ui.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_favorite.*
 
 class FavoriteActivity : AppCompatActivity() {
@@ -15,5 +17,11 @@ class FavoriteActivity : AppCompatActivity() {
         tabs_activity_favorite.setupWithViewPager(view_pager_activity_favorite)
         supportActionBar?.elevation = 0f
         supportActionBar?.title = "Favorite List"
+    }
+
+    override fun onBackPressed() {
+        startActivity(Intent(this@FavoriteActivity, HomeActivity::class.java))
+        finish()
+        super.onBackPressed()
     }
 }

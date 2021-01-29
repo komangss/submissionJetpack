@@ -14,6 +14,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.favorite.FavoriteActivity" />
+        <activity android:name=".ui.movie.favorite.MovieFavoriteDetailActivity" />
+        <activity android:name=".ui.tvshow.favorite.TvShowFavoriteDetailActivity" />
         <activity android:name=".ui.tvshow.detail.TvShowDetailActivity" />
         <activity android:name=".ui.movie.detail.MovieDetailActivity" />
         <activity android:name=".ui.home.HomeActivity">

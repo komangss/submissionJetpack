@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.ui.movie.favorite
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -41,8 +42,9 @@ class MovieFavoriteAdapter :
 
                     setOnClickListener {
                         val intent = Intent(context, MovieDetailActivity::class.java)
-                        intent.putExtra(MovieDetailActivity.EXTRA_MOVIE_ID, movie.id)
+                        intent.putExtra(MovieFavoriteDetailActivity.EXTRA_MOVIE_ID, movie.id)
                         context.startActivity(intent)
+                         (context as Activity).finish()
                     }
                 }
             }
