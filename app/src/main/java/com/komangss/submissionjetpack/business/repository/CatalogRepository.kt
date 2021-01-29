@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.business.repository
 
+import androidx.paging.DataSource
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
@@ -109,6 +110,14 @@ private constructor(
             }
             EspressoIdlingResources.decrement()
         }
+    }
+
+    override suspend fun getFavoriteMovies(): DataSource.Factory<Int, Movie> {
+        return catalogLocalDataSource.getFavoriteMovies().map { catalogMovieMapper.entityToDomain(it) }
+    }
+
+    override suspend fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
+        return catalogLocalDataSource.getFavoriteTvShows().map { catalogTvShowMapper.entityToDomain(it) }
     }
 
     override suspend fun setTvShowFavorite(tvShow: TvShow) {
