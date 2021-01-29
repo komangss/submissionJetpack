@@ -38,7 +38,8 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
             title = entity.title,
             voteAverage = entity.voteAverage,
             description = entity.description,
-            releaseDate = entity.releaseDate
+            releaseDate = entity.releaseDate,
+            isFavorite = entity.isFavorite
         )
     }
 
@@ -82,7 +83,8 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
             title = d.title,
             voteAverage = d.voteAverage,
             description = d.description,
-            releaseDate = d.releaseDate
+            releaseDate = d.releaseDate,
+            isFavorite = d.isFavorite
         )
     }
 }
