@@ -14,6 +14,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 class TvShowDetailActivity : AppCompatActivity() {
+
+    private var isFav = false
+
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,13 +53,13 @@ class TvShowDetailActivity : AppCompatActivity() {
                         .centerCrop()
                         .into(image_view_activity_tv_show_detail_tv_show_backdrop)
 
-                    if(tvShow.isFavorite) {
-                        fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_favorite)
-                    } else {
-                        fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
-                    }
+                    isFav = tvShow.isFavorite
+
+                    setFavorite()
 
                     fab_activity_tv_show_detail_favorite.setOnClickListener {
+                        isFav = !isFav
+                        setFavorite()
                         lifecycleScope.launch {
                             viewModel.setFavorite(tvShow)
                         }
@@ -81,7 +84,17 @@ class TvShowDetailActivity : AppCompatActivity() {
 
     }
 
+    private fun setFavorite() {
+        if(isFav) {
+            fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_favorite)
+        } else {
+            fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
+        }
+
+    }
+
     companion object {
         const val EXTRA_TV_SHOW_ID = "extra_tv_show_id"
     }
+
 }

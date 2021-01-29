@@ -41,7 +41,8 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             popularity = entity.popularity,
             posterUrlPath = entity.posterUrlPath,
             voteAverage = entity.voteAverage,
-            voteCount = entity.voteCount
+            voteCount = entity.voteCount,
+            isFavorite = entity.isFavorite
         )
     }
 
@@ -86,7 +87,8 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             popularity = d.popularity,
             posterUrlPath = d.posterUrlPath,
             voteAverage = d.voteAverage,
-            voteCount = d.voteCount
+            voteCount = d.voteCount,
+            isFavorite = d.isFavorite
         )
     }
 }

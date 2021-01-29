@@ -101,7 +101,7 @@ constructor(
     }
 
     override suspend fun setTvShowFavorite(tvShow: TvShow) {
-        catalogLocalDataSource.updateTvShowFavorite(tvShow.id, !tvShow.isFavorite)
+//        catalogLocalDataSource.updateTvShowFavorite(tvShow.id, !tvShow.isFavorite)
     }
 
     override suspend fun setMovieFavorite(movie: Movie) {
