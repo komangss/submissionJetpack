@@ -125,6 +125,7 @@ private constructor(
     }
 
     override suspend fun setMovieFavorite(movie: Movie) {
-        catalogLocalDataSource.updateMovieFavorite(movie.id, !movie.isFavorite)
+        movie.isFavorite = !movie.isFavorite
+        catalogLocalDataSource.updateMovieFavorite(catalogMovieMapper.domainToEntity(movie))
     }
 }
