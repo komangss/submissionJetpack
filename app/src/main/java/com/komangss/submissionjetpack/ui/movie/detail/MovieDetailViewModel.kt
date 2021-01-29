@@ -14,4 +14,8 @@ class MovieDetailViewModel (private val catalogRepository: CatalogRepository) : 
     fun detailMovie(id : Int) : LiveData<Resource<Movie>> = liveData {
         emitSource(catalogRepository.getMovieById(id).asLiveData())
     }
+
+    suspend fun setFavorite(movie: Movie) {
+        catalogRepository.setMovieFavorite(movie)
+    }
 }
