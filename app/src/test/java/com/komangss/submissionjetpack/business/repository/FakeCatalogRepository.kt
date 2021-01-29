@@ -4,18 +4,15 @@ import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.business.domain.model.MovieDetail
 import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.business.domain.model.TvShowDetail
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.MapperInterface
-import com.komangss.submissionjetpack.framework.network.model.MovieDetailResponse
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
-import com.komangss.submissionjetpack.framework.network.model.TvShowDetailResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
-import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
+import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
 import com.komangss.submissionjetpack.framework.network.utils.networkBoundResource
+import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -71,77 +68,38 @@ constructor(
     }
 
     @ExperimentalCoroutinesApi
-    override suspend fun getMovieById(id: Int): Flow<Resource<MovieDetail>> = flow {
-        catalogRemoteDataSource.getMovieById(id).collect {
-            emit(Resource.InProgress)
-            when (it) {
-                is ApiResponse.Success -> {
-                    emit(Resource.Success(movieDetailResponseToDomain(it.value)))
-                }
-                is ApiResponse.GenericError -> {
-                    emit(Resource.Error(it.code, it.error))
-                }
-                ApiResponse.NetworkError -> {
-                    emit(Resource.Error())
-                }
+    override suspend fun getMovieById(id: Int): Flow<Resource<Movie>> = flow {
+        emit(Resource.InProgress)
+        EspressoIdlingResources.increment()
+        catalogLocalDataSource.getMovieById(id).collect {
+            if(it == null) {
+                emit(Resource.Error(null, ErrorResponse("Data Not Found")))
+            } else {
+                emit(Resource.Success(catalogMovieMapper.entityToDomain(it)))
             }
+            EspressoIdlingResources.decrement()
         }
     }
 
     @ExperimentalCoroutinesApi
-    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShowDetail>> = flow {
-        catalogRemoteDataSource.getTvShowById(id).collect {
-            emit(Resource.InProgress)
-            when (it) {
-                is ApiResponse.Success -> {
-                    emit(Resource.Success(tvShowDetailResponseToDomain(it.value)))
-                }
-                is ApiResponse.GenericError -> {
-                    emit(Resource.Error(it.code, it.error))
-                }
-                ApiResponse.NetworkError -> {
-                    emit(Resource.Error())
-                }
+    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> = flow {
+        emit(Resource.InProgress)
+        EspressoIdlingResources.increment()
+        catalogLocalDataSource.getTvShowById(id).collect {
+            if(it == null) {
+                emit(Resource.Error(null, ErrorResponse("Data Not Found")))
+            } else {
+                emit(Resource.Success(catalogTvShowMapper.entityToDomain(it)))
             }
+            EspressoIdlingResources.decrement()
         }
     }
 
-    private fun tvShowDetailResponseToDomain(response: TvShowDetailResponse): TvShowDetail {
-        return TvShowDetail(
-            response.backdropPath,
-            response.firstAirDate,
-            response.genres,
-            response.homepage,
-            response.id,
-            response.name,
-            response.networks,
-            response.description,
-            response.popularity,
-            response.posterPath,
-            response.spokenLanguages,
-            response.status,
-            response.voteAverage,
-            response.voteCount
-        )
+    override suspend fun setTvShowFavorite(tvShow: TvShow) {
+        catalogLocalDataSource.updateTvShowFavorite(tvShow.id, !tvShow.isFavorite)
     }
 
-    private fun movieDetailResponseToDomain(response: MovieDetailResponse): MovieDetail {
-        return MovieDetail(
-            adult = response.adult,
-            posterPath = response.posterPath,
-            backdropPath = response.backdropPath,
-            genres = response.genres,
-            id = response.id,
-            originalLanguage = response.originalLanguage,
-            description = response.description,
-            popularity = response.popularity,
-            releaseDate = response.releaseDate,
-            status = response.status,
-            tagLine = response.tagLine,
-            title = response.title,
-            video = response.video,
-            voteAverage = response.voteAverage,
-            voteCount = response.voteCount
-        )
+    override suspend fun setMovieFavorite(movie: Movie) {
+        catalogLocalDataSource.updateMovieFavorite(movie.id, !movie.isFavorite)
     }
 }
