@@ -62,6 +62,8 @@ class TvShowDetailViewModelTest {
             }
 
             viewModel = TvShowDetailViewModel(repo)
+
+            viewModel.tvShow.observeForever(observer)
             viewModel.setTvShowId(dummyTvShow.id)
 
             assertEquals(
@@ -69,8 +71,6 @@ class TvShowDetailViewModelTest {
                 viewModel.tvShow.getOrAwaitValue()
             )
 
-
-            viewModel.tvShow.observeForever(observer)
 
             verify(observer).onChanged(dummyTvShowResult.first())
         }

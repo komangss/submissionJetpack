@@ -60,14 +60,14 @@ class MovieDetailViewModelTest {
             }
 
             viewModel = MovieDetailViewModel(repo)
+            viewModel.movie.observeForever(observer)
+
             viewModel.setMovieId(dummyMovie.id)
 
             assertEquals(
                 dummyMovieResult.first(),
                 viewModel.movie.getOrAwaitValue()
             )
-
-            viewModel.movie.observeForever(observer)
 
             verify(observer).onChanged(dummyMovieResult.first())
         }
