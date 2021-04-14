@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -13,6 +14,7 @@ import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
+import com.komangss.submissionjetpack.ui.CustomMatchers
 import com.komangss.submissionjetpack.ui.Utils.getJsonFromAssets
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
@@ -67,6 +69,21 @@ class MovieFavoriteDetailActivityTest {
         val voteAverageText = "${dummyMovie.voteAverage.div(2).toFloat()} / 5"
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_rating))
             .check(ViewAssertions.matches(withText(voteAverageText)))
+    }
+
+    @Test
+    fun testFavoriteThisMovie() {
+        val intent = Intent(
+            ApplicationProvider.getApplicationContext(), MovieFavoriteDetailActivity::class.java
+        ).putExtra(EXTRA_MOVIE_ID, dummyMovie.id)
+
+        rule.launch(intent)
+
+        Espresso.onView(ViewMatchers.withId(R.id.fab__activity_movie_detail_favorite))
+            .perform(ViewActions.click())
+
+        Espresso.onView(ViewMatchers.withId(R.id.fab__activity_movie_detail_favorite))
+            .check(ViewAssertions.matches(CustomMatchers.withImageDrawable(R.drawable.ic_favorite)))
     }
 
     @After

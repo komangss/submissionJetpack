@@ -32,9 +32,7 @@ class MovieFavoriteDetailActivity : AppCompatActivity() {
 
         val movieId = intent.getIntExtra(EXTRA_MOVIE_ID, -1)
 
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel =
-            ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
+        val viewModel = setViewModel()
 
         viewModel.setMovieId(movieId)
 
@@ -108,5 +106,10 @@ class MovieFavoriteDetailActivity : AppCompatActivity() {
         startActivity(Intent(this@MovieFavoriteDetailActivity, FavoriteActivity::class.java))
         finish()
         super.onBackPressed()
+    }
+
+    fun setViewModel() : MovieDetailViewModel {
+        val factory = ViewModelFactory.getInstance(this)
+        return  ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
     }
 }
