@@ -19,13 +19,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 class CatalogRepository
-private constructor(
-    private val catalogRemoteDataSource: CatalogRemoteDataSource,
-    private val catalogLocalDataSource: CatalogLocalDataSource,
-    private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
-    private val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
+@Inject constructor(
+    val catalogRemoteDataSource: CatalogRemoteDataSource,
+    val catalogLocalDataSource: CatalogLocalDataSource,
+    val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
+    val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
 ) : CatalogDataSource {
     companion object {
         @Volatile

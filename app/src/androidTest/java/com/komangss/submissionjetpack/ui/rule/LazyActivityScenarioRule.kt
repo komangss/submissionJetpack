@@ -39,12 +39,12 @@ class LazyActivityScenarioRule<A : Activity> : ExternalResource {
         scenario?.close()
     }
 
-    fun launch(newIntent: Intent? = null) {
+    fun launch(newIntent: Intent? = null, action: A.() -> Unit = {}) {
         if (scenarioLaunched) throw IllegalStateException("Scenario has already been launched!")
 
         newIntent?.let { scenarioSupplier = { ActivityScenario.launch(it) } }
 
-        scenario = scenarioSupplier()
+        scenario = scenarioSupplier().onActivity(action)
         scenarioLaunched = true
     }
 

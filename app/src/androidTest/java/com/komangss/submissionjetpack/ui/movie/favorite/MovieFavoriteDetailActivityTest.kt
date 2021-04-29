@@ -12,13 +12,16 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.GsonBuilder
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
+import com.komangss.submissionjetpack.business.repository.FakeCatalogRepositoryAndroidTest
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
 import com.komangss.submissionjetpack.ui.CustomMatchers
 import com.komangss.submissionjetpack.ui.Utils.getJsonFromAssets
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
+import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailViewModel
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -53,13 +56,14 @@ class MovieFavoriteDetailActivityTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
     }
 
+    @ExperimentalCoroutinesApi
     @Test
     fun testMovieTitleShowUp() {
         val intent = Intent(
             ApplicationProvider.getApplicationContext(), MovieFavoriteDetailActivity::class.java
         ).putExtra(EXTRA_MOVIE_ID, dummyMovie.id)
 
-        rule.launch(intent)
+        val vm = MovieDetailViewModel(FakeCatalogRepositoryAndroidTest())
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_title))
             .check(ViewAssertions.matches(withText(dummyMovie.title)))

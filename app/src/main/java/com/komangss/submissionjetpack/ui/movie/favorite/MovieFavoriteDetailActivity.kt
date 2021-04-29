@@ -3,15 +3,15 @@ package com.komangss.submissionjetpack.ui.movie.favorite
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.ui.favorite.FavoriteActivity
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailViewModel
-import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 import kotlinx.coroutines.Dispatchers
@@ -19,8 +19,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class MovieFavoriteDetailActivity : AppCompatActivity() {
 
+    val viewModel: MovieDetailViewModel by viewModels()
     private var isFav = false
 
     @ExperimentalCoroutinesApi
@@ -31,8 +33,6 @@ class MovieFavoriteDetailActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.movie)
 
         val movieId = intent.getIntExtra(EXTRA_MOVIE_ID, -1)
-
-        val viewModel = setViewModel()
 
         viewModel.setMovieId(movieId)
 
@@ -108,8 +108,4 @@ class MovieFavoriteDetailActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    fun setViewModel() : MovieDetailViewModel {
-        val factory = ViewModelFactory.getInstance(this)
-        return  ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
-    }
 }
