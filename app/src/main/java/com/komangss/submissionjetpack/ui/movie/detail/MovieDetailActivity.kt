@@ -12,12 +12,14 @@ import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 class MovieDetailActivity : AppCompatActivity() {
 
     private var isFav = false
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

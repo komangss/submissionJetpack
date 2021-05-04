@@ -26,8 +26,9 @@ interface CatalogDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTvShows(tvShows: List<TvShowEntity>): LongArray
 
+    @WorkerThread
     @Query("SELECT * FROM movie_entity WHERE id = :id")
-    suspend fun getMovieById(id : Int) : MovieEntity?
+    fun getMovieById(id : Int) : Flow<MovieEntity>
 
     @Query("SELECT * FROM tv_show_entity WHERE id = :id")
     suspend fun getTvShowById(id : Int) : TvShowEntity?

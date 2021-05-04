@@ -73,22 +73,45 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
         }
     }
 
-    override fun domainToEntity(d: TvShow): TvShowEntity {
+    override fun domainToEntity(domain: TvShow): TvShowEntity {
         return TvShowEntity(
-            backdropUrlPath = d.backdropUrlPath,
-            releaseDate = d.releaseDate,
-            genreIds = d.genreIds.toString(),
-            id = d.id,
-            name = d.name,
+            backdropUrlPath = domain.backdropUrlPath,
+            releaseDate = domain.releaseDate,
+            genreIds = domain.genreIds.toString(),
+            id = domain.id,
+            name = domain.name,
             originalCountry = listOf("en").toString(),
-            originalLanguage = d.originalLanguage,
-            originalName = d.originalName,
-            description = d.description,
-            popularity = d.popularity,
-            posterUrlPath = d.posterUrlPath,
-            voteAverage = d.voteAverage,
-            voteCount = d.voteCount,
-            isFavorite = d.isFavorite
+            originalLanguage = domain.originalLanguage,
+            originalName = domain.originalName,
+            description = domain.description,
+            popularity = domain.popularity,
+            posterUrlPath = domain.posterUrlPath,
+            voteAverage = domain.voteAverage,
+            voteCount = domain.voteCount,
+            isFavorite = domain.isFavorite
         )
+    }
+
+    override fun responseToDomain(response: TvShowResponse): TvShow {
+        return TvShow(
+            backdropUrlPath = response.backdropUrlPath ?: "",
+            releaseDate = response.releaseDate ?: "",
+            genreIds = response.genreIds ?: listOf(),
+            id = response.id ?: -1,
+            name = response.name ?: "",
+            originalCountry = response.originalCountry ?: listOf(),
+            originalLanguage = response.originalLanguage ?: "",
+            originalName = response.originalName ?: "",
+            description = response.description ?: "",
+            popularity = response.popularity ?: -1.0,
+            posterUrlPath = response.posterUrlPath ?: "",
+            voteAverage = response.voteAverage ?: -1.0,
+            voteCount = response.voteCount ?: -1,
+            isFavorite = false
+        )
+    }
+
+    override fun responsesToDomains(responses: List<TvShowResponse>): List<TvShow> {
+        return responses.map { responseToDomain(it) }
     }
 }

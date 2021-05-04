@@ -29,7 +29,7 @@ class CatalogLocalDataSource private constructor(
 
     suspend fun insertTvShows(tvShows: List<TvShowEntity>) = catalogDao.insertTvShows(tvShows)
 
-    suspend fun getMovieById(id : Int) = catalogDao.getMovieById(id)
+    fun getMovieById(id : Int) = catalogDao.getMovieById(id)
 
     suspend fun getTvShowById(id : Int) = catalogDao.getTvShowById(id)
 

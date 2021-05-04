@@ -7,21 +7,11 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.platform.app.InstrumentationRegistry
-import com.google.gson.GsonBuilder
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.business.repository.FakeCatalogRepositoryAndroidTest
-import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
-import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
 import com.komangss.submissionjetpack.ui.CustomMatchers
-import com.komangss.submissionjetpack.ui.Utils.getJsonFromAssets
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
-import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailViewModel
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -29,57 +19,37 @@ import org.junit.Test
 
 
 class MovieFavoriteDetailActivityTest {
-    private lateinit var dummyMovie: Movie
+    private var dummyMovieId : Int = 123
 
     @get:Rule
     val rule = lazyActivityScenarioRule<MovieFavoriteDetailActivity>(launchActivity = false)
 
     @Before
     fun setUp() {
-        val gson = GsonBuilder().create()
-        val jsonResult =
-            getJsonFromAssets(
-                InstrumentationRegistry.getInstrumentation().context,
-                "MovieResponse.json"
-            )
-
-        val movieResultResponse: MovieResultResponse = gson.fromJson(
-            jsonResult,
-            MovieResultResponse::class.java
-        )
-
-        val mapper = CatalogMovieMapper()
-        val entities = mapper.responsesToEntities(movieResultResponse.results ?: listOf())
-
-        dummyMovie = mapper.entitiesToDomains(entities)[0]
-
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun testMovieTitleShowUp() {
         val intent = Intent(
             ApplicationProvider.getApplicationContext(), MovieFavoriteDetailActivity::class.java
-        ).putExtra(EXTRA_MOVIE_ID, dummyMovie.id)
+        ).putExtra(EXTRA_MOVIE_ID, dummyMovieId)
 
-        val vm = MovieDetailViewModel(FakeCatalogRepositoryAndroidTest())
+        rule.launch(intent)
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_title))
-            .check(ViewAssertions.matches(withText(dummyMovie.title)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_description))
-            .check(ViewAssertions.matches(withText(dummyMovie.description)))
-
-        val voteAverageText = "${dummyMovie.voteAverage.div(2).toFloat()} / 5"
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_rating))
-            .check(ViewAssertions.matches(withText(voteAverageText)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test
     fun testFavoriteThisMovie() {
         val intent = Intent(
             ApplicationProvider.getApplicationContext(), MovieFavoriteDetailActivity::class.java
-        ).putExtra(EXTRA_MOVIE_ID, dummyMovie.id)
+        ).putExtra(EXTRA_MOVIE_ID, dummyMovieId)
 
         rule.launch(intent)
 

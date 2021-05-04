@@ -14,10 +14,7 @@ import com.komangss.submissionjetpack.vo.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class MovieFavoriteDetailActivity : AppCompatActivity() {
@@ -25,6 +22,7 @@ class MovieFavoriteDetailActivity : AppCompatActivity() {
     val viewModel: MovieDetailViewModel by viewModels()
     private var isFav = false
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
