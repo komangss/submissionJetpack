@@ -12,7 +12,7 @@ class TvShowDetailViewModel(private val catalogRepository: CatalogRepository) : 
 
     @ExperimentalCoroutinesApi
     val tvShow : LiveData<Resource<TvShow>> = id.switchMap { id ->
-        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        liveData<Resource<TvShow>>(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emitSource(catalogRepository.getTvShowById(id).asLiveData())
         }
     }

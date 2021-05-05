@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
@@ -37,7 +38,7 @@ class MovieFragment : Fragment() {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             val movieAdapter = MovieAdapter()
-            viewModel.movieList.observe(viewLifecycleOwner, {
+            viewModel.movieList.observe(viewLifecycleOwner, Observer {
                 when (it) {
                     is Resource.Success -> {
                         fragment_movie_progress_bar.visibility = View.GONE

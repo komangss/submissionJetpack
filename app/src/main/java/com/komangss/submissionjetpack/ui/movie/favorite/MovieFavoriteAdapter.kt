@@ -42,7 +42,7 @@ class MovieFavoriteAdapter :
 
                     setOnClickListener {
                         val intent = Intent(context, MovieDetailActivity::class.java)
-                        intent.putExtra(MovieFavoriteDetailActivity.EXTRA_MOVIE_ID, movie.id)
+                        intent.putExtra(MovieDetailActivity.EXTRA_MOVIE_ID, movie.id)
                         context.startActivity(intent)
                          (context as Activity).finish()
                     }

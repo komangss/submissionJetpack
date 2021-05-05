@@ -14,7 +14,7 @@ class MovieDetailViewModel (private val catalogRepository: CatalogRepository) : 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     val movie : LiveData<Resource<Movie>> = id.switchMap { id ->
-        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        liveData<Resource<Movie>>(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emitSource(catalogRepository.getMovieById(id).asLiveData())
         }
     }

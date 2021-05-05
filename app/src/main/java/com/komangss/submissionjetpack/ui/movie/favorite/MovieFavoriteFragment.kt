@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
@@ -28,7 +29,7 @@ class MovieFavoriteFragment : Fragment() {
 
             val adapter = MovieFavoriteAdapter()
 
-            viewModel.getFavoriteMovies().observe(viewLifecycleOwner, {
+            viewModel.getFavoriteMovies().observe(viewLifecycleOwner, Observer {
                 adapter.submitList(it)
             })
 

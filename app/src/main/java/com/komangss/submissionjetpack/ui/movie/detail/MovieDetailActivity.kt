@@ -3,6 +3,7 @@ package com.komangss.submissionjetpack.ui.movie.detail
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -10,7 +11,6 @@ import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.android.synthetic.main.activity_movie_detail.*
-import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         viewModel.setMovieId(movieId)
 
-        viewModel.movie.observe(this, {
+        viewModel.movie.observe(this, Observer {
             when (it) {
                 is Resource.Success -> {
                     val movie = it.data

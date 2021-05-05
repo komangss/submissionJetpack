@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -37,7 +38,7 @@ class TvShowFavoriteDetailActivity : AppCompatActivity() {
 
         viewModel.setTvShowId(tvShowId)
 
-        viewModel.tvShow.observe(this, {
+        viewModel.tvShow.observe(this, Observer {
             when (it) {
                 is Resource.Success -> {
                     val tvShow = it.data
