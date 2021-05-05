@@ -5,23 +5,49 @@ on:
   push:
     branches:
       - master
+      - submission-3
   pull_request:
     branches:
       - master
 jobs:
-  build-and-test:
-    name: Build and Run test
+  unit_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Unit Tests
+        run: ./gradlew test
+
+  android_test:
+    runs-on: [macos-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Instrumentation Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: ./gradlew connectedAndroidTest
+  generate_apk:
+    name: Generate APK
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout current repository in ubuntu's file system
+      - name: Checkout
         uses: actions/checkout@v1
-      - name: Print contents in current directory
-        run: ls -la
-      - name: Setup JDK 1.8
+      - name: Setup JDK
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build this project
-        run: ./gradlew assembleDebug
-      - name: Run Unit tests
-        run: bash ./gradlew test --stacktrace
+      - name: Build APK
+        run: bash ./gradlew assembleDebug --stacktrace
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: apk
+          path: app/build/outputs/apk/debug/app-debug.apk
