@@ -94,10 +94,10 @@ class CatalogRepository
             shouldFetchFromRemote = { it == null },
             fetchFromLocal = { catalogLocalDataSource.getMovieById(id) },
             processRemoteResponse = {},
-            saveRemoteData = {},
+            saveRemoteData = {catalogLocalDataSource.insertMovie(catalogMovieMapper.responseToEntity(it))},
             mapFromCache = { catalogMovieMapper.entityToDomain(it) },
             mapFromRemote = { catalogMovieMapper.responseToDomain(it) },
-            shouldCache = { false }
+            shouldCache = { true }
         )
     }
 
@@ -123,12 +123,10 @@ class CatalogRepository
     }
 
     override suspend fun setTvShowFavorite(tvShow: TvShow) {
-        tvShow.isFavorite = !tvShow.isFavorite
         catalogLocalDataSource.updateTvShowFavorite(catalogTvShowMapper.domainToEntity(tvShow))
     }
 
     override suspend fun setMovieFavorite(movie: Movie) {
-        movie.isFavorite = !movie.isFavorite
         catalogLocalDataSource.updateMovieFavorite(catalogMovieMapper.domainToEntity(movie))
     }
 }

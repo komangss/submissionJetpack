@@ -20,7 +20,8 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
             title = response.title ?: "",
             voteAverage = response.voteAverage ?: -1.0,
             description = response.description ?: "",
-            releaseDate = response.releaseDate ?: ""
+            releaseDate = response.releaseDate ?: "",
+            isFavorite = false
         )
     }
 
@@ -102,7 +103,8 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
             title = response.title ?: "",
             voteAverage = response.voteAverage ?: -1.0,
             description = response.description ?: "",
-            releaseDate = response.releaseDate ?: ""
+            releaseDate = response.releaseDate ?: "",
+            isFavorite = false
         )
     }
 

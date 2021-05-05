@@ -44,4 +44,8 @@ class CatalogLocalDataSource private constructor(
     fun getFavoriteMovies() = catalogDao.getFavoriteMovies()
 
     fun getFavoriteTvShows() = catalogDao.getFavoriteTvShows()
+
+    suspend fun insertMovie(movie: MovieEntity) {
+        catalogDao.insertMovie(movie)
+    }
 }

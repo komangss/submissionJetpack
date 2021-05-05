@@ -17,8 +17,6 @@ import kotlinx.coroutines.launch
 
 class MovieDetailActivity : AppCompatActivity() {
 
-    private var isFav = false
-
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,14 +55,13 @@ class MovieDetailActivity : AppCompatActivity() {
 
                     supportActionBar?.title = movie.title
 
-                    isFav = movie.isFavorite
-
-                    setFavorite()
+                    setFavorite(movie.isFavorite)
 
                     fab__activity_movie_detail_favorite.setOnClickListener {
-                        isFav = !isFav
-                        setFavorite()
-                        if (isFav) {
+                        val boolean = movie.isFavorite
+                        movie.isFavorite = !boolean
+                        setFavorite(movie.isFavorite)
+                        if (movie.isFavorite) {
                             Toast.makeText(
                                 this@MovieDetailActivity,
                                 "Added to Favorite List",
@@ -100,8 +97,8 @@ class MovieDetailActivity : AppCompatActivity() {
         })
     }
 
-    private fun setFavorite() {
-        if(isFav) {
+    private fun setFavorite(state : Boolean) {
+        if(state) {
             fab__activity_movie_detail_favorite.setImageResource(R.drawable.ic_favorite)
         } else {
             fab__activity_movie_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
