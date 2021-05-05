@@ -101,21 +101,6 @@ class CatalogRepository
         )
     }
 
-//    = flow {
-//        emit(Resource.InProgress)
-//        EspressoIdlingResources.increment()
-//
-//        val result = catalogLocalDataSource.getMovieById(id)
-//        if (result == null) {
-//            val entity = catalogMovieMapper.responseToEntity(catalogRemoteDataSource.getMovieById(id))
-//            val response = catalogMovieMapper.entityToDomain(entity)
-//            emit(Resource.Success(response))
-//        } else {
-//            emit(Resource.Success(catalogMovieMapper.entityToDomain(result)))
-//        }
-//        EspressoIdlingResources.decrement()
-//    }
-
     @ExperimentalCoroutinesApi
     override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> = flow {
         emit(Resource.InProgress)
