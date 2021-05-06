@@ -114,7 +114,7 @@ class CatalogRepositoryTest {
             val id = provideDummyMovieEntities()[0].id
 
             `when`(catalogLocalDataSource.getMovieById(id))
-                .thenReturn(provideDummyMovieEntities()[0])
+                .thenReturn(flowOf(provideDummyMovieEntities()[0]))
 
             val result = catalogRepository.getMovieById(id).toList()
             verify(catalogLocalDataSource).getMovieById(id)

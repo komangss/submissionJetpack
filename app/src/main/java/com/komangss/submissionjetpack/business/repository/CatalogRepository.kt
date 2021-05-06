@@ -19,10 +19,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
 class CatalogRepository
-@Inject constructor(
+constructor(
     val catalogRemoteDataSource: CatalogRemoteDataSource,
     val catalogLocalDataSource: CatalogLocalDataSource,
     val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
