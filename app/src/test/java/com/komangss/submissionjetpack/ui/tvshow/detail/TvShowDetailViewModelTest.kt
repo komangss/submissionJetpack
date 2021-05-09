@@ -12,6 +12,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -49,6 +50,7 @@ class TvShowDetailViewModelTest {
         dummyTvShow = DomainModelDataGenerator.generateDummyTvShows()[0]
     }
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test
     fun detailTvShow() {

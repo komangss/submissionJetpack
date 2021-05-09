@@ -11,14 +11,11 @@ import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.MapperInterface
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
-import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
-import com.komangss.submissionjetpack.framework.network.utils.networkBoundResource
-import com.komangss.submissionjetpack.utils.EspressoIdlingResources
+import com.komangss.submissionjetpack.utils.networkBoundResourceTest
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class FakeCatalogRepository
 constructor(
@@ -31,7 +28,7 @@ constructor(
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun getAllMovies(): Flow<Resource<List<Movie>>> {
-        return networkBoundResource(
+        return networkBoundResourceTest(
             fetchFromLocal = { catalogLocalDataSource.getAllMovies() },
             shouldFetchFromRemote = { it?.isEmpty() == true },
             fetchFromRemote = { catalogRemoteDataSource.getAllMovies() },
@@ -51,7 +48,7 @@ constructor(
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun getAllTvShows(): Flow<Resource<List<TvShow>>> {
-        return networkBoundResource(
+        return networkBoundResourceTest(
             fetchFromRemote = { catalogRemoteDataSource.getAllTvShows() },
             shouldFetchFromRemote = { it?.isEmpty() == true },
             fetchFromLocal = { catalogLocalDataSource.getAllTvShows() },
@@ -71,7 +68,7 @@ constructor(
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override suspend fun getMovieById(id: Int): Flow<Resource<Movie>> {
-        return networkBoundResource(
+        return networkBoundResourceTest(
             fetchFromRemote = { catalogRemoteDataSource.getMovieById(id) },
             shouldFetchFromRemote = { it == null },
             fetchFromLocal = { catalogLocalDataSource.getMovieById(id) },
@@ -83,17 +80,19 @@ constructor(
         )
     }
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
-    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> = flow {
-        emit(Resource.InProgress)
-        EspressoIdlingResources.increment()
-        val result = catalogLocalDataSource.getTvShowById(id)
-        if (result == null) {
-            emit(Resource.Error(null, ErrorResponse("Data Not Found")))
-        } else {
-            emit(Resource.Success(catalogTvShowMapper.entityToDomain(result)))
-        }
-        EspressoIdlingResources.decrement()
+    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> {
+        return networkBoundResourceTest(
+            fetchFromRemote = { catalogRemoteDataSource.getTvShowById(id) },
+            shouldFetchFromRemote = { it == null },
+            fetchFromLocal = { catalogLocalDataSource.getTvShowById(id) },
+            processRemoteResponse = {},
+            saveRemoteData = {catalogLocalDataSource.insertTvShow(catalogTvShowMapper.responseToEntity(it))},
+            mapFromCache = { catalogTvShowMapper.entityToDomain(it) },
+            mapFromRemote = { catalogTvShowMapper.responseToDomain(it) },
+            shouldCache = { true }
+        )
     }
 
     override fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {

@@ -30,8 +30,9 @@ interface CatalogDao {
     @Query("SELECT * FROM movie_entity WHERE id = :id")
     fun getMovieById(id : Int) : Flow<MovieEntity>
 
+    @WorkerThread
     @Query("SELECT * FROM tv_show_entity WHERE id = :id")
-    suspend fun getTvShowById(id : Int) : TvShowEntity?
+    fun getTvShowById(id : Int) : Flow<TvShowEntity>
 
     @WorkerThread
     @Query("SELECT * FROM movie_entity WHERE isFavorite = 1")

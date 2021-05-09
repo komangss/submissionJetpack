@@ -11,21 +11,18 @@ import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.MapperInterface
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
-import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
 import com.komangss.submissionjetpack.framework.network.utils.networkBoundResource
-import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class CatalogRepository
-constructor(
-    val catalogRemoteDataSource: CatalogRemoteDataSource,
-    val catalogLocalDataSource: CatalogLocalDataSource,
-    val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
-    val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
+private constructor(
+    private val catalogRemoteDataSource: CatalogRemoteDataSource,
+    private val catalogLocalDataSource: CatalogLocalDataSource,
+    private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
+    private val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
 ) : CatalogDataSource {
     companion object {
         @Volatile
@@ -100,17 +97,19 @@ constructor(
         )
     }
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
-    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> = flow {
-        emit(Resource.InProgress)
-        EspressoIdlingResources.increment()
-        val result = catalogLocalDataSource.getTvShowById(id)
-        if (result == null) {
-            emit(Resource.Error(null, ErrorResponse("Data Not Found")))
-        } else {
-            emit(Resource.Success(catalogTvShowMapper.entityToDomain(result)))
-        }
-        EspressoIdlingResources.decrement()
+    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> {
+        return networkBoundResource(
+            fetchFromRemote = { catalogRemoteDataSource.getTvShowById(id) },
+            shouldFetchFromRemote = { it == null },
+            fetchFromLocal = { catalogLocalDataSource.getTvShowById(id) },
+            processRemoteResponse = {},
+            saveRemoteData = {catalogLocalDataSource.insertTvShow(catalogTvShowMapper.responseToEntity(it))},
+            mapFromCache = { catalogTvShowMapper.entityToDomain(it) },
+            mapFromRemote = { catalogTvShowMapper.responseToDomain(it) },
+            shouldCache = { true }
+        )
     }
 
     override fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {

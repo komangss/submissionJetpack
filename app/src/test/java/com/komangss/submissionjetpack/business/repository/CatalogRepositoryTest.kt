@@ -126,6 +126,7 @@ class CatalogRepositoryTest {
         }
 
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test
     fun getTvShowById() =
@@ -135,7 +136,7 @@ class CatalogRepositoryTest {
             val id = provideDummyTvShowEntities()[0].id
 
             `when`(catalogLocalDataSource.getTvShowById(id))
-                .thenReturn(provideDummyTvShowEntities()[0])
+                .thenReturn(flowOf(provideDummyTvShowEntities()[0]))
 
             val result = catalogRepository.getTvShowById(id).toList()
             verify(catalogLocalDataSource).getTvShowById(id)

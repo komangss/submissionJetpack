@@ -2,6 +2,7 @@ package com.komangss.submissionjetpack.business.datasource.network
 
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
+import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResultResponse
 import com.komangss.submissionjetpack.framework.network.services.CatalogServices
 import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
@@ -34,5 +35,10 @@ class CatalogRemoteDataSource private constructor(private val catalogServices: C
     @ExperimentalCoroutinesApi
     suspend fun getMovieById(movieId : Int) : Flow<ApiResponse<MovieResponse>> {
         return safeApiCall(Dispatchers.IO) {catalogServices.getMovieById(movieId)}
+    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun getTvShowById(tvShowId : Int) : Flow<ApiResponse<TvShowResponse>> {
+        return safeApiCall(Dispatchers.IO) {catalogServices.getTvShowById(tvShowId)}
     }
 }
