@@ -104,10 +104,10 @@ constructor(
     }
 
     override suspend fun updateTvShow(tvShow: TvShow) {
-        catalogLocalDataSource.updateTvShowFavorite(catalogTvShowMapper.domainToEntity(tvShow))
+        catalogLocalDataSource.updateTvShow(catalogTvShowMapper.domainToEntity(tvShow))
     }
 
     override suspend fun updateMovie(movie: Movie) {
-        catalogLocalDataSource.updateMovieFavorite(catalogMovieMapper.domainToEntity(movie))
+        catalogLocalDataSource.updateMovie(catalogMovieMapper.domainToEntity(movie))
     }
 }
