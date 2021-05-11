@@ -44,4 +44,10 @@ interface CatalogDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateMovie(movie: MovieEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTvShow(tvShow: TvShowEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovie(movie: MovieEntity)
 }
