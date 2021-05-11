@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 class GenreIdMapperTest {
 
     @Test
-    fun p() {
+    fun `test convert example id from entity into domain model`() {
         val genreIdsToTest = "[16, 14, 12, 35, 10751]"
         val m = Pattern.compile("\\d+").matcher(genreIdsToTest)
         val result : ArrayList<Int> = ArrayList()

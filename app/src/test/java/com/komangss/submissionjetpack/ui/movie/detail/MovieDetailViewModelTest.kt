@@ -74,4 +74,16 @@ class MovieDetailViewModelTest {
             verify(observer).onChanged(dummyMovieResult.first())
         }
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun updateMovieFavorite() {
+        mainCoroutineRule.runBlockingTest {
+            val repo = mock<CatalogRepository>()
+            viewModel = MovieDetailViewModel(repo)
+            viewModel.setFavorite(dummyMovie)
+
+            verify(repo).updateMovie(dummyMovie)
+        }
+    }
 }

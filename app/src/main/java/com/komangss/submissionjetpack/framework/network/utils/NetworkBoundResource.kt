@@ -41,11 +41,9 @@ inline fun <DB : Any, REMOTE : Any, DOMAIN : Any> networkBoundResource(
                 }
                 ApiResponse.NetworkError -> emit(Resource.Error())
             }
-            EspressoIdlingResources.decrement()
         }
     } else {
         emit(Resource.Success(mapFromCache(localData)))
-
-        EspressoIdlingResources.decrement()
     }
+    EspressoIdlingResources.decrement()
 }

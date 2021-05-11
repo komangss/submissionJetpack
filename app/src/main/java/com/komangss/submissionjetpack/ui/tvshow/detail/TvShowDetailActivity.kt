@@ -12,12 +12,14 @@ import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.android.synthetic.main.activity_tv_show_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 class TvShowDetailActivity : AppCompatActivity() {
 
     private var isFav = false
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
