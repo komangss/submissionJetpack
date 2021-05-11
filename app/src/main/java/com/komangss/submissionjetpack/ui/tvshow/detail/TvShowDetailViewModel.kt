@@ -20,7 +20,7 @@ class TvShowDetailViewModel(private val catalogRepository: CatalogRepository) : 
     }
 
     suspend fun setFavorite(tvShow: TvShow) {
-        catalogRepository.setTvShowFavorite(tvShow)
+        catalogRepository.updateTvShow(tvShow)
     }
 
     fun setTvShowId(newId : Int) {

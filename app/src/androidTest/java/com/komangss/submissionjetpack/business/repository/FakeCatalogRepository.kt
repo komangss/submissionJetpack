@@ -42,11 +42,11 @@ class FakeCatalogRepositoryAndroidTest : CatalogDataSource {
         return throw NullPointerException()
     }
 
-    override suspend fun setTvShowFavorite(tvShow: TvShow) {
+    override suspend fun updateTvShow(tvShow: TvShow) {
         return throw NullPointerException()
      }
 
-    override suspend fun setMovieFavorite(movie: Movie) {
+    override suspend fun updateMovie(movie: Movie) {
         return throw NullPointerException()
     }
 }

@@ -20,7 +20,7 @@ class MovieDetailViewModel (private val catalogRepository: CatalogRepository) : 
     }
 
     suspend fun setFavorite(movie: Movie) {
-        catalogRepository.setMovieFavorite(movie)
+        catalogRepository.updateMovie(movie)
     }
 
     fun setMovieId(newId : Int) {

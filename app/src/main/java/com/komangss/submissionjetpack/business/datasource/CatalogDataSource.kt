@@ -14,9 +14,9 @@ interface CatalogDataSource {
 
     suspend fun getAllTvShows() : Flow<Resource<List<TvShow>>>
 
-    suspend fun setTvShowFavorite(tvShow: TvShow)
+    suspend fun updateTvShow(tvShow: TvShow)
 
-    suspend fun setMovieFavorite(movie: Movie)
+    suspend fun updateMovie(movie: Movie)
 
     @ExperimentalCoroutinesApi
     suspend fun getMovieById(id: Int): Flow<Resource<Movie>>
