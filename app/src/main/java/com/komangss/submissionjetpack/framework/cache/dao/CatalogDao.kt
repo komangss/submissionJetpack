@@ -24,12 +24,12 @@ interface CatalogDao {
     suspend fun insertTvShows(tvShows: List<TvShowEntity>): LongArray
 
     @WorkerThread
-    @Query("SELECT * FROM movie_entity WHERE id = :id")
-    fun getMovieById(id : Int) : Flow<MovieEntity>
+    @Query("SELECT * FROM movie_entity WHERE id = :movieId")
+    fun getMovieById(movieId : Int) : Flow<MovieEntity>
 
     @WorkerThread
-    @Query("SELECT * FROM tv_show_entity WHERE id = :id")
-    fun getTvShowById(id : Int) : Flow<TvShowEntity>
+    @Query("SELECT * FROM tv_show_entity WHERE id = :tvShowId")
+    fun getTvShowById(tvShowId : Int) : Flow<TvShowEntity>
 
     @WorkerThread
     @Query("SELECT * FROM movie_entity WHERE isFavorite = 1")
