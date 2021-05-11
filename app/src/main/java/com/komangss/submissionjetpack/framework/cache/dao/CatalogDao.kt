@@ -2,10 +2,7 @@ package com.komangss.submissionjetpack.framework.cache.dao
 
 import androidx.annotation.WorkerThread
 import androidx.paging.DataSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import kotlinx.coroutines.flow.Flow
@@ -42,9 +39,9 @@ interface CatalogDao {
     @Query("SELECT * FROM tv_show_entity WHERE isFavorite = 1")
     fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTvShow(tvShow: TvShowEntity)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateTvShow(tvShow: TvShowEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovie(movie: MovieEntity)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateMovie(movie: MovieEntity)
 }

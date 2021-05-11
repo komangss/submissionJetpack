@@ -34,11 +34,11 @@ class CatalogLocalDataSource private constructor(
     fun getTvShowById(id : Int) = catalogDao.getTvShowById(id)
 
     suspend fun updateMovieFavorite(movie : MovieEntity) {
-        catalogDao.insertMovie(movie)
+        catalogDao.updateMovie(movie)
     }
 
     suspend fun updateTvShowFavorite(tvShow : TvShowEntity) {
-        catalogDao.insertTvShow(tvShow)
+        catalogDao.updateTvShow(tvShow)
     }
 
     fun getFavoriteMovies() = catalogDao.getFavoriteMovies()
@@ -46,10 +46,10 @@ class CatalogLocalDataSource private constructor(
     fun getFavoriteTvShows() = catalogDao.getFavoriteTvShows()
 
     suspend fun insertMovie(movie: MovieEntity) {
-        catalogDao.insertMovie(movie)
+        catalogDao.updateMovie(movie)
     }
 
     suspend fun insertTvShow(tvShowEntity: TvShowEntity) {
-        catalogDao.insertTvShow(tvShowEntity)
+        catalogDao.updateTvShow(tvShowEntity)
     }
 }
