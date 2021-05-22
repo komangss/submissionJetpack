@@ -11,24 +11,4 @@ import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 @Database(entities = [MovieEntity::class, TvShowEntity::class], version = 2, exportSchema = false)
 abstract class CatalogDatabase : RoomDatabase() {
     abstract val catalogDao: CatalogDao
-    companion object {
-        private var INSTANCE: CatalogDatabase? = null
-        fun getInstance(context: Context): CatalogDatabase {
-//            we add a synchronized block
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance =
-                        Room.databaseBuilder(
-                            context,
-                            CatalogDatabase::class.java,
-                            "catalog_database"
-                        )
-                            .fallbackToDestructiveMigration()
-                            .build()
-                }
-                return instance
-            }
-        }
-    }
 }

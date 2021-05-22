@@ -4,8 +4,9 @@ import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse> {
+class CatalogTvShowMapper @Inject constructor() : MapperInterface<TvShow, TvShowEntity, TvShowResponse> {
     override fun responseToEntity(response: TvShowResponse): TvShowEntity {
         return TvShowEntity(
             backdropUrlPath = response.backdropUrlPath ?: "",

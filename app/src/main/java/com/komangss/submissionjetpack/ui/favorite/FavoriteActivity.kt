@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.ui.home.HomeActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_favorite.*
 
+@AndroidEntryPoint
 class FavoriteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

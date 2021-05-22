@@ -7,8 +7,10 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.ui.favorite.FavoriteActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_home.*
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

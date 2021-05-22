@@ -2,22 +2,24 @@ package com.komangss.submissionjetpack.ui.tvshow.detail
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_tv_show_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class TvShowDetailActivity : AppCompatActivity() {
 
     private var isFav = false
+    val viewModel by viewModels<TvShowDetailViewModel>()
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
@@ -28,10 +30,6 @@ class TvShowDetailActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.tvshow)
 
         val tvShowId = intent.getIntExtra(EXTRA_TV_SHOW_ID, -1)
-
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel =
-            ViewModelProvider(this, factory)[TvShowDetailViewModel::class.java]
 
         viewModel.setTvShowId(tvShowId)
 

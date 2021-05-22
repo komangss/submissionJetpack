@@ -12,6 +12,5 @@ object RetrofitBuilder {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-
     val catalogServices: CatalogServices = retrofit.create(CatalogServices::class.java)
 }

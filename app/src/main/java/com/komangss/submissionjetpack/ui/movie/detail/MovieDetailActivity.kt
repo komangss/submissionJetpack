@@ -2,20 +2,23 @@ package com.komangss.submissionjetpack.ui.movie.detail
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MovieDetailActivity : AppCompatActivity() {
+
+    val viewModel by viewModels<MovieDetailViewModel>()
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
@@ -26,10 +29,6 @@ class MovieDetailActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.movie)
 
         val movieId = intent.getIntExtra(EXTRA_MOVIE_ID, -1)
-
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel =
-            ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
 
         viewModel.setMovieId(movieId)
 

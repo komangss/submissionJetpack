@@ -8,6 +8,8 @@ import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
+import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
+import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.framework.mapper.MapperInterface
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
@@ -16,31 +18,15 @@ import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 class CatalogRepository
-private constructor(
+@Inject constructor(
     private val catalogRemoteDataSource: CatalogRemoteDataSource,
     private val catalogLocalDataSource: CatalogLocalDataSource,
-    private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
-    private val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
+    private val catalogMovieMapper: CatalogMovieMapper,
+    private val catalogTvShowMapper: CatalogTvShowMapper
 ) : CatalogDataSource {
-    companion object {
-        @Volatile
-        private var instance: CatalogRepository? = null
-
-        fun getInstance(
-            catalogRemoteDataSource: CatalogRemoteDataSource,
-            catalogLocalDataSource: CatalogLocalDataSource,
-            catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
-            catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
-        ): CatalogRepository =
-            instance ?: synchronized(this) {
-                instance ?: CatalogRepository(
-                    catalogRemoteDataSource, catalogLocalDataSource, catalogMovieMapper,
-                    catalogTvShowMapper
-                )
-            }
-    }
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi

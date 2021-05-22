@@ -10,11 +10,4 @@ import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.framework.network.instance.RetrofitBuilder
 
 object Injection {
-    fun provideCatalogRepository(context: Context) : CatalogRepository =
-        CatalogRepository.getInstance(
-            CatalogRemoteDataSource.getInstance(RetrofitBuilder.catalogServices),
-            CatalogLocalDataSource.getInstance(CatalogDatabase.getInstance(context).catalogDao),
-            CatalogMovieMapper(),
-            CatalogTvShowMapper()
-        )
 }
