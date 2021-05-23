@@ -1,24 +1,29 @@
 package com.komangss.submissionjetpack.business.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.liveData
 import androidx.paging.DataSource
+import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
+import com.komangss.submissionjetpack.business.domain.model.Movie
+import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
+import com.komangss.submissionjetpack.utils.PagedListUtil.createMockDataSourceFactory
 import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyTvShowEntities
 import com.komangss.submissionjetpack.vo.Resource
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import junit.framework.TestCase.assertNotNull
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -28,8 +33,10 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 
 class CatalogRepositoryTest {
 
@@ -40,16 +47,18 @@ class CatalogRepositoryTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private val catalogRemoteDataSource = mock(CatalogRemoteDataSource::class.java)
-    private val catalogLocalDataSource = mock(CatalogLocalDataSource::class.java)
-    private val catalogMovieMapper = CatalogMovieMapper()
-    private val catalogTvShowMapper = CatalogTvShowMapper()
+    private val catalogRemoteDataSource = Mockito.mock(CatalogRemoteDataSource::class.java)
+    private val catalogLocalDataSource = Mockito.mock(CatalogLocalDataSource::class.java)
+    private val catalogMovieMapperMocked = Mockito.mock(CatalogMovieMapper::class.java)
+    private val catalogTvShowMapperMocked = Mockito.mock(CatalogTvShowMapper::class.java)
+    private val catalogMovieMapperNotMocked = CatalogMovieMapper()
+    private val catalogTvShowMapperNotMocked = CatalogTvShowMapper()
 
     private val catalogRepository = FakeCatalogRepository(
         catalogRemoteDataSource,
         catalogLocalDataSource,
-        catalogMovieMapper,
-        catalogTvShowMapper
+        catalogMovieMapperMocked,
+        catalogTvShowMapperMocked
     )
 
     @ExperimentalCoroutinesApi
@@ -109,7 +118,7 @@ class CatalogRepositoryTest {
     fun getMovieById() =
         mainCoroutineRule.runBlockingTest {
 
-            val expectedMovieResult = catalogMovieMapper.entityToDomain(provideDummyMovieEntities()[0])
+            val expectedMovieResult = catalogMovieMapperNotMocked.entityToDomain(provideDummyMovieEntities()[0])
 
             val id = provideDummyMovieEntities()[0].id
 
@@ -131,7 +140,7 @@ class CatalogRepositoryTest {
     @Test
     fun getTvShowById() =
         mainCoroutineRule.runBlockingTest {
-            val expectedTvShowResult = catalogTvShowMapper.entityToDomain(provideDummyTvShowEntities()[0])
+            val expectedTvShowResult = catalogTvShowMapperNotMocked.entityToDomain(provideDummyTvShowEntities()[0])
 
             val id = provideDummyTvShowEntities()[0].id
 
@@ -149,16 +158,22 @@ class CatalogRepositoryTest {
 
         @Test
         fun getFavoriteMovies() {
-            val dataSourceFactory = mock<DataSource.Factory<Int, MovieEntity>>()
-            `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactory)
+            val dataSourceFactoryMovieEntity = object : DataSource.Factory<Int, MovieEntity>() {
+                override fun create(): DataSource<Int, MovieEntity> =
+                    PagedListUtil.MockLimitDataSource(provideDummyMovieEntities())
+            }
+            `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactoryMovieEntity)
+
             catalogRepository.getFavoriteMovies()
 
-            val movieEntities = Resource.Success(PagedListUtil.mockPagedList(
-                provideDummyMovieEntities()
-            ))
+            val movieResults: List<Movie> = DomainModelDataGenerator.generateDummyMovies()
 
+            val mockedMoviePagedList: PagedList<Movie> = PagedListUtil.mockPagedList(movieResults)
+            val repoResult = liveData {
+                emit(mockedMoviePagedList)
+            }
             verify(catalogLocalDataSource).getFavoriteMovies()
-            assertNotNull(movieEntities)
+            assertNotNull(repoResult)
         }
 
 

@@ -1,6 +1,9 @@
 package com.komangss.submissionjetpack.business.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
@@ -76,7 +79,13 @@ class CatalogRepository
             shouldFetchFromRemote = { it == null },
             fetchFromLocal = { catalogLocalDataSource.getMovieById(id) },
             processRemoteResponse = {},
-            saveRemoteData = {catalogLocalDataSource.insertMovie(catalogMovieMapper.responseToEntity(it))},
+            saveRemoteData = {
+                catalogLocalDataSource.insertMovie(
+                    catalogMovieMapper.responseToEntity(
+                        it
+                    )
+                )
+            },
             mapFromCache = { catalogMovieMapper.entityToDomain(it) },
             mapFromRemote = { catalogMovieMapper.responseToDomain(it) },
             shouldCache = { true }
@@ -91,19 +100,37 @@ class CatalogRepository
             shouldFetchFromRemote = { it == null },
             fetchFromLocal = { catalogLocalDataSource.getTvShowById(id) },
             processRemoteResponse = {},
-            saveRemoteData = {catalogLocalDataSource.insertTvShow(catalogTvShowMapper.responseToEntity(it))},
+            saveRemoteData = {
+                catalogLocalDataSource.insertTvShow(
+                    catalogTvShowMapper.responseToEntity(
+                        it
+                    )
+                )
+            },
             mapFromCache = { catalogTvShowMapper.entityToDomain(it) },
             mapFromRemote = { catalogTvShowMapper.responseToDomain(it) },
             shouldCache = { true }
         )
     }
 
-    override fun getFavoriteMovies(): DataSource.Factory<Int, Movie> {
-        return catalogLocalDataSource.getFavoriteMovies().map { catalogMovieMapper.entityToDomain(it) }
+    override fun getFavoriteMovies(): LiveData<PagedList<Movie>> {
+        return LivePagedListBuilder(
+            catalogLocalDataSource.getFavoriteMovies()
+                .map { catalogMovieMapper.entityToDomain(it) }, 5
+        ).build()
     }
 
     override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
-        return catalogLocalDataSource.getFavoriteTvShows().map { catalogTvShowMapper.entityToDomain(it) }
+        return catalogLocalDataSource.getFavoriteTvShows()
+            .map { catalogTvShowMapper.entityToDomain(it) }
+    }
+
+    override fun convertMovieDataSourceEntityToDomain(favoriteMovies: DataSource.Factory<Int, MovieEntity>) = favoriteMovies.map {
+        catalogMovieMapper.entityToDomain(it)
+    }
+
+    override fun convertTvShowDataSourceEntityToDomain(favoriteTvShows: DataSource.Factory<Int, TvShowEntity>) = favoriteTvShows.map {
+        catalogTvShowMapper.entityToDomain(it)
     }
 
     override suspend fun updateTvShow(tvShow: TvShow) {

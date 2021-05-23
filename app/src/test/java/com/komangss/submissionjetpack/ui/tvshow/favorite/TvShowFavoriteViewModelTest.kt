@@ -19,8 +19,8 @@ class TvShowFavoriteViewModelTest {
     @Test
     fun getFavoriteTvShows() {
         val tvShowResults: List<TvShow> = DomainModelDataGenerator.generateDummyTvShows()
-        val dataSourceFactory: DataSource.Factory<Int, TvShowEntity> =
-            mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShowEntity>
+        val dataSourceFactory: DataSource.Factory<Int, TvShow> =
+            mock(DataSource.Factory::class.java) as DataSource.Factory<Int, TvShow>
 
         val repository = com.nhaarman.mockitokotlin2.mock<CatalogRepository> {
             onBlocking { getFavoriteTvShows() } doReturn dataSourceFactory
