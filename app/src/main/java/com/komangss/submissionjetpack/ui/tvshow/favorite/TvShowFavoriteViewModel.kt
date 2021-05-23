@@ -13,11 +13,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TvShowFavoriteViewModel
 @Inject constructor(private val catalogRepository: CatalogRepository) : ViewModel() {
-    //    map disini untuk mecegah error saat unit test di repo
-    val mapper = CatalogTvShowMapper()
     fun getFavoriteTvShows(): LiveData<PagedList<TvShow>> {
         return LivePagedListBuilder(
-            catalogRepository.getFavoriteTvShows().map { mapper.entityToDomain(it) }, 5
+            catalogRepository.getFavoriteTvShows(), 5
         ).build()
     }
 }

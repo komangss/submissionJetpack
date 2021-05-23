@@ -26,5 +26,5 @@ interface CatalogDataSource {
 
     fun getFavoriteMovies() : DataSource.Factory<Int, Movie>
 
-    fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
+    fun getFavoriteTvShows() : DataSource.Factory<Int, TvShow>
 }

@@ -102,8 +102,8 @@ class CatalogRepository
         return catalogLocalDataSource.getFavoriteMovies().map { catalogMovieMapper.entityToDomain(it) }
     }
 
-    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShowEntity> {
-        return catalogLocalDataSource.getFavoriteTvShows()
+    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
+        return catalogLocalDataSource.getFavoriteTvShows().map { catalogTvShowMapper.entityToDomain(it) }
     }
 
     override suspend fun updateTvShow(tvShow: TvShow) {
