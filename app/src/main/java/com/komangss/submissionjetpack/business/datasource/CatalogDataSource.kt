@@ -24,7 +24,7 @@ interface CatalogDataSource {
     @ExperimentalCoroutinesApi
     suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>>
 
-    fun getFavoriteMovies() : DataSource.Factory<Int, MovieEntity>
+    fun getFavoriteMovies() : DataSource.Factory<Int, Movie>
 
     fun getFavoriteTvShows() : DataSource.Factory<Int, TvShowEntity>
 }
