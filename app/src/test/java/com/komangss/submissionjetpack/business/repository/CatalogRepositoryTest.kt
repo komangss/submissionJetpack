@@ -11,12 +11,12 @@ import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyTvShowEntities
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntity
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntityList
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomainList
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntity
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntityList
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.TestCase.assertNotNull
@@ -135,11 +135,15 @@ class CatalogRepositoryTest {
         mainCoroutineRule.runBlockingTest {
 
             val dummyTvShowsResult = flowOf(
-                Resource.Success(DomainModelDataGenerator.generateDummyTvShows())
+                Resource.Success(tvShowDomainList)
             ).first()
 
+            val dummyTvShowsLocalResult = flow {
+                emit(tvShowEntityList)
+            }
+
             `when`(catalogLocalDataSource.getAllTvShows())
-                .thenReturn(dummyTvShowEntities())
+                .thenReturn(dummyTvShowsLocalResult)
 
             val result = catalogRepository.getAllTvShows().toList()
 
@@ -180,12 +184,12 @@ class CatalogRepositoryTest {
     fun getTvShowById() =
         mainCoroutineRule.runBlockingTest {
             val expectedTvShowResult =
-                catalogTvShowMapper.entityToDomain(provideDummyTvShowEntities()[0])
+                catalogTvShowMapper.entityToDomain(tvShowEntity)
 
-            val id = provideDummyTvShowEntities()[0].id
+            val id = tvShowEntity.id
 
             `when`(catalogLocalDataSource.getTvShowById(id))
-                .thenReturn(flowOf(provideDummyTvShowEntities()[0]))
+                .thenReturn(flowOf(tvShowEntity))
 
             val result = catalogRepository.getTvShowById(id).toList()
             verify(catalogLocalDataSource).getTvShowById(id)
@@ -215,7 +219,7 @@ class CatalogRepositoryTest {
     fun getFavoriteTvShows() {
         val dataSourceFactoryTvShowEntity = object : DataSource.Factory<Int, TvShowEntity>() {
             override fun create(): DataSource<Int, TvShowEntity> =
-                PagedListUtil.MockLimitDataSource(provideDummyTvShowEntities())
+                PagedListUtil.MockLimitDataSource(tvShowEntityList)
         }
         `when`(catalogLocalDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactoryTvShowEntity)
         catalogRepository.getFavoriteTvShows()
