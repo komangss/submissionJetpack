@@ -1,29 +1,24 @@
 package com.komangss.submissionjetpack.business.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.liveData
 import androidx.paging.DataSource
-import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
-import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
+import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
-import com.komangss.submissionjetpack.utils.PagedListUtil.asPagedList
 import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyEmptyMovieEntities
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyTvShowEntities
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
-import junit.framework.Assert.assertNotNull
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -36,7 +31,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+
 
 class CatalogRepositoryTest {
 
@@ -87,40 +85,48 @@ class CatalogRepositoryTest {
             verify(catalogLocalDataSource).getAllMovies()
 
             Assert.assertEquals(result, listOf(Resource.InProgress, dummyMoviesResult))
-            result.forEach {
-                if(it is Resource.Success) {
-                    Assert.assertEquals(it.data, catalogMovieMapper.entitiesToDomains(dummyMoviesLocalResult.first()))
-                }
-            }
         }
 
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     @Test
-    fun `get movie from local when local data movie is empty`() =
+    fun `get movie from remote when local data movie is empty`() =
         mainCoroutineRule.runBlockingTest {
 
             val dummyMoviesResult = flowOf(
                 Resource.Success(MovieDataGenerator.movieDomainList)
             ).first()
 
-            val dummyMoviesLocalResult = flow {
+            val dummyMoviesLocalResultFirst = flow<List<MovieEntity>> {
+                emit(listOf())
+            }
+
+            val dummyMoviesLocalResultSecond = flow {
                 emit(MovieDataGenerator.movieEntityList)
             }
 
+            val dummyMovieResponses = flowOf(
+                ApiResponse.Success(
+                    MovieDataGenerator.movieResultResponse
+                )
+            )
 
             `when`(catalogLocalDataSource.getAllMovies())
-                .thenReturn(dummyEmptyMovieEntities())
-//            `when`(catalogRemoteDataSource.getAllMovies())
-//                .thenReturn()
+                .thenReturn(dummyMoviesLocalResultFirst, dummyMoviesLocalResultSecond)
+
+            `when`(catalogRemoteDataSource.getAllMovies())
+                .thenReturn(dummyMovieResponses)
+
+            `when`(catalogLocalDataSource.insertMovies(any())).thenAnswer {  }
+
             val result = catalogRepository.getAllMovies().toList()
 
-            verify(catalogLocalDataSource).getAllMovies()
+            verify(catalogLocalDataSource, times(2)).getAllMovies()
+            verify(catalogLocalDataSource).insertMovies(any())
+            verify(catalogRemoteDataSource).getAllMovies()
 
             Assert.assertEquals(result, listOf(Resource.InProgress, dummyMoviesResult))
-
         }
-
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
@@ -150,7 +156,8 @@ class CatalogRepositoryTest {
     fun getMovieById() =
         mainCoroutineRule.runBlockingTest {
 
-            val expectedMovieResult = catalogMovieMapper.entityToDomain(provideDummyMovieEntities()[0])
+            val expectedMovieResult =
+                catalogMovieMapper.entityToDomain(provideDummyMovieEntities()[0])
 
             val id = provideDummyMovieEntities()[0].id
 
@@ -172,7 +179,8 @@ class CatalogRepositoryTest {
     @Test
     fun getTvShowById() =
         mainCoroutineRule.runBlockingTest {
-            val expectedTvShowResult = catalogTvShowMapper.entityToDomain(provideDummyTvShowEntities()[0])
+            val expectedTvShowResult =
+                catalogTvShowMapper.entityToDomain(provideDummyTvShowEntities()[0])
 
             val id = provideDummyTvShowEntities()[0].id
 
@@ -188,19 +196,19 @@ class CatalogRepositoryTest {
             )
         }
 
-        @Test
-        fun getFavoriteMovies() {
-            val dataSourceFactoryMovieEntity = object : DataSource.Factory<Int, MovieEntity>() {
-                override fun create(): DataSource<Int, MovieEntity> =
-                    PagedListUtil.MockLimitDataSource(provideDummyMovieEntities())
-            }
-            `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactoryMovieEntity)
-
-            val result = catalogRepository.getFavoriteMovies()
-
-            verify(catalogLocalDataSource).getFavoriteMovies()
-            assertNotNull(result)
+    @Test
+    fun getFavoriteMovies() {
+        val dataSourceFactoryMovieEntity = object : DataSource.Factory<Int, MovieEntity>() {
+            override fun create(): DataSource<Int, MovieEntity> =
+                PagedListUtil.MockLimitDataSource(provideDummyMovieEntities())
         }
+        `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactoryMovieEntity)
+
+        val result = catalogRepository.getFavoriteMovies()
+
+        verify(catalogLocalDataSource).getFavoriteMovies()
+        assertNotNull(result)
+    }
 
 
     @Test
@@ -209,9 +217,11 @@ class CatalogRepositoryTest {
         `when`(catalogLocalDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactory)
         catalogRepository.getFavoriteTvShows()
 
-        val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(
-            provideDummyTvShowEntities()
-        ))
+        val tvShowEntities = Resource.Success(
+            PagedListUtil.mockPagedList(
+                provideDummyTvShowEntities()
+            )
+        )
 
         verify(catalogLocalDataSource).getFavoriteTvShows()
         assertNotNull(tvShowEntities)
