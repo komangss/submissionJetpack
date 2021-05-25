@@ -10,6 +10,8 @@ object EntityModelDataGenerator {
         emit(provideDummyMovieEntities())
     }
 
+    fun dummyEmptyMovieEntities(): Flow<List<MovieEntity>> = flow {}
+
     fun provideDummyMovieEntities(): ArrayList<MovieEntity> {
         val dummyMovieList: ArrayList<MovieEntity> = ArrayList()
         dummyMovieList.add(

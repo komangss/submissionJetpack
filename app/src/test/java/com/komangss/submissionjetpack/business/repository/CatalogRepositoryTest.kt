@@ -15,16 +15,19 @@ import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
 import com.komangss.submissionjetpack.utils.PagedListUtil.asPagedList
 import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyEmptyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyTvShowEntities
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runBlockingTest
@@ -62,7 +65,6 @@ class CatalogRepositoryTest {
             block()
         }
 
-    //    IF CACHE AVAILABLE
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     @Test
@@ -70,12 +72,47 @@ class CatalogRepositoryTest {
         mainCoroutineRule.runBlockingTest {
 
             val dummyMoviesResult = flowOf(
-                Resource.Success(DomainModelDataGenerator.generateDummyMovies())
+                Resource.Success(MovieDataGenerator.movieDomainList)
             ).first()
 
-            `when`(catalogLocalDataSource.getAllMovies())
-                .thenReturn(dummyMovieEntities())
+            val dummyMoviesLocalResult = flow {
+                emit(MovieDataGenerator.movieEntityList)
+            }
 
+            `when`(catalogLocalDataSource.getAllMovies())
+                .thenReturn(dummyMoviesLocalResult)
+
+            val result = catalogRepository.getAllMovies().toList()
+
+            verify(catalogLocalDataSource).getAllMovies()
+
+            Assert.assertEquals(result, listOf(Resource.InProgress, dummyMoviesResult))
+            result.forEach {
+                if(it is Resource.Success) {
+                    Assert.assertEquals(it.data, catalogMovieMapper.entitiesToDomains(dummyMoviesLocalResult.first()))
+                }
+            }
+        }
+
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
+    @Test
+    fun `get movie from local when local data movie is empty`() =
+        mainCoroutineRule.runBlockingTest {
+
+            val dummyMoviesResult = flowOf(
+                Resource.Success(MovieDataGenerator.movieDomainList)
+            ).first()
+
+            val dummyMoviesLocalResult = flow {
+                emit(MovieDataGenerator.movieEntityList)
+            }
+
+
+            `when`(catalogLocalDataSource.getAllMovies())
+                .thenReturn(dummyEmptyMovieEntities())
+//            `when`(catalogRemoteDataSource.getAllMovies())
+//                .thenReturn()
             val result = catalogRepository.getAllMovies().toList()
 
             verify(catalogLocalDataSource).getAllMovies()

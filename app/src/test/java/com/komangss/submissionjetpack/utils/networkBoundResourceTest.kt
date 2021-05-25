@@ -17,7 +17,7 @@ inline fun <DB : Any, REMOTE : Any, DOMAIN : Any> networkBoundResourceTest(
     crossinline mapFromCache : (DB) -> DOMAIN,
     crossinline mapFromRemote : (REMOTE) -> DOMAIN,
     crossinline shouldCache : () -> Boolean = { true }
-) = flow {
+) = flow <Resource<DOMAIN>> {
     emit(Resource.InProgress)
     val localData = fetchFromLocal().first()
 
