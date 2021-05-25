@@ -33,7 +33,6 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 
 
@@ -214,17 +213,16 @@ class CatalogRepositoryTest {
 
     @Test
     fun getFavoriteTvShows() {
-        val dataSourceFactory = mock<DataSource.Factory<Int, TvShowEntity>>()
-        `when`(catalogLocalDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactory)
+        val dataSourceFactoryTvShowEntity = object : DataSource.Factory<Int, TvShowEntity>() {
+            override fun create(): DataSource<Int, TvShowEntity> =
+                PagedListUtil.MockLimitDataSource(provideDummyTvShowEntities())
+        }
+        `when`(catalogLocalDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactoryTvShowEntity)
         catalogRepository.getFavoriteTvShows()
 
-        val tvShowEntities = Resource.Success(
-            PagedListUtil.mockPagedList(
-                provideDummyTvShowEntities()
-            )
-        )
+        val result = catalogRepository.getFavoriteTvShows()
 
-        verify(catalogLocalDataSource).getFavoriteTvShows()
-        assertNotNull(tvShowEntities)
+        verify(catalogLocalDataSource, times(2)).getFavoriteTvShows()
+        assertNotNull(result)
     }
 }

@@ -103,17 +103,22 @@ constructor(
         ).build()
     }
 
-    override fun convertMovieDataSourceEntityToDomain(favoriteMovies: DataSource.Factory<Int, MovieEntity>) = favoriteMovies.map {
-        catalogMovieMapper.entityToDomain(it)
+    override fun getFavoriteTvShows(): LiveData<PagedList<TvShow>> {
+        return LivePagedListBuilder(
+            convertTvShowDataSourceEntityToDomain(catalogLocalDataSource.getFavoriteTvShows()), 5
+        ).build()
     }
 
-    override fun convertTvShowDataSourceEntityToDomain(favoriteTvShows: DataSource.Factory<Int, TvShowEntity>) = favoriteTvShows.map {
-        catalogTvShowMapper.entityToDomain(it)
-    }
+    override fun convertMovieDataSourceEntityToDomain(favoriteMovies: DataSource.Factory<Int, MovieEntity>) =
+        favoriteMovies.map {
+            catalogMovieMapper.entityToDomain(it)
+        }
 
-    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShow> {
-        return catalogLocalDataSource.getFavoriteTvShows().map { catalogTvShowMapper.entityToDomain(it) }
-    }
+    override fun convertTvShowDataSourceEntityToDomain(favoriteTvShows: DataSource.Factory<Int, TvShowEntity>) =
+        favoriteTvShows.map {
+            catalogTvShowMapper.entityToDomain(it)
+        }
+
     override suspend fun updateTvShow(tvShow: TvShow) {
         catalogLocalDataSource.updateTvShow(catalogTvShowMapper.domainToEntity(tvShow))
     }
