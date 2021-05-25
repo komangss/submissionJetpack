@@ -159,16 +159,10 @@ class CatalogRepositoryTest {
             }
             `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactoryMovieEntity)
 
-            catalogRepository.getFavoriteMovies()
+            val result = catalogRepository.getFavoriteMovies()
 
-            val movieResults: List<Movie> = DomainModelDataGenerator.generateDummyMovies()
-
-            val mockedMoviePagedList: PagedList<Movie> = PagedListUtil.mockPagedList(movieResults)
-            val repoResult = liveData {
-                emit(mockedMoviePagedList)
-            }
             verify(catalogLocalDataSource).getFavoriteMovies()
-            assertNotNull(repoResult)
+            assertNotNull(result)
         }
 
 
