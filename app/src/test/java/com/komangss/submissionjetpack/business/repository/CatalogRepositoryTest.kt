@@ -13,9 +13,10 @@ import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
 import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyMovieEntities
 import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyTvShowEntities
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntity
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntityList
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.TestCase.assertNotNull
@@ -74,7 +75,7 @@ class CatalogRepositoryTest {
             ).first()
 
             val dummyMoviesLocalResult = flow {
-                emit(MovieDataGenerator.movieEntityList)
+                emit(movieEntityList)
             }
 
             `when`(catalogLocalDataSource.getAllMovies())
@@ -102,7 +103,7 @@ class CatalogRepositoryTest {
             }
 
             val dummyMoviesLocalResultSecond = flow {
-                emit(MovieDataGenerator.movieEntityList)
+                emit(movieEntityList)
             }
 
             val dummyMovieResponses = flowOf(
@@ -157,12 +158,12 @@ class CatalogRepositoryTest {
         mainCoroutineRule.runBlockingTest {
 
             val expectedMovieResult =
-                catalogMovieMapper.entityToDomain(provideDummyMovieEntities()[0])
+                catalogMovieMapper.entityToDomain(movieEntity)
 
-            val id = provideDummyMovieEntities()[0].id
+            val id = movieEntity.id
 
             `when`(catalogLocalDataSource.getMovieById(id))
-                .thenReturn(flowOf(provideDummyMovieEntities()[0]))
+                .thenReturn(flowOf(movieEntity))
 
             val result = catalogRepository.getMovieById(id).toList()
             verify(catalogLocalDataSource).getMovieById(id)
@@ -200,7 +201,7 @@ class CatalogRepositoryTest {
     fun getFavoriteMovies() {
         val dataSourceFactoryMovieEntity = object : DataSource.Factory<Int, MovieEntity>() {
             override fun create(): DataSource<Int, MovieEntity> =
-                PagedListUtil.MockLimitDataSource(provideDummyMovieEntities())
+                PagedListUtil.MockLimitDataSource(movieEntityList)
         }
         `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactoryMovieEntity)
 

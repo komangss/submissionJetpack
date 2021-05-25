@@ -30,11 +30,11 @@ object MovieDataGenerator {
         )
     )
 
-    private val movieDomain = movieMapper.responseToDomain(movieResultResponse.results!!.first()).apply {
+    val movieDomain = movieMapper.responseToDomain(movieResultResponse.results!!.first()).apply {
         this.isFavorite = false
     }
 
-    private val movieEntity = movieMapper.domainToEntity(movieDomain)
+    val movieEntity = movieMapper.domainToEntity(movieDomain)
 
     val movieDomainList =
         listOf(

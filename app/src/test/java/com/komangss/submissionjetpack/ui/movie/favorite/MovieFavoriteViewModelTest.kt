@@ -1,24 +1,22 @@
 package com.komangss.submissionjetpack.ui.movie.favorite
 
 import androidx.lifecycle.liveData
-import androidx.paging.DataSource
 import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.PagedListUtil.mockPagedList
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieDomainList
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import org.junit.Test
-import org.mockito.Mockito.mock
 
 
 class  MovieFavoriteViewModelTest {
     @Test
     fun getFavoriteMovies() {
-        val movieResults: List<Movie> = DomainModelDataGenerator.generateDummyMovies()
+        val movieResults: List<Movie> = movieDomainList
 
         val mockedMoviePagedList: PagedList<Movie> = mockPagedList(movieResults)
         val repoResult = liveData {
