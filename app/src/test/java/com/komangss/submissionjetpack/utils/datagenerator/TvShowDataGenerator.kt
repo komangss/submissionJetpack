@@ -7,7 +7,7 @@ import com.komangss.submissionjetpack.framework.network.model.TvShowResultRespon
 object TvShowDataGenerator {
     private val tvShowMapper = CatalogTvShowMapper()
 
-    private val tvShowResultResponse = TvShowResultResponse(
+    val tvShowResultResponse = TvShowResultResponse(
         1,
         1,
         1,

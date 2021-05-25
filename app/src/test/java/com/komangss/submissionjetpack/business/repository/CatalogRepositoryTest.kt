@@ -14,6 +14,7 @@ import com.komangss.submissionjetpack.utils.PagedListUtil
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntity
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntityList
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomainList
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntity
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntityList
@@ -150,7 +151,47 @@ class CatalogRepositoryTest {
             verify(catalogLocalDataSource).getAllTvShows()
 
             Assert.assertEquals(result, listOf(Resource.InProgress, dummyTvShowsResult))
+        }
 
+    @InternalCoroutinesApi
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `get tv show from remote when local data tv show is empty`() =
+        mainCoroutineRule.runBlockingTest {
+
+            val dummyTvShowsResult = flowOf(
+                Resource.Success(tvShowDomainList)
+            ).first()
+
+            val dummyTvShowsLocalResultFirst = flow<List<TvShowEntity>> {
+                emit(listOf())
+            }
+
+            val dummyTvShowsLocalResultSecond = flow {
+                emit(tvShowEntityList)
+            }
+
+            val dummyTvShowResponses = flowOf(
+                ApiResponse.Success(
+                    TvShowDataGenerator.tvShowResultResponse
+                )
+            )
+
+            `when`(catalogLocalDataSource.getAllTvShows())
+                .thenReturn(dummyTvShowsLocalResultFirst, dummyTvShowsLocalResultSecond)
+
+            `when`(catalogRemoteDataSource.getAllTvShows())
+                .thenReturn(dummyTvShowResponses)
+
+            `when`(catalogLocalDataSource.insertTvShows(any())).thenAnswer { }
+
+            val result = catalogRepository.getAllTvShows().toList()
+
+            verify(catalogLocalDataSource, times(2)).getAllTvShows()
+            verify(catalogLocalDataSource).insertTvShows(any())
+            verify(catalogRemoteDataSource).getAllTvShows()
+
+            Assert.assertEquals(result, listOf(Resource.InProgress, dummyTvShowsResult))
         }
 
 

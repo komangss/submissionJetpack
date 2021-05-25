@@ -81,6 +81,7 @@ class CatalogTvShowMapper @Inject constructor() : MapperInterface<TvShow, TvShow
             genreIds = domain.genreIds.toString(),
             id = domain.id,
             name = domain.name,
+//            ToDo : Fix this, don't hardcode inside the mapper lol
             originalCountry = listOf("en").toString(),
             originalLanguage = domain.originalLanguage,
             originalName = domain.originalName,
