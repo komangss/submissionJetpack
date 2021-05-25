@@ -131,7 +131,7 @@ class CatalogRepositoryTest {
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test
-    fun getAllTvShows() =
+    fun `get tv show from local when local data tv show is available`() =
         mainCoroutineRule.runBlockingTest {
 
             val dummyTvShowsResult = flowOf(
