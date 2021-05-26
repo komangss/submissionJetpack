@@ -4,7 +4,7 @@ import org.junit.Assert
 import org.junit.Test
 import java.util.regex.Pattern
 
-class GenreIdMapperTest {
+class MapperTest {
 
     @Test
     fun `test convert example id from entity into domain model using regex`() {
@@ -38,12 +38,9 @@ class GenreIdMapperTest {
         genreIdsToTest = genreIdsToTest.replace(" ", "")
         genreIdsToTest = genreIdsToTest.substring(1, genreIdsToTest.length - 1)
 
-
         val expectedResult = listOf("en", "uk", "id")
 
         val result: List<String> = genreIdsToTest.split(",")
         Assert.assertEquals(expectedResult, result)
     }
-
-
 }
