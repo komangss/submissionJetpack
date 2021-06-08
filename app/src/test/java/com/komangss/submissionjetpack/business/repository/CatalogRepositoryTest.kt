@@ -12,9 +12,11 @@ import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieDomain
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntity
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntityList
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomain
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomainList
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntity
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntityList
@@ -118,7 +120,7 @@ class CatalogRepositoryTest {
             `when`(catalogRemoteDataSource.getAllMovies())
                 .thenReturn(dummyMovieResponses)
 
-            `when`(catalogLocalDataSource.insertMovies(any())).thenAnswer {  }
+            `when`(catalogLocalDataSource.insertMovies(any())).thenAnswer { }
 
             val result = catalogRepository.getAllMovies().toList()
 
@@ -270,4 +272,20 @@ class CatalogRepositoryTest {
         verify(catalogLocalDataSource, times(2)).getFavoriteTvShows()
         assertNotNull(result)
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `test update movie in catalog local data source`() =
+        mainCoroutineRule.runBlockingTest {
+            catalogRepository.updateMovie(movieDomain)
+            verify(catalogLocalDataSource).updateMovie(any())
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `test update Tv Show in catalog local data source`() =
+        mainCoroutineRule.runBlockingTest {
+            catalogRepository.updateTvShow(tvShowDomain)
+            verify(catalogLocalDataSource).updateTvShow(any())
+        }
 }
