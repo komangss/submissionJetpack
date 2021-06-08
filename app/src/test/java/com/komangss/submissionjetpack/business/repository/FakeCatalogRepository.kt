@@ -1,7 +1,6 @@
 package com.komangss.submissionjetpack.business.repository
 
 import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
@@ -9,7 +8,6 @@ import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalData
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.utils.networkBoundResourceTest
@@ -105,14 +103,10 @@ constructor(
 
     override fun getFavoriteTvShows(): LiveData<PagedList<TvShow>> {
         return LivePagedListBuilder(
-            convertTvShowDataSourceEntityToDomain(catalogLocalDataSource.getFavoriteTvShows()), 5
+            catalogLocalDataSource.getFavoriteTvShows()
+                .map { catalogTvShowMapper.entityToDomain(it) }, 5
         ).build()
     }
-
-    override fun convertTvShowDataSourceEntityToDomain(favoriteTvShows: DataSource.Factory<Int, TvShowEntity>) =
-        favoriteTvShows.map {
-            catalogTvShowMapper.entityToDomain(it)
-        }
 
     override suspend fun updateTvShow(tvShow: TvShow) {
         catalogLocalDataSource.updateTvShow(catalogTvShowMapper.domainToEntity(tvShow))
