@@ -41,9 +41,10 @@ class TvShowFavoriteDetailActivity : AppCompatActivity() {
                     val tvShow = it.data
                     tv_activity_tv_show_detail_tv_show_title.text = tvShow.name
                     tv_activity_tv_show_detail_tv_show_description.text = tvShow.description
-                    val voteAverage = tvShow.voteAverage.div(2).toFloat()
-                    item_tv_show_tvshow_rating_bar.rating = voteAverage
-                    tv_activity_tv_show_detail_tv_show_rating.text = "$voteAverage / 5"
+                    val voteAverage = tvShow.voteAverage.div(2)
+                    item_tv_show_tvshow_rating_bar.rating = voteAverage.toFloat()
+                    tv_activity_tv_show_detail_tv_show_rating.text =
+                        getString(R.string.vote_average, voteAverage)
                     supportActionBar?.title = tvShow.name
 
                     Glide.with(this@TvShowFavoriteDetailActivity)

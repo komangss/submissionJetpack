@@ -38,9 +38,10 @@ class MovieDetailActivity : AppCompatActivity() {
                     val movie = it.data
                     tv_activity_movie_detail_movie_title.text = movie.title
                     tv_activity_movie_detail_movie_description.text = movie.description
-                    val voteAverage = movie.voteAverage.div(2).toFloat()
-                    item_movie_tvshow_rating_bar.rating = voteAverage
-                    tv_activity_movie_detail_movie_rating.text = "$voteAverage / 5"
+                    val voteAverage = movie.voteAverage.div(2)
+                    item_movie_tvshow_rating_bar.rating = voteAverage.toFloat()
+                    tv_activity_movie_detail_movie_rating.text =
+                        getString(R.string.vote_average, voteAverage)
 
                     Glide.with(this@MovieDetailActivity)
                         .load("https://image.tmdb.org/t/p/original/${movie.posterUrlPath}")

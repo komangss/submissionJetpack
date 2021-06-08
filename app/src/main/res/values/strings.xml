@@ -9,4 +9,6 @@
     <string name="activity_movie_detail_description">Movie Description :</string>
     <string name="activity_tv_show_detail_description">Tv Show Description :</string>
     <string name="favorite">Favorite Catalog</string>
+    <!--    Sources : https://developer.android.com/guide/topics/resources/string-resource#formatting-strings-->
+    <string name="vote_average">%d / 5</string>
 </resources>

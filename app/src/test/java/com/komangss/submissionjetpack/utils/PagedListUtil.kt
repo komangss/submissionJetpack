@@ -1,18 +1,19 @@
 package com.komangss.submissionjetpack.utils
 
-import androidx.paging.PagedList
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import android.database.Cursor
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import androidx.room.RoomDatabase
 import androidx.room.RoomSQLiteQuery
 import androidx.room.paging.LimitOffsetDataSource
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import io.mockk.every
 import io.mockk.mockk
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+
 object PagedListUtil {
 
     fun <T> mockPagedList(list: List<T>): PagedList<T> {
@@ -39,7 +40,7 @@ object PagedListUtil {
         ).build().getOrAwaitValue()
     }
 
-    fun <T> createMockDataSourceFactory(itemList: List<T>): DataSource.Factory<Int, T> =
+    private fun <T> createMockDataSourceFactory(itemList: List<T>): DataSource.Factory<Int, T> =
         object : DataSource.Factory<Int, T>() {
             override fun create(): DataSource<Int, T> = MockLimitDataSource(itemList)
         }
