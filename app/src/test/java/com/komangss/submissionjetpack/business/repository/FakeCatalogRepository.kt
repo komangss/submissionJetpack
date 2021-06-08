@@ -9,7 +9,6 @@ import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalData
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
@@ -99,7 +98,8 @@ constructor(
 
     override fun getFavoriteMovies(): LiveData<PagedList<Movie>> {
         return LivePagedListBuilder(
-            convertMovieDataSourceEntityToDomain(catalogLocalDataSource.getFavoriteMovies()), 5
+            catalogLocalDataSource.getFavoriteMovies()
+                .map { catalogMovieMapper.entityToDomain(it) }, 5
         ).build()
     }
 
@@ -108,11 +108,6 @@ constructor(
             convertTvShowDataSourceEntityToDomain(catalogLocalDataSource.getFavoriteTvShows()), 5
         ).build()
     }
-
-    override fun convertMovieDataSourceEntityToDomain(favoriteMovies: DataSource.Factory<Int, MovieEntity>) =
-        favoriteMovies.map {
-            catalogMovieMapper.entityToDomain(it)
-        }
 
     override fun convertTvShowDataSourceEntityToDomain(favoriteTvShows: DataSource.Factory<Int, TvShowEntity>) =
         favoriteTvShows.map {

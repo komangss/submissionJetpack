@@ -5,7 +5,6 @@ import androidx.paging.DataSource
 import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,8 +28,6 @@ interface CatalogDataSource {
     fun getFavoriteMovies(): LiveData<PagedList<Movie>>
 
     fun getFavoriteTvShows(): LiveData<PagedList<TvShow>>
-
-    fun convertMovieDataSourceEntityToDomain(favoriteMovies: DataSource.Factory<Int, MovieEntity>): DataSource.Factory<Int, Movie>
 
     fun convertTvShowDataSourceEntityToDomain(favoriteTvShows: DataSource.Factory<Int, TvShowEntity>): DataSource.Factory<Int, TvShow>
 }
