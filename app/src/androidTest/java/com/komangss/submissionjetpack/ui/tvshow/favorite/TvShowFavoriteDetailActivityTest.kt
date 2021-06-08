@@ -16,16 +16,25 @@ import com.komangss.submissionjetpack.ui.Utils
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.ui.tvshow.favorite.TvShowFavoriteDetailActivity.Companion.EXTRA_TV_SHOW_ID
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@HiltAndroidTest
 class TvShowFavoriteDetailActivityTest {
-    private lateinit var dummyTvShow : TvShow
 
     @get:Rule
-    val rule = lazyActivityScenarioRule<TvShowFavoriteDetailActivity>(launchActivity = false)
+    var hiltAndroidRule = HiltAndroidRule(this)
+
+    @Before
+    fun preparation() {
+        hiltAndroidRule.inject()
+    }
+
+    private lateinit var dummyTvShow: TvShow
 
     @Before
     fun setUp() {
@@ -46,7 +55,6 @@ class TvShowFavoriteDetailActivityTest {
 
         dummyTvShow = mapper.entitiesToDomains(entities)[0]
 
-        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
     }
 
     @Test
@@ -55,7 +63,8 @@ class TvShowFavoriteDetailActivityTest {
             ApplicationProvider.getApplicationContext(), TvShowFavoriteDetailActivity::class.java
         ).putExtra(EXTRA_TV_SHOW_ID, dummyTvShow.id)
 
-        rule.launch(intent)
+        lazyActivityScenarioRule<TvShowFavoriteDetailActivity>(launchActivity = false).launch(intent)
+        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
 
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_title))
             .check(ViewAssertions.matches(ViewMatchers.withText(dummyTvShow.name)))

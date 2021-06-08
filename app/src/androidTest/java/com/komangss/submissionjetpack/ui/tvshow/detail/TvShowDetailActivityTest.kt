@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.ui.tvshow.detail
+ package com.komangss.submissionjetpack.ui.tvshow.detail
 
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -16,61 +16,68 @@ import com.komangss.submissionjetpack.ui.Utils
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity.Companion.EXTRA_TV_SHOW_ID
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+ @HiltAndroidTest
 class TvShowDetailActivityTest {
-    private lateinit var dummyTvShow : TvShow
 
-    @get:Rule
-    val rule = lazyActivityScenarioRule<TvShowDetailActivity>(launchActivity = false)
+     @get:Rule
+     var hiltAndroidRule = HiltAndroidRule(this)
 
-    @Before
-    fun setUp() {
-        val gson = GsonBuilder().create()
-        val jsonResult =
-            Utils.getJsonFromAssets(
-                InstrumentationRegistry.getInstrumentation().context,
-                "TvShowResponse.json"
-            )
+     @Before
+     fun preparation() {
+         hiltAndroidRule.inject()
+     }
 
-        val tvShowResultResponse: TvShowResultResponse = gson.fromJson(
-            jsonResult,
-            TvShowResultResponse::class.java
-        )
+     private lateinit var dummyTvShow: TvShow
 
-        val mapper = CatalogTvShowMapper()
-        val entities = mapper.responsesToEntities(tvShowResultResponse.results ?: listOf())
+     @Before
+     fun setUp() {
+         val gson = GsonBuilder().create()
+         val jsonResult =
+             Utils.getJsonFromAssets(
+                 InstrumentationRegistry.getInstrumentation().context,
+                 "TvShowResponse.json"
+             )
 
-        dummyTvShow = mapper.entitiesToDomains(entities)[0]
+         val tvShowResultResponse: TvShowResultResponse = gson.fromJson(
+             jsonResult,
+             TvShowResultResponse::class.java
+         )
 
-        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
-    }
+         val mapper = CatalogTvShowMapper()
+         val entities = mapper.responsesToEntities(tvShowResultResponse.results ?: listOf())
 
-    @Test
-    fun testTvShowTitleShowUp() {
-        val intent = Intent(
-            ApplicationProvider.getApplicationContext(), TvShowDetailActivity::class.java
-        ).putExtra(EXTRA_TV_SHOW_ID, dummyTvShow.id)
+         dummyTvShow = mapper.entitiesToDomains(entities)[0]
 
-        rule.launch(intent)
+     }
 
-        Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_title))
-            .check(ViewAssertions.matches(ViewMatchers.withText(dummyTvShow.name)))
-        Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_description))
-            .check(ViewAssertions.matches(ViewMatchers.withText(dummyTvShow.description)))
+     @Test
+     fun testTvShowTitleShowUp() {
+         val intent = Intent(
+             ApplicationProvider.getApplicationContext(), TvShowDetailActivity::class.java
+         ).putExtra(EXTRA_TV_SHOW_ID, dummyTvShow.id)
 
-        val voteAverageText = "${dummyTvShow.voteAverage.div(2).toFloat()} / 5"
-        Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_rating))
-            .check(ViewAssertions.matches(ViewMatchers.withText(voteAverageText)))
+         lazyActivityScenarioRule<TvShowDetailActivity>(launchActivity = false).launch(intent)
+         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
 
+         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_title))
+             .check(ViewAssertions.matches(ViewMatchers.withText(dummyTvShow.name)))
+         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_description))
+             .check(ViewAssertions.matches(ViewMatchers.withText(dummyTvShow.description)))
 
-    }
+         val voteAverageText = "${dummyTvShow.voteAverage.div(2).toFloat()} / 5"
+         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_tv_show_detail_tv_show_rating))
+             .check(ViewAssertions.matches(ViewMatchers.withText(voteAverageText)))
+     }
 
-    @After
-    fun unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResources.countingIdlingResource)
-    }
+     @After
+     fun unregisterIdlingResource() {
+         IdlingRegistry.getInstance().unregister(EspressoIdlingResources.countingIdlingResource)
+     }
 }
