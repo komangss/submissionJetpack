@@ -41,7 +41,7 @@ class TvShowFavoriteAdapter :
                         .into(item_movie_tvshow_image_view_poster)
 
                     setOnClickListener {
-                        val intent = Intent(context, TvShowFavoriteDetailActivity::class.java)
+                        val intent = Intent(context, TvShowDetailActivity::class.java)
                         intent.putExtra(TvShowDetailActivity.EXTRA_TV_SHOW_ID, tvShow.id)
                         context.startActivity(intent)
                         (context as Activity).finish()

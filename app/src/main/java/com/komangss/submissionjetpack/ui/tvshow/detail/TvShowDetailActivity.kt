@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class TvShowDetailActivity : AppCompatActivity() {
 
-    private var isFav = false
     val viewModel by viewModels<TvShowDetailViewModel>()
 
     @InternalCoroutinesApi
@@ -54,13 +53,13 @@ class TvShowDetailActivity : AppCompatActivity() {
                         .centerCrop()
                         .into(image_view_activity_tv_show_detail_tv_show_backdrop)
 
-                    isFav = tvShow.isFavorite
-
-                    setFavorite()
+                    setFavorite(tvShow.isFavorite)
 
                     fab_activity_tv_show_detail_favorite.setOnClickListener {
-                        isFav = !isFav
-                        if (isFav) {
+                        val boolean = tvShow.isFavorite
+                        tvShow.isFavorite = !boolean
+                        setFavorite(tvShow.isFavorite)
+                        if (tvShow.isFavorite) {
                             Toast.makeText(
                                 this@TvShowDetailActivity,
                                 "Added to Favorite List",
@@ -73,7 +72,6 @@ class TvShowDetailActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                        setFavorite()
                         lifecycleScope.launch {
                             viewModel.setFavorite(tvShow)
                         }
@@ -98,8 +96,8 @@ class TvShowDetailActivity : AppCompatActivity() {
 
     }
 
-    private fun setFavorite() {
-        if (isFav) {
+    private fun setFavorite(state: Boolean) {
+        if (state) {
             fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_favorite)
         } else {
             fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
