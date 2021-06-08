@@ -35,7 +35,7 @@ class MapperTest {
     }
 
     @Test
-    fun `test convert example original country from entity into domain model`() {
+    fun `test convert example original country tv show from entity into domain model`() {
         var originalCountries = "[en, uk, id]"
         val expectedResult = listOf("en", "uk", "id")
 
