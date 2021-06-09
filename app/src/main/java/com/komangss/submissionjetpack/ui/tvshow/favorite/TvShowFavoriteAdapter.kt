@@ -1,7 +1,5 @@
 package com.komangss.submissionjetpack.ui.tvshow.favorite
 
-import android.app.Activity
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
-class TvShowFavoriteAdapter :
-    PagedListAdapter<TvShow, TvShowFavoriteAdapter.TvShowFavoriteViewHolder>(DIFF_CALLBACK) {
+class TvShowFavoriteAdapter(
+    private val onClickListener: (tvShow: TvShow) -> Unit
+) : PagedListAdapter<TvShow, TvShowFavoriteAdapter.TvShowFavoriteViewHolder>(DIFF_CALLBACK) {
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvShow>() {
             override fun areItemsTheSame(oldItem: TvShow, newItem: TvShow): Boolean =
@@ -27,7 +25,7 @@ class TvShowFavoriteAdapter :
         }
     }
 
-    class TvShowFavoriteViewHolder(private val v: View) : RecyclerView.ViewHolder(v) {
+    inner class TvShowFavoriteViewHolder(private val v: View) : RecyclerView.ViewHolder(v) {
         fun bind(tvShow: TvShow?) {
             with(v) {
                 if (tvShow != null) {
@@ -40,11 +38,9 @@ class TvShowFavoriteAdapter :
                         .load("https://image.tmdb.org/t/p/original/${tvShow.posterUrlPath}")
                         .into(item_movie_tvshow_image_view_poster)
 
+
                     setOnClickListener {
-                        val intent = Intent(context, TvShowDetailActivity::class.java)
-                        intent.putExtra(TvShowDetailActivity.EXTRA_TV_SHOW_ID, tvShow.id)
-                        context.startActivity(intent)
-                        (context as Activity).finish()
+                        onClickListener(tvShow)
                     }
                 }
             }

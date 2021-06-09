@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.ui.tvshow.favorite
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
+import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tv_show_favorite.*
 
@@ -26,9 +28,13 @@ class TvShowFavoriteFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if(activity != null) {
-
-            val adapter = TvShowFavoriteAdapter()
+        if (activity != null) {
+            val adapter = TvShowFavoriteAdapter {
+                val intent = Intent(activity, TvShowDetailActivity::class.java)
+                intent.putExtra(TvShowDetailActivity.EXTRA_TV_SHOW_ID, it.id)
+                startActivity(intent)
+                requireActivity().finish()
+            }
 
             viewModel.getFavoriteTvShows().observe(viewLifecycleOwner, Observer {
                 adapter.submitList(it)
