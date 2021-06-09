@@ -33,7 +33,6 @@ class TvShowFavoriteFragment : Fragment() {
                 val intent = Intent(activity, TvShowDetailActivity::class.java)
                 intent.putExtra(TvShowDetailActivity.EXTRA_TV_SHOW_ID, it.id)
                 startActivity(intent)
-                requireActivity().finish()
             }
 
             viewModel.getFavoriteTvShows().observe(viewLifecycleOwner, Observer {

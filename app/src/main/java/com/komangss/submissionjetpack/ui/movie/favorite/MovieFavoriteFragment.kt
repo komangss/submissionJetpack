@@ -32,7 +32,6 @@ class MovieFavoriteFragment : Fragment() {
                 val intent = Intent(activity, MovieDetailActivity::class.java)
                 intent.putExtra(MovieDetailActivity.EXTRA_MOVIE_ID, it.id)
                 startActivity(intent)
-                requireActivity().finish()
 
             }
 
