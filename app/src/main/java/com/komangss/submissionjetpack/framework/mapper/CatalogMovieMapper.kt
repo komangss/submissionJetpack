@@ -4,8 +4,9 @@ import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
+class CatalogMovieMapper @Inject constructor() : MapperInterface<Movie, MovieEntity, MovieResponse> {
     override fun responseToEntity(response: MovieResponse): MovieEntity {
         return MovieEntity(
             popularity = response.popularity ?: 0.0,
@@ -20,7 +21,8 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
             title = response.title ?: "",
             voteAverage = response.voteAverage ?: -1.0,
             description = response.description ?: "",
-            releaseDate = response.releaseDate ?: ""
+            releaseDate = response.releaseDate ?: "",
+            isFavorite = false
         )
     }
 
@@ -69,22 +71,45 @@ class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
         return responses.map { responseToEntity(it) }
     }
 
-    override fun domainToEntity(d: Movie): MovieEntity {
+    override fun domainToEntity(domain: Movie): MovieEntity {
         return MovieEntity(
-            popularity = d.popularity,
-            voteCount = d.voteCount,
-            isVideo = d.isVideo,
-            posterUrlPath = d.posterUrlPath,
-            id = d.id,
-            backdropUrlPath = d.backdropUrlPath,
-            originalLanguage = d.originalLanguage,
-            originalTitle = d.originalTitle,
-            genreIds = d.genreIds.toString(),
-            title = d.title,
-            voteAverage = d.voteAverage,
-            description = d.description,
-            releaseDate = d.releaseDate,
-            isFavorite = d.isFavorite
+            popularity = domain.popularity,
+            voteCount = domain.voteCount,
+            isVideo = domain.isVideo,
+            posterUrlPath = domain.posterUrlPath,
+            id = domain.id,
+            backdropUrlPath = domain.backdropUrlPath,
+            originalLanguage = domain.originalLanguage,
+            originalTitle = domain.originalTitle,
+            genreIds = domain.genreIds.toString(),
+            title = domain.title,
+            voteAverage = domain.voteAverage,
+            description = domain.description,
+            releaseDate = domain.releaseDate,
+            isFavorite = domain.isFavorite
         )
+    }
+
+    override fun responseToDomain(response : MovieResponse): Movie {
+        return Movie(
+            popularity = response.popularity ?: 0.0,
+            voteCount = response.voteCount ?: -1,
+            isVideo = response.isVideo ?: false,
+            posterUrlPath = response.posterUrlPath ?: "",
+            id = response.id ?: -1,
+            backdropUrlPath = response.backdropUrlPath ?: "",
+            originalLanguage = response.originalLanguage ?: "",
+            originalTitle = response.originalTitle ?: "",
+            genreIds = response.genreIds ?: listOf(),
+            title = response.title ?: "",
+            voteAverage = response.voteAverage ?: -1.0,
+            description = response.description ?: "",
+            releaseDate = response.releaseDate ?: "",
+            isFavorite = false
+        )
+    }
+
+    override fun responsesToDomains(responses: List<MovieResponse>): List<Movie> {
+        return responses.map { responseToDomain(it) }
     }
 }

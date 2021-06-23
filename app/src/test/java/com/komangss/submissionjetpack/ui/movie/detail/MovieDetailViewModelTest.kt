@@ -6,12 +6,13 @@ import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieDomain
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -46,9 +47,10 @@ class MovieDetailViewModelTest {
 
     @Before
     fun setUp() {
-        dummyMovie = DomainModelDataGenerator.generateDummyMovies()[0]
+        dummyMovie = movieDomain
     }
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test
     fun detailMovie() {
@@ -60,6 +62,8 @@ class MovieDetailViewModelTest {
             }
 
             viewModel = MovieDetailViewModel(repo)
+            viewModel.movie.observeForever(observer)
+
             viewModel.setMovieId(dummyMovie.id)
 
             assertEquals(
@@ -67,9 +71,19 @@ class MovieDetailViewModelTest {
                 viewModel.movie.getOrAwaitValue()
             )
 
-            viewModel.movie.observeForever(observer)
-
             verify(observer).onChanged(dummyMovieResult.first())
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun updateMovieFavorite() {
+        mainCoroutineRule.runBlockingTest {
+            val repo = mock<CatalogRepository>()
+            viewModel = MovieDetailViewModel(repo)
+            viewModel.setFavorite(dummyMovie)
+
+            verify(repo).updateMovie(dummyMovie)
         }
     }
 }

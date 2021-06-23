@@ -8,28 +8,36 @@ import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
 import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
+import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyMovieEntities
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.dummyTvShowEntities
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyMovieEntities
-import com.komangss.submissionjetpack.utils.datagenerator.EntityModelDataGenerator.provideDummyTvShowEntities
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieDomain
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntity
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieEntityList
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomain
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomainList
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntity
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntityList
 import com.komangss.submissionjetpack.vo.Resource
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+
 
 class CatalogRepositoryTest {
 
@@ -40,8 +48,8 @@ class CatalogRepositoryTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private val catalogRemoteDataSource = mock(CatalogRemoteDataSource::class.java)
-    private val catalogLocalDataSource = mock(CatalogLocalDataSource::class.java)
+    private val catalogRemoteDataSource = Mockito.mock(CatalogRemoteDataSource::class.java)
+    private val catalogLocalDataSource = Mockito.mock(CatalogLocalDataSource::class.java)
     private val catalogMovieMapper = CatalogMovieMapper()
     private val catalogTvShowMapper = CatalogTvShowMapper()
 
@@ -58,7 +66,6 @@ class CatalogRepositoryTest {
             block()
         }
 
-    //    IF CACHE AVAILABLE
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
     @Test
@@ -66,40 +73,127 @@ class CatalogRepositoryTest {
         mainCoroutineRule.runBlockingTest {
 
             val dummyMoviesResult = flowOf(
-                Resource.Success(DomainModelDataGenerator.generateDummyMovies())
+                Resource.Success(MovieDataGenerator.movieDomainList)
             ).first()
 
+            val dummyMoviesLocalResult = flow {
+                emit(movieEntityList)
+            }
+
             `when`(catalogLocalDataSource.getAllMovies())
-                .thenReturn(dummyMovieEntities())
+                .thenReturn(dummyMoviesLocalResult)
 
             val result = catalogRepository.getAllMovies().toList()
 
             verify(catalogLocalDataSource).getAllMovies()
 
             Assert.assertEquals(result, listOf(Resource.InProgress, dummyMoviesResult))
-
         }
 
+    @ExperimentalCoroutinesApi
+    @InternalCoroutinesApi
+    @Test
+    fun `get movie from remote when local data movie is empty`() =
+        mainCoroutineRule.runBlockingTest {
+
+            val dummyMoviesResult = flowOf(
+                Resource.Success(MovieDataGenerator.movieDomainList)
+            ).first()
+
+            val dummyMoviesLocalResultFirst = flow<List<MovieEntity>> {
+                emit(listOf())
+            }
+
+            val dummyMoviesLocalResultSecond = flow {
+                emit(movieEntityList)
+            }
+
+            val dummyMovieResponses = flowOf(
+                ApiResponse.Success(
+                    MovieDataGenerator.movieResultResponse
+                )
+            )
+
+            `when`(catalogLocalDataSource.getAllMovies())
+                .thenReturn(dummyMoviesLocalResultFirst, dummyMoviesLocalResultSecond)
+
+            `when`(catalogRemoteDataSource.getAllMovies())
+                .thenReturn(dummyMovieResponses)
+
+            `when`(catalogLocalDataSource.insertMovies(any())).thenAnswer { }
+
+            val result = catalogRepository.getAllMovies().toList()
+
+            verify(catalogLocalDataSource, times(2)).getAllMovies()
+            verify(catalogLocalDataSource).insertMovies(any())
+            verify(catalogRemoteDataSource).getAllMovies()
+
+            Assert.assertEquals(result, listOf(Resource.InProgress, dummyMoviesResult))
+        }
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test
-    fun getAllTvShows() =
+    fun `get tv show from local when local data tv show is available`() =
         mainCoroutineRule.runBlockingTest {
 
             val dummyTvShowsResult = flowOf(
-                Resource.Success(DomainModelDataGenerator.generateDummyTvShows())
+                Resource.Success(tvShowDomainList)
             ).first()
 
+            val dummyTvShowsLocalResult = flow {
+                emit(tvShowEntityList)
+            }
+
             `when`(catalogLocalDataSource.getAllTvShows())
-                .thenReturn(dummyTvShowEntities())
+                .thenReturn(dummyTvShowsLocalResult)
 
             val result = catalogRepository.getAllTvShows().toList()
 
             verify(catalogLocalDataSource).getAllTvShows()
 
             Assert.assertEquals(result, listOf(Resource.InProgress, dummyTvShowsResult))
+        }
 
+    @InternalCoroutinesApi
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `get tv show from remote when local data tv show is empty`() =
+        mainCoroutineRule.runBlockingTest {
+
+            val dummyTvShowsResult = flowOf(
+                Resource.Success(tvShowDomainList)
+            ).first()
+
+            val dummyTvShowsLocalResultFirst = flow<List<TvShowEntity>> {
+                emit(listOf())
+            }
+
+            val dummyTvShowsLocalResultSecond = flow {
+                emit(tvShowEntityList)
+            }
+
+            val dummyTvShowResponses = flowOf(
+                ApiResponse.Success(
+                    TvShowDataGenerator.tvShowResultResponse
+                )
+            )
+
+            `when`(catalogLocalDataSource.getAllTvShows())
+                .thenReturn(dummyTvShowsLocalResultFirst, dummyTvShowsLocalResultSecond)
+
+            `when`(catalogRemoteDataSource.getAllTvShows())
+                .thenReturn(dummyTvShowResponses)
+
+            `when`(catalogLocalDataSource.insertTvShows(any())).thenAnswer { }
+
+            val result = catalogRepository.getAllTvShows().toList()
+
+            verify(catalogLocalDataSource, times(2)).getAllTvShows()
+            verify(catalogLocalDataSource).insertTvShows(any())
+            verify(catalogRemoteDataSource).getAllTvShows()
+
+            Assert.assertEquals(result, listOf(Resource.InProgress, dummyTvShowsResult))
         }
 
 
@@ -109,12 +203,13 @@ class CatalogRepositoryTest {
     fun getMovieById() =
         mainCoroutineRule.runBlockingTest {
 
-            val expectedMovieResult = catalogMovieMapper.entityToDomain(provideDummyMovieEntities()[0])
+            val expectedMovieResult =
+                catalogMovieMapper.entityToDomain(movieEntity)
 
-            val id = provideDummyMovieEntities()[0].id
+            val id = movieEntity.id
 
             `when`(catalogLocalDataSource.getMovieById(id))
-                .thenReturn(provideDummyMovieEntities()[0])
+                .thenReturn(flowOf(movieEntity))
 
             val result = catalogRepository.getMovieById(id).toList()
             verify(catalogLocalDataSource).getMovieById(id)
@@ -126,16 +221,18 @@ class CatalogRepositoryTest {
         }
 
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test
     fun getTvShowById() =
         mainCoroutineRule.runBlockingTest {
-            val expectedTvShowResult = catalogTvShowMapper.entityToDomain(provideDummyTvShowEntities()[0])
+            val expectedTvShowResult =
+                catalogTvShowMapper.entityToDomain(tvShowEntity)
 
-            val id = provideDummyTvShowEntities()[0].id
+            val id = tvShowEntity.id
 
             `when`(catalogLocalDataSource.getTvShowById(id))
-                .thenReturn(provideDummyTvShowEntities()[0])
+                .thenReturn(flowOf(tvShowEntity))
 
             val result = catalogRepository.getTvShowById(id).toList()
             verify(catalogLocalDataSource).getTvShowById(id)
@@ -146,32 +243,49 @@ class CatalogRepositoryTest {
             )
         }
 
-        @Test
-        fun getFavoriteMovies() {
-            val dataSourceFactory = mock<DataSource.Factory<Int, MovieEntity>>()
-            `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactory)
-            catalogRepository.getFavoriteMovies()
-
-            val movieEntities = Resource.Success(PagedListUtil.mockPagedList(
-                provideDummyMovieEntities()
-            ))
-
-            verify(catalogLocalDataSource).getFavoriteMovies()
-            assertNotNull(movieEntities)
+    @Test
+    fun getFavoriteMovies() {
+        val dataSourceFactoryMovieEntity = object : DataSource.Factory<Int, MovieEntity>() {
+            override fun create(): DataSource<Int, MovieEntity> =
+                PagedListUtil.MockLimitDataSource(movieEntityList)
         }
+        `when`(catalogLocalDataSource.getFavoriteMovies()).thenReturn(dataSourceFactoryMovieEntity)
+
+        val result = catalogRepository.getFavoriteMovies()
+
+        verify(catalogLocalDataSource).getFavoriteMovies()
+        assertNotNull(result)
+    }
 
 
     @Test
     fun getFavoriteTvShows() {
-        val dataSourceFactory = mock<DataSource.Factory<Int, TvShowEntity>>()
-        `when`(catalogLocalDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactory)
+        val dataSourceFactoryTvShowEntity = object : DataSource.Factory<Int, TvShowEntity>() {
+            override fun create(): DataSource<Int, TvShowEntity> =
+                PagedListUtil.MockLimitDataSource(tvShowEntityList)
+        }
+        `when`(catalogLocalDataSource.getFavoriteTvShows()).thenReturn(dataSourceFactoryTvShowEntity)
         catalogRepository.getFavoriteTvShows()
 
-        val tvShowEntities = Resource.Success(PagedListUtil.mockPagedList(
-            provideDummyTvShowEntities()
-        ))
+        val result = catalogRepository.getFavoriteTvShows()
 
-        verify(catalogLocalDataSource).getFavoriteTvShows()
-        assertNotNull(tvShowEntities)
+        verify(catalogLocalDataSource, times(2)).getFavoriteTvShows()
+        assertNotNull(result)
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `test update movie in catalog local data source`() =
+        mainCoroutineRule.runBlockingTest {
+            catalogRepository.updateMovie(movieDomain)
+            verify(catalogLocalDataSource).updateMovie(any())
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `test update Tv Show in catalog local data source`() =
+        mainCoroutineRule.runBlockingTest {
+            catalogRepository.updateTvShow(tvShowDomain)
+            verify(catalogLocalDataSource).updateTvShow(any())
+        }
 }

@@ -1,49 +1,29 @@
 package com.komangss.submissionjetpack.business.repository
 
-import androidx.paging.DataSource
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.komangss.submissionjetpack.business.datasource.CatalogDataSource
 import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
 import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
-import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
-import com.komangss.submissionjetpack.framework.mapper.MapperInterface
-import com.komangss.submissionjetpack.framework.network.model.MovieResponse
-import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
-import com.komangss.submissionjetpack.framework.network.utils.ErrorResponse
+import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
+import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.framework.network.utils.networkBoundResource
-import com.komangss.submissionjetpack.utils.EspressoIdlingResources
 import com.komangss.submissionjetpack.vo.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
 class CatalogRepository
-private constructor(
+@Inject constructor(
     private val catalogRemoteDataSource: CatalogRemoteDataSource,
     private val catalogLocalDataSource: CatalogLocalDataSource,
-    private val catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
-    private val catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
+    private val catalogMovieMapper: CatalogMovieMapper,
+    private val catalogTvShowMapper: CatalogTvShowMapper
 ) : CatalogDataSource {
-    companion object {
-        @Volatile
-        private var instance: CatalogRepository? = null
-
-        fun getInstance(
-            catalogRemoteDataSource: CatalogRemoteDataSource,
-            catalogLocalDataSource: CatalogLocalDataSource,
-            catalogMovieMapper: MapperInterface<Movie, MovieEntity, MovieResponse>,
-            catalogTvShowMapper: MapperInterface<TvShow, TvShowEntity, TvShowResponse>
-        ): CatalogRepository =
-            instance ?: synchronized(this) {
-                instance ?: CatalogRepository(
-                    catalogRemoteDataSource, catalogLocalDataSource, catalogMovieMapper,
-                    catalogTvShowMapper
-                )
-            }
-    }
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
@@ -60,7 +40,8 @@ private constructor(
                     )
                 }?.let { movieEntities -> catalogLocalDataSource.insertMovies(movieEntities) }
             },
-            mapFromCache = { catalogMovieMapper.entitiesToDomains(it) }
+            mapFromCache = { catalogMovieMapper.entitiesToDomains(it) },
+            mapFromRemote = { catalogMovieMapper.responsesToDomains(it.results ?: listOf()) }
         )
     }
 
@@ -79,51 +60,72 @@ private constructor(
                     )
                 }?.let { tvShowEntities -> catalogLocalDataSource.insertTvShows(tvShowEntities) }
             },
-            mapFromCache = { catalogTvShowMapper.entitiesToDomains(it) }
+            mapFromCache = { catalogTvShowMapper.entitiesToDomains(it) },
+            mapFromRemote = { catalogTvShowMapper.responsesToDomains(it.results ?: listOf()) }
         )
     }
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
-    override suspend fun getMovieById(id: Int): Flow<Resource<Movie>> = flow {
-        emit(Resource.InProgress)
-        EspressoIdlingResources.increment()
-        val result = catalogLocalDataSource.getMovieById(id)
-        if (result == null) {
-            emit(Resource.Error(null, ErrorResponse("Data Not Found")))
-        } else {
-            emit(Resource.Success(catalogMovieMapper.entityToDomain(result)))
-        }
-        EspressoIdlingResources.decrement()
+    override suspend fun getMovieById(id: Int): Flow<Resource<Movie>> {
+        return networkBoundResource(
+            fetchFromRemote = { catalogRemoteDataSource.getMovieById(id) },
+            shouldFetchFromRemote = { it == null },
+            fetchFromLocal = { catalogLocalDataSource.getMovieById(id) },
+            processRemoteResponse = {},
+            saveRemoteData = {
+                catalogLocalDataSource.insertMovie(
+                    catalogMovieMapper.responseToEntity(
+                        it
+                    )
+                )
+            },
+            mapFromCache = { catalogMovieMapper.entityToDomain(it) },
+            mapFromRemote = { catalogMovieMapper.responseToDomain(it) },
+            shouldCache = { true }
+        )
     }
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
-    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> = flow {
-        emit(Resource.InProgress)
-        EspressoIdlingResources.increment()
-        val result = catalogLocalDataSource.getTvShowById(id)
-        if (result == null) {
-            emit(Resource.Error(null, ErrorResponse("Data Not Found")))
-        } else {
-            emit(Resource.Success(catalogTvShowMapper.entityToDomain(result)))
-        }
-        EspressoIdlingResources.decrement()
+    override suspend fun getTvShowById(id: Int): Flow<Resource<TvShow>> {
+        return networkBoundResource(
+            fetchFromRemote = { catalogRemoteDataSource.getTvShowById(id) },
+            shouldFetchFromRemote = { it == null },
+            fetchFromLocal = { catalogLocalDataSource.getTvShowById(id) },
+            processRemoteResponse = {},
+            saveRemoteData = {
+                catalogLocalDataSource.insertTvShow(
+                    catalogTvShowMapper.responseToEntity(
+                        it
+                    )
+                )
+            },
+            mapFromCache = { catalogTvShowMapper.entityToDomain(it) },
+            mapFromRemote = { catalogTvShowMapper.responseToDomain(it) },
+            shouldCache = { true }
+        )
     }
 
-    override fun getFavoriteMovies(): DataSource.Factory<Int, MovieEntity> {
-        return catalogLocalDataSource.getFavoriteMovies()
+    override fun getFavoriteMovies(): LiveData<PagedList<Movie>> {
+        return LivePagedListBuilder(
+            catalogLocalDataSource.getFavoriteMovies()
+                .map { catalogMovieMapper.entityToDomain(it) }, 5
+        ).build()
     }
 
-    override fun getFavoriteTvShows(): DataSource.Factory<Int, TvShowEntity> {
-        return catalogLocalDataSource.getFavoriteTvShows()
+    override fun getFavoriteTvShows(): LiveData<PagedList<TvShow>> {
+        return LivePagedListBuilder(
+            catalogLocalDataSource.getFavoriteTvShows()
+                .map { catalogTvShowMapper.entityToDomain(it) }, 5
+        ).build()
     }
 
-    override suspend fun setTvShowFavorite(tvShow: TvShow) {
-        tvShow.isFavorite = !tvShow.isFavorite
-        catalogLocalDataSource.updateTvShowFavorite(catalogTvShowMapper.domainToEntity(tvShow))
+    override suspend fun updateTvShow(tvShow: TvShow) {
+        catalogLocalDataSource.updateTvShow(catalogTvShowMapper.domainToEntity(tvShow))
     }
 
-    override suspend fun setMovieFavorite(movie: Movie) {
-        movie.isFavorite = !movie.isFavorite
-        catalogLocalDataSource.updateMovieFavorite(catalogMovieMapper.domainToEntity(movie))
+    override suspend fun updateMovie(movie: Movie) {
+        catalogLocalDataSource.updateMovie(catalogMovieMapper.domainToEntity(movie))
     }
 }

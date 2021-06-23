@@ -6,12 +6,13 @@ import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomain
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -46,9 +47,10 @@ class TvShowDetailViewModelTest {
 
     @Before
     fun setUp() {
-        dummyTvShow = DomainModelDataGenerator.generateDummyTvShows()[0]
+        dummyTvShow = tvShowDomain
     }
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test
     fun detailTvShow() {
@@ -62,6 +64,8 @@ class TvShowDetailViewModelTest {
             }
 
             viewModel = TvShowDetailViewModel(repo)
+
+            viewModel.tvShow.observeForever(observer)
             viewModel.setTvShowId(dummyTvShow.id)
 
             assertEquals(
@@ -69,8 +73,6 @@ class TvShowDetailViewModelTest {
                 viewModel.tvShow.getOrAwaitValue()
             )
 
-
-            viewModel.tvShow.observeForever(observer)
 
             verify(observer).onChanged(dummyTvShowResult.first())
         }

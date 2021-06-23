@@ -2,21 +2,25 @@ package com.komangss.submissionjetpack.ui.tvshow.detail
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_tv_show_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class TvShowDetailActivity : AppCompatActivity() {
 
-    private var isFav = false
+    val viewModel by viewModels<TvShowDetailViewModel>()
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,20 +30,16 @@ class TvShowDetailActivity : AppCompatActivity() {
 
         val tvShowId = intent.getIntExtra(EXTRA_TV_SHOW_ID, -1)
 
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel =
-            ViewModelProvider(this, factory)[TvShowDetailViewModel::class.java]
-
         viewModel.setTvShowId(tvShowId)
 
-        viewModel.tvShow.observe(this, {
+        viewModel.tvShow.observe(this, Observer {
             when (it) {
                 is Resource.Success -> {
                     val tvShow = it.data
                     tv_activity_tv_show_detail_tv_show_title.text = tvShow.name
                     tv_activity_tv_show_detail_tv_show_description.text = tvShow.description
-                    val voteAverage = tvShow.voteAverage.div(2).toFloat()
-                    item_tv_show_tvshow_rating_bar.rating = voteAverage
+                    val voteAverage = tvShow.voteAverage.div(2)
+                    item_tv_show_tvshow_rating_bar.rating = voteAverage.toFloat()
                     tv_activity_tv_show_detail_tv_show_rating.text = "$voteAverage / 5"
                     supportActionBar?.title = tvShow.name
 
@@ -53,13 +53,13 @@ class TvShowDetailActivity : AppCompatActivity() {
                         .centerCrop()
                         .into(image_view_activity_tv_show_detail_tv_show_backdrop)
 
-                    isFav = tvShow.isFavorite
-
-                    setFavorite()
+                    setFavorite(tvShow.isFavorite)
 
                     fab_activity_tv_show_detail_favorite.setOnClickListener {
-                        isFav = !isFav
-                        if (isFav) {
+                        val boolean = tvShow.isFavorite
+                        tvShow.isFavorite = !boolean
+                        setFavorite(tvShow.isFavorite)
+                        if (tvShow.isFavorite) {
                             Toast.makeText(
                                 this@TvShowDetailActivity,
                                 "Added to Favorite List",
@@ -72,7 +72,6 @@ class TvShowDetailActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                        setFavorite()
                         lifecycleScope.launch {
                             viewModel.setFavorite(tvShow)
                         }
@@ -97,8 +96,8 @@ class TvShowDetailActivity : AppCompatActivity() {
 
     }
 
-    private fun setFavorite() {
-        if (isFav) {
+    private fun setFavorite(state: Boolean) {
+        if (state) {
             fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_favorite)
         } else {
             fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)

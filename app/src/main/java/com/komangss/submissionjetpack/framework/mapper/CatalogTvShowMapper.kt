@@ -4,8 +4,9 @@ import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse> {
+class CatalogTvShowMapper @Inject constructor() : MapperInterface<TvShow, TvShowEntity, TvShowResponse> {
     override fun responseToEntity(response: TvShowResponse): TvShowEntity {
         return TvShowEntity(
             backdropUrlPath = response.backdropUrlPath ?: "",
@@ -31,10 +32,7 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             genreIds = mapGenreIdsEntityToDomainModel(entity.genreIds),
             id = entity.id,
             name = entity.name,
-
-//            TODO : string to list of string
-            originalCountry = listOf("en"),
-
+            originalCountry = mapOriginalCountriesEntityToDomainModel(entity.originalCountry),
             originalLanguage = entity.originalLanguage,
             originalName = entity.originalName,
             description = entity.description,
@@ -54,11 +52,9 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
         return responses.map { responseToEntity(it) }
     }
 
-
     private fun mapGenreIdsToEntity(genreId: List<Int>?): String {
         return genreId?.toString() ?: ""
     }
-
 
     private fun mapGenreIdsEntityToDomainModel(genreId: String): List<Int>? {
         return if (genreId == "") {
@@ -73,22 +69,61 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
         }
     }
 
-    override fun domainToEntity(d: TvShow): TvShowEntity {
+    override fun domainToEntity(domain: TvShow): TvShowEntity {
         return TvShowEntity(
-            backdropUrlPath = d.backdropUrlPath,
-            releaseDate = d.releaseDate,
-            genreIds = d.genreIds.toString(),
-            id = d.id,
-            name = d.name,
-            originalCountry = listOf("en").toString(),
-            originalLanguage = d.originalLanguage,
-            originalName = d.originalName,
-            description = d.description,
-            popularity = d.popularity,
-            posterUrlPath = d.posterUrlPath,
-            voteAverage = d.voteAverage,
-            voteCount = d.voteCount,
-            isFavorite = d.isFavorite
+            backdropUrlPath = domain.backdropUrlPath,
+            releaseDate = domain.releaseDate,
+            genreIds = domain.genreIds.toString(),
+            id = domain.id,
+            name = domain.name,
+            originalCountry = mapOriginalCountriesToEntity(domain.originalCountry),
+            originalLanguage = domain.originalLanguage,
+            originalName = domain.originalName,
+            description = domain.description,
+            popularity = domain.popularity,
+            posterUrlPath = domain.posterUrlPath,
+            voteAverage = domain.voteAverage,
+            voteCount = domain.voteCount,
+            isFavorite = domain.isFavorite
         )
+    }
+
+    override fun responseToDomain(response: TvShowResponse): TvShow {
+        return TvShow(
+            backdropUrlPath = response.backdropUrlPath ?: "",
+            releaseDate = response.releaseDate ?: "",
+            genreIds = response.genreIds ?: listOf(),
+            id = response.id ?: -1,
+            name = response.name ?: "",
+            originalCountry = response.originalCountry ?: listOf(),
+            originalLanguage = response.originalLanguage ?: "",
+            originalName = response.originalName ?: "",
+            description = response.description ?: "",
+            popularity = response.popularity ?: -1.0,
+            posterUrlPath = response.posterUrlPath ?: "",
+            voteAverage = response.voteAverage ?: -1.0,
+            voteCount = response.voteCount ?: -1,
+            isFavorite = false
+        )
+    }
+
+    override fun responsesToDomains(responses: List<TvShowResponse>): List<TvShow> {
+        return responses.map { responseToDomain(it) }
+    }
+
+    private fun mapOriginalCountriesToEntity(originalCountries: List<String>?): String {
+        return originalCountries?.toString() ?: ""
+    }
+
+    private fun mapOriginalCountriesEntityToDomainModel(originalCountries: String): List<String>? {
+        return if (originalCountries == "" || originalCountries == "[]") {
+            null
+        } else {
+            var originalCountriesResult = originalCountries.replace(" ", "")
+            originalCountriesResult =
+                originalCountries.substring(1, originalCountriesResult.length - 1)
+            val result: List<String> = originalCountriesResult.split(",")
+            result
+        }
     }
 }

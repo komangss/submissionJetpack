@@ -6,67 +6,45 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.platform.app.InstrumentationRegistry
-import com.google.gson.GsonBuilder
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
-import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
-import com.komangss.submissionjetpack.ui.Utils.getJsonFromAssets
 import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity.Companion.EXTRA_MOVIE_ID
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.utils.EspressoIdlingResources
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@HiltAndroidTest
 class MovieDetailActivityTest {
 
-    private lateinit var dummyMovie: Movie
-
     @get:Rule
-    val rule = lazyActivityScenarioRule<MovieDetailActivity>(launchActivity = false)
+    var hiltAndroidRule = HiltAndroidRule(this)
 
     @Before
-    fun setUp() {
-        val gson = GsonBuilder().create()
-        val jsonResult =
-            getJsonFromAssets(
-                InstrumentationRegistry.getInstrumentation().context,
-                "MovieResponse.json"
-            )
-
-        val movieResultResponse: MovieResultResponse = gson.fromJson(
-            jsonResult,
-            MovieResultResponse::class.java
-        )
-
-        val mapper = CatalogMovieMapper()
-        val entities = mapper.responsesToEntities(movieResultResponse.results ?: listOf())
-
-        dummyMovie = mapper.entitiesToDomains(entities)[0]
-
-        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
+    fun preparation() {
+        hiltAndroidRule.inject()
     }
+
+    private var dummyMovieId: Int = 123
 
     @Test
     fun testMovieTitleShowUp() {
         val intent = Intent(
             ApplicationProvider.getApplicationContext(), MovieDetailActivity::class.java
-        ).putExtra(EXTRA_MOVIE_ID, dummyMovie.id)
+        ).putExtra(EXTRA_MOVIE_ID, dummyMovieId)
 
-        rule.launch(intent)
-
+        lazyActivityScenarioRule<MovieDetailActivity>(launchActivity = false).launch(intent)
+        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_title))
-            .check(ViewAssertions.matches(withText(dummyMovie.title)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_description))
-            .check(ViewAssertions.matches(withText(dummyMovie.description)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        val voteAverageText = "${dummyMovie.voteAverage.div(2).toFloat()} / 5"
         Espresso.onView(ViewMatchers.withId(R.id.tv_activity_movie_detail_movie_rating))
-            .check(ViewAssertions.matches(withText(voteAverageText)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @After

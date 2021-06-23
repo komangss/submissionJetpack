@@ -4,22 +4,9 @@ import com.komangss.submissionjetpack.framework.cache.dao.CatalogDao
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class CatalogLocalDataSource private constructor(
-    private val catalogDao: CatalogDao
-) {
-    companion object {
-        private var INSTANCE: CatalogLocalDataSource? = null
-        fun getInstance(catalogDao: CatalogDao): CatalogLocalDataSource {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = CatalogLocalDataSource(catalogDao)
-                }
-                return instance
-            }
-        }
-    }
+class CatalogLocalDataSource @Inject constructor(private val catalogDao: CatalogDao) {
 
     fun getAllMovies(): Flow<List<MovieEntity>> = catalogDao.getMovies()
 
@@ -29,19 +16,27 @@ class CatalogLocalDataSource private constructor(
 
     suspend fun insertTvShows(tvShows: List<TvShowEntity>) = catalogDao.insertTvShows(tvShows)
 
-    suspend fun getMovieById(id : Int) = catalogDao.getMovieById(id)
+    fun getMovieById(id: Int) = catalogDao.getMovieById(id)
 
-    suspend fun getTvShowById(id : Int) = catalogDao.getTvShowById(id)
+    fun getTvShowById(id: Int) = catalogDao.getTvShowById(id)
 
-    suspend fun updateMovieFavorite(movie : MovieEntity) {
-        catalogDao.insertMovie(movie)
+    suspend fun updateMovie(movie: MovieEntity) {
+        catalogDao.updateMovie(movie)
     }
 
-    suspend fun updateTvShowFavorite(tvShow : TvShowEntity) {
-        catalogDao.insertTvShow(tvShow)
+    suspend fun updateTvShow(tvShow: TvShowEntity) {
+        catalogDao.updateTvShow(tvShow)
     }
 
     fun getFavoriteMovies() = catalogDao.getFavoriteMovies()
 
     fun getFavoriteTvShows() = catalogDao.getFavoriteTvShows()
+
+    suspend fun insertMovie(movie: MovieEntity) {
+        catalogDao.insertMovie(movie)
+    }
+
+    suspend fun insertTvShow(tvShowEntity: TvShowEntity) {
+        catalogDao.insertTvShow(tvShowEntity)
+    }
 }

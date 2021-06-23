@@ -2,22 +2,25 @@ package com.komangss.submissionjetpack.ui.movie.detail
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_movie_detail.*
-import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MovieDetailActivity : AppCompatActivity() {
 
-    private var isFav = false
+    val viewModel by viewModels<MovieDetailViewModel>()
 
+    @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,20 +30,16 @@ class MovieDetailActivity : AppCompatActivity() {
 
         val movieId = intent.getIntExtra(EXTRA_MOVIE_ID, -1)
 
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel =
-            ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
-
         viewModel.setMovieId(movieId)
 
-        viewModel.movie.observe(this, {
+        viewModel.movie.observe(this, Observer {
             when (it) {
                 is Resource.Success -> {
                     val movie = it.data
                     tv_activity_movie_detail_movie_title.text = movie.title
                     tv_activity_movie_detail_movie_description.text = movie.description
-                    val voteAverage = movie.voteAverage.div(2).toFloat()
-                    item_movie_tvshow_rating_bar.rating = voteAverage
+                    val voteAverage = movie.voteAverage.div(2)
+                    item_movie_tvshow_rating_bar.rating = voteAverage.toFloat()
                     tv_activity_movie_detail_movie_rating.text = "$voteAverage / 5"
 
                     Glide.with(this@MovieDetailActivity)
@@ -55,14 +54,13 @@ class MovieDetailActivity : AppCompatActivity() {
 
                     supportActionBar?.title = movie.title
 
-                    isFav = movie.isFavorite
-
-                    setFavorite()
+                    setFavorite(movie.isFavorite)
 
                     fab__activity_movie_detail_favorite.setOnClickListener {
-                        isFav = !isFav
-                        setFavorite()
-                        if (isFav) {
+                        val boolean = movie.isFavorite
+                        movie.isFavorite = !boolean
+                        setFavorite(movie.isFavorite)
+                        if (movie.isFavorite) {
                             Toast.makeText(
                                 this@MovieDetailActivity,
                                 "Added to Favorite List",
@@ -98,8 +96,8 @@ class MovieDetailActivity : AppCompatActivity() {
         })
     }
 
-    private fun setFavorite() {
-        if(isFav) {
+    private fun setFavorite(state : Boolean) {
+        if(state) {
             fab__activity_movie_detail_favorite.setImageResource(R.drawable.ic_favorite)
         } else {
             fab__activity_movie_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
