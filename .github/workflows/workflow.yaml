@@ -6,6 +6,7 @@ on:
     branches:
       - master
       - submission-3
+      - -hilt
   pull_request:
     branches:
       - master

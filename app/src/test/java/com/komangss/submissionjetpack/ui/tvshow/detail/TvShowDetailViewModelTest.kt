@@ -6,7 +6,7 @@ import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomain
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -47,7 +47,7 @@ class TvShowDetailViewModelTest {
 
     @Before
     fun setUp() {
-        dummyTvShow = DomainModelDataGenerator.generateDummyTvShows()[0]
+        dummyTvShow = tvShowDomain
     }
 
     @InternalCoroutinesApi

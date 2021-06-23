@@ -4,8 +4,9 @@ import com.komangss.submissionjetpack.business.domain.model.TvShow
 import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
 import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse> {
+class CatalogTvShowMapper @Inject constructor() : MapperInterface<TvShow, TvShowEntity, TvShowResponse> {
     override fun responseToEntity(response: TvShowResponse): TvShowEntity {
         return TvShowEntity(
             backdropUrlPath = response.backdropUrlPath ?: "",
@@ -31,10 +32,7 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             genreIds = mapGenreIdsEntityToDomainModel(entity.genreIds),
             id = entity.id,
             name = entity.name,
-
-//            TODO : string to list of string
-            originalCountry = listOf("en"),
-
+            originalCountry = mapOriginalCountriesEntityToDomainModel(entity.originalCountry),
             originalLanguage = entity.originalLanguage,
             originalName = entity.originalName,
             description = entity.description,
@@ -54,11 +52,9 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
         return responses.map { responseToEntity(it) }
     }
 
-
     private fun mapGenreIdsToEntity(genreId: List<Int>?): String {
         return genreId?.toString() ?: ""
     }
-
 
     private fun mapGenreIdsEntityToDomainModel(genreId: String): List<Int>? {
         return if (genreId == "") {
@@ -80,7 +76,7 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
             genreIds = domain.genreIds.toString(),
             id = domain.id,
             name = domain.name,
-            originalCountry = listOf("en").toString(),
+            originalCountry = mapOriginalCountriesToEntity(domain.originalCountry),
             originalLanguage = domain.originalLanguage,
             originalName = domain.originalName,
             description = domain.description,
@@ -113,5 +109,21 @@ class CatalogTvShowMapper : MapperInterface<TvShow, TvShowEntity, TvShowResponse
 
     override fun responsesToDomains(responses: List<TvShowResponse>): List<TvShow> {
         return responses.map { responseToDomain(it) }
+    }
+
+    private fun mapOriginalCountriesToEntity(originalCountries: List<String>?): String {
+        return originalCountries?.toString() ?: ""
+    }
+
+    private fun mapOriginalCountriesEntityToDomainModel(originalCountries: String): List<String>? {
+        return if (originalCountries == "" || originalCountries == "[]") {
+            null
+        } else {
+            var originalCountriesResult = originalCountries.replace(" ", "")
+            originalCountriesResult =
+                originalCountries.substring(1, originalCountriesResult.length - 1)
+            val result: List<String> = originalCountriesResult.split(",")
+            result
+        }
     }
 }

@@ -4,8 +4,9 @@ import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
 import com.komangss.submissionjetpack.framework.network.model.MovieResponse
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class CatalogMovieMapper : MapperInterface<Movie, MovieEntity, MovieResponse> {
+class CatalogMovieMapper @Inject constructor() : MapperInterface<Movie, MovieEntity, MovieResponse> {
     override fun responseToEntity(response: MovieResponse): MovieEntity {
         return MovieEntity(
             popularity = response.popularity ?: 0.0,

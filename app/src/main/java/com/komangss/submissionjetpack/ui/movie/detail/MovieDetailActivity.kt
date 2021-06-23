@@ -2,20 +2,23 @@ package com.komangss.submissionjetpack.ui.movie.detail
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.viewmodel.ViewModelFactory
 import com.komangss.submissionjetpack.vo.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MovieDetailActivity : AppCompatActivity() {
+
+    val viewModel by viewModels<MovieDetailViewModel>()
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
@@ -27,10 +30,6 @@ class MovieDetailActivity : AppCompatActivity() {
 
         val movieId = intent.getIntExtra(EXTRA_MOVIE_ID, -1)
 
-        val factory = ViewModelFactory.getInstance(this)
-        val viewModel =
-            ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
-
         viewModel.setMovieId(movieId)
 
         viewModel.movie.observe(this, Observer {
@@ -39,8 +38,8 @@ class MovieDetailActivity : AppCompatActivity() {
                     val movie = it.data
                     tv_activity_movie_detail_movie_title.text = movie.title
                     tv_activity_movie_detail_movie_description.text = movie.description
-                    val voteAverage = movie.voteAverage.div(2).toFloat()
-                    item_movie_tvshow_rating_bar.rating = voteAverage
+                    val voteAverage = movie.voteAverage.div(2)
+                    item_movie_tvshow_rating_bar.rating = voteAverage.toFloat()
                     tv_activity_movie_detail_movie_rating.text = "$voteAverage / 5"
 
                     Glide.with(this@MovieDetailActivity)

@@ -1,7 +1,5 @@
 package com.komangss.submissionjetpack.ui.movie.favorite
 
-import android.app.Activity
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.ui.movie.detail.MovieDetailActivity
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
-class MovieFavoriteAdapter :
-    PagedListAdapter<Movie, MovieFavoriteAdapter.MovieFavoriteViewHolder>(DIFF_CALLBACK) {
+class MovieFavoriteAdapter(
+  private val onClickListener: (movie : Movie) -> Unit
+) : PagedListAdapter<Movie, MovieFavoriteAdapter.MovieFavoriteViewHolder>(DIFF_CALLBACK) {
+
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
@@ -41,10 +40,7 @@ class MovieFavoriteAdapter :
                         .into(item_movie_tvshow_image_view_poster)
 
                     setOnClickListener {
-                        val intent = Intent(context, MovieDetailActivity::class.java)
-                        intent.putExtra(MovieDetailActivity.EXTRA_MOVIE_ID, movie.id)
-                        context.startActivity(intent)
-                         (context as Activity).finish()
+                        onClickListener(movie)
                     }
                 }
             }

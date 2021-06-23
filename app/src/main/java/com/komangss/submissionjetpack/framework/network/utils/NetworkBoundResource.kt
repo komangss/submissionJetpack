@@ -10,24 +10,24 @@ import kotlinx.coroutines.flow.*
 @InternalCoroutinesApi
 inline fun <DB : Any, REMOTE : Any, DOMAIN : Any> networkBoundResource(
     crossinline fetchFromLocal: () -> Flow<DB>,
-    crossinline shouldFetchFromRemote : (DB?) -> Boolean = { true },
-    crossinline fetchFromRemote : suspend () -> Flow<ApiResponse<REMOTE>>,
-    crossinline processRemoteResponse : (response : ApiResponse.Success<REMOTE>) -> Unit = { },
+    crossinline shouldFetchFromRemote: (DB?) -> Boolean = { true },
+    crossinline fetchFromRemote: suspend () -> Flow<ApiResponse<REMOTE>>,
+    crossinline processRemoteResponse: (response: ApiResponse.Success<REMOTE>) -> Unit = { },
     crossinline saveRemoteData: suspend (REMOTE) -> Unit = { },
-    crossinline mapFromCache : (DB) -> DOMAIN,
-    crossinline mapFromRemote : (REMOTE) -> DOMAIN,
-    crossinline shouldCache : () -> Boolean = { true }
-) = flow {
-    emit(Resource.InProgress)
+    crossinline mapFromCache: (DB) -> DOMAIN,
+    crossinline mapFromRemote: (REMOTE) -> DOMAIN,
+    crossinline shouldCache: () -> Boolean = { true }
+) = flow<Resource<DOMAIN>> {
     EspressoIdlingResources.increment()
+    emit(Resource.InProgress)
     val localData = fetchFromLocal().first()
 
     if (shouldFetchFromRemote(localData)) {
         fetchFromRemote().collect { apiResponse ->
-            when(apiResponse) {
+            when (apiResponse) {
                 is ApiResponse.Success -> {
                     processRemoteResponse(apiResponse)
-                    if(shouldCache()) {
+                    if (shouldCache()) {
                         saveRemoteData(apiResponse.value)
                         emitAll(fetchFromLocal().map { dbData ->
                             Resource.Success(mapFromCache(dbData))

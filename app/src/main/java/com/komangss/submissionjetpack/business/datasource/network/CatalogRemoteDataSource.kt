@@ -10,17 +10,9 @@ import com.komangss.submissionjetpack.framework.network.utils.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class CatalogRemoteDataSource private constructor(private val catalogServices: CatalogServices){
-    companion object {
-        @Volatile
-        private var instance: CatalogRemoteDataSource? = null
-
-        fun getInstance(catalogServices: CatalogServices): CatalogRemoteDataSource =
-            instance ?: synchronized(this) {
-                instance ?: CatalogRemoteDataSource(catalogServices)
-            }
-    }
+class CatalogRemoteDataSource @Inject constructor(private val catalogServices: CatalogServices){
 
     @ExperimentalCoroutinesApi
     suspend fun getAllMovies() : Flow<ApiResponse<MovieResultResponse>> {

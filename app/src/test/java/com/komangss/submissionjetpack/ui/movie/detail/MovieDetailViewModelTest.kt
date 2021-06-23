@@ -6,7 +6,7 @@ import com.komangss.submissionjetpack.business.domain.model.Movie
 import com.komangss.submissionjetpack.business.repository.CatalogRepository
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
-import com.komangss.submissionjetpack.utils.datagenerator.DomainModelDataGenerator
+import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieDomain
 import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -47,7 +47,7 @@ class MovieDetailViewModelTest {
 
     @Before
     fun setUp() {
-        dummyMovie = DomainModelDataGenerator.generateDummyMovies()[0]
+        dummyMovie = movieDomain
     }
 
     @InternalCoroutinesApi
