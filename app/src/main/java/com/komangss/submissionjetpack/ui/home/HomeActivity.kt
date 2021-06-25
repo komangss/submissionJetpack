@@ -6,20 +6,29 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.komangss.submissionjetpack.R
+import com.komangss.submissionjetpack.databinding.ActivityHomeBinding
 import com.komangss.submissionjetpack.ui.favorite.FavoriteActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_home.*
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
+
+    private var _binding: ActivityHomeBinding? = null
+    private val binding: ActivityHomeBinding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        _binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-        view_pager_activity_home.adapter = sectionsPagerAdapter
-        tabs_activity_home.setupWithViewPager(view_pager_activity_home)
+
+        binding.viewPagerActivityHome.adapter = sectionsPagerAdapter
+        binding.tabsActivityHome.setupWithViewPager(binding.viewPagerActivityHome)
+
+
         supportActionBar?.elevation = 0f
+        // ToDo : Change Title According to current fragment
         supportActionBar?.title = "Movie Catalog"
     }
 

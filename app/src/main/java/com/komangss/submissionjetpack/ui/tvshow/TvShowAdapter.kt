@@ -2,21 +2,19 @@ package com.komangss.submissionjetpack.ui.tvshow
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.business.domain.model.TvShow
+import com.komangss.submissionjetpack.databinding.ItemsMovieAndTvshowBinding
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity.Companion.EXTRA_TV_SHOW_ID
-import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
 
     private val tvShowList = ArrayList<TvShow>()
 
-    fun setTvShows(tvShowList : List<TvShow>) {
+    fun setTvShows(tvShowList: List<TvShow>) {
         this.tvShowList.clear()
         this.tvShowList.addAll(tvShowList)
         notifyDataSetChanged()
@@ -24,8 +22,7 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
         return TvShowViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.items_movie_and_tvshow, parent, false)
+            ItemsMovieAndTvshowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -35,22 +32,22 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
         holder.bind(tvShowList[position])
     }
 
-    class TvShowViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(tvShow : TvShow) {
-            with(itemView) {
-                item_movie_tvshow_tv_item_title.text = tvShow.name
-                item_movie_tvshow_tv_description.text = tvShow.description
-                item_movie_tvshow_rating_bar.rating = tvShow.voteAverage.toFloat() / 2
+    class TvShowViewHolder(private val binding: ItemsMovieAndTvshowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(tvShow: TvShow) {
+            binding.itemMovieTvshowTvItemTitle.text = tvShow.name
+            binding.itemMovieTvshowTvDescription.text = tvShow.description
 
-                Glide.with(context)
-                    .load("https://image.tmdb.org/t/p/original/${tvShow.posterUrlPath}")
-                    .into(item_movie_tvshow_image_view_poster)
+            binding.itemMovieTvshowRatingBar.rating = tvShow.voteAverage.toFloat() / 2
 
-                setOnClickListener {
-                    val intent = Intent(context, TvShowDetailActivity::class.java)
-                    intent.putExtra(EXTRA_TV_SHOW_ID, tvShow.id)
-                    context.startActivity(intent)
-                }
+            Glide.with(binding.root.context)
+                .load("https://image.tmdb.org/t/p/original/${tvShow.posterUrlPath}")
+                .into(binding.itemMovieTvshowImageViewPoster)
+
+            binding.root.setOnClickListener {
+                val intent = Intent(binding.root.context, TvShowDetailActivity::class.java)
+                intent.putExtra(EXTRA_TV_SHOW_ID, tvShow.id)
+                binding.root.context.startActivity(intent)
             }
         }
     }
