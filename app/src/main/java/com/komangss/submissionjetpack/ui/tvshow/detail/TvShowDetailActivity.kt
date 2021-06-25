@@ -8,9 +8,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
+import com.komangss.submissionjetpack.databinding.ActivityTvShowDetailBinding
 import com.komangss.submissionjetpack.vo.Resource
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_tv_show_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -19,12 +19,15 @@ import kotlinx.coroutines.launch
 class TvShowDetailActivity : AppCompatActivity() {
 
     val viewModel by viewModels<TvShowDetailViewModel>()
+    private var _binding: ActivityTvShowDetailBinding? = null
+    private val binding get() = _binding!!
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tv_show_detail)
+        _binding = ActivityTvShowDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         supportActionBar?.title = getString(R.string.tvshow)
 
@@ -36,26 +39,26 @@ class TvShowDetailActivity : AppCompatActivity() {
             when (it) {
                 is Resource.Success -> {
                     val tvShow = it.data
-                    tv_activity_tv_show_detail_tv_show_title.text = tvShow.name
-                    tv_activity_tv_show_detail_tv_show_description.text = tvShow.description
+                    binding.tvActivityTvShowDetailTvShowTitle.text = tvShow.name
+                    binding.tvActivityTvShowDetailTvShowDescription.text = tvShow.description
                     val voteAverage = tvShow.voteAverage.div(2)
-                    item_tv_show_tvshow_rating_bar.rating = voteAverage.toFloat()
-                    tv_activity_tv_show_detail_tv_show_rating.text = "$voteAverage / 5"
+                    binding.itemTvShowTvshowRatingBar.rating = voteAverage.toFloat()
+                    binding.tvActivityTvShowDetailTvShowRating.text = "$voteAverage / 5"
                     supportActionBar?.title = tvShow.name
 
                     Glide.with(this@TvShowDetailActivity)
                         .load("https://image.tmdb.org/t/p/original/${tvShow.posterUrlPath}")
-                        .into(image_view_activity_tv_show_detail_tv_show_poster)
+                        .into(binding.imageViewActivityTvShowDetailTvShowBackdrop)
 
                     Glide.with(this@TvShowDetailActivity)
                         .load("https://image.tmdb.org/t/p/original/${tvShow.backdropUrlPath}")
                         .fitCenter()
                         .centerCrop()
-                        .into(image_view_activity_tv_show_detail_tv_show_backdrop)
+                        .into(binding.imageViewActivityTvShowDetailTvShowBackdrop)
 
                     setFavorite(tvShow.isFavorite)
 
-                    fab_activity_tv_show_detail_favorite.setOnClickListener {
+                    binding.fabActivityTvShowDetailFavorite.setOnClickListener {
                         val boolean = tvShow.isFavorite
                         tvShow.isFavorite = !boolean
                         setFavorite(tvShow.isFavorite)
@@ -98,9 +101,9 @@ class TvShowDetailActivity : AppCompatActivity() {
 
     private fun setFavorite(state: Boolean) {
         if (state) {
-            fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_favorite)
+            binding.fabActivityTvShowDetailFavorite.setImageResource(R.drawable.ic_favorite)
         } else {
-            fab_activity_tv_show_detail_favorite.setImageResource(R.drawable.ic_broken_heart)
+            binding.fabActivityTvShowDetailFavorite.setImageResource(R.drawable.ic_broken_heart)
         }
 
     }
