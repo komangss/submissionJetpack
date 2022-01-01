@@ -1,8 +1,8 @@
 package com.komangss.submissionjetpack.utils.datagenerator
 
-import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
-import com.komangss.submissionjetpack.framework.network.model.TvShowResponse
-import com.komangss.submissionjetpack.framework.network.model.TvShowResultResponse
+import com.komangss.submissionjetpack.core.data.source.remote.response.TvShowResponse
+import com.komangss.submissionjetpack.core.data.source.remote.response.TvShowResultResponse
+import com.komangss.submissionjetpack.core.utils.mapper.CatalogTvShowMapper
 
 object TvShowDataGenerator {
     private val tvShowMapper = CatalogTvShowMapper()

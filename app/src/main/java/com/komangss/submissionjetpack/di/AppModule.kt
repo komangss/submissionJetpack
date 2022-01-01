@@ -2,13 +2,13 @@ package com.komangss.submissionjetpack.di
 
 import android.content.Context
 import androidx.room.Room
-import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
-import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
-import com.komangss.submissionjetpack.framework.cache.CatalogDatabase
-import com.komangss.submissionjetpack.framework.cache.dao.CatalogDao
-import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
-import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
-import com.komangss.submissionjetpack.framework.network.services.CatalogServices
+import com.komangss.submissionjetpack.core.data.source.local.CatalogLocalDataSource
+import com.komangss.submissionjetpack.core.data.source.local.room.CatalogDao
+import com.komangss.submissionjetpack.core.data.source.local.room.CatalogDatabase
+import com.komangss.submissionjetpack.core.data.source.remote.CatalogRemoteDataSource
+import com.komangss.submissionjetpack.core.data.source.remote.network.CatalogServices
+import com.komangss.submissionjetpack.core.utils.mapper.CatalogMovieMapper
+import com.komangss.submissionjetpack.core.utils.mapper.CatalogTvShowMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,9 +1,9 @@
 package com.komangss.submissionjetpack.ui.tvshow.detail
 
 import androidx.lifecycle.*
-import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.business.repository.CatalogRepository
-import com.komangss.submissionjetpack.vo.Resource
+import com.komangss.submissionjetpack.core.data.CatalogRepository
+import com.komangss.submissionjetpack.core.data.Resource
+import com.komangss.submissionjetpack.core.domain.model.TvShow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

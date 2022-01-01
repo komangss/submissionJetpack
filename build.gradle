@@ -37,6 +37,8 @@ buildscript {
         recyclerViewVersion = '1.1.0'
         glideVersion = '4.11.0'
         pagingVersion = '2.1.2'
+
+        koin_version = "2.1.6"
     }
 }
 

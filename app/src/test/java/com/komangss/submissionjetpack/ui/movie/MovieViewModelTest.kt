@@ -2,12 +2,12 @@ package com.komangss.submissionjetpack.ui.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.business.repository.CatalogRepository
+import com.komangss.submissionjetpack.core.data.CatalogRepository
+import com.komangss.submissionjetpack.core.data.Resource
+import com.komangss.submissionjetpack.core.domain.model.Movie
 import com.komangss.submissionjetpack.utils.LiveDataTestUtil.getOrAwaitValue
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieDomainList
-import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify

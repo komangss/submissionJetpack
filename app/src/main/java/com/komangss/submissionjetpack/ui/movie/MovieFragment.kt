@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.vo.Resource
+import com.komangss.submissionjetpack.core.data.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movie.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi

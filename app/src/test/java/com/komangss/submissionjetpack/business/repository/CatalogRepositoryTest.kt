@@ -2,13 +2,14 @@ package com.komangss.submissionjetpack.business.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.DataSource
-import com.komangss.submissionjetpack.business.datasource.cache.CatalogLocalDataSource
-import com.komangss.submissionjetpack.business.datasource.network.CatalogRemoteDataSource
-import com.komangss.submissionjetpack.framework.cache.model.MovieEntity
-import com.komangss.submissionjetpack.framework.cache.model.TvShowEntity
-import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
-import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
-import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
+import com.komangss.submissionjetpack.core.data.Resource
+import com.komangss.submissionjetpack.core.data.source.local.CatalogLocalDataSource
+import com.komangss.submissionjetpack.core.data.source.local.entity.MovieEntity
+import com.komangss.submissionjetpack.core.data.source.local.entity.TvShowEntity
+import com.komangss.submissionjetpack.core.data.source.remote.CatalogRemoteDataSource
+import com.komangss.submissionjetpack.core.data.source.remote.network.ApiResponse
+import com.komangss.submissionjetpack.core.utils.mapper.CatalogMovieMapper
+import com.komangss.submissionjetpack.core.utils.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.utils.MainCoroutineRule
 import com.komangss.submissionjetpack.utils.PagedListUtil
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator
@@ -20,7 +21,6 @@ import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tv
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowDomainList
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntity
 import com.komangss.submissionjetpack.utils.datagenerator.TvShowDataGenerator.tvShowEntityList
-import com.komangss.submissionjetpack.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,7 +53,7 @@ class CatalogRepositoryTest {
     private val catalogMovieMapper = CatalogMovieMapper()
     private val catalogTvShowMapper = CatalogTvShowMapper()
 
-    private val catalogRepository = FakeCatalogRepository(
+    private val catalogRepository = FakeICatalogRepository(
         catalogRemoteDataSource,
         catalogLocalDataSource,
         catalogMovieMapper,

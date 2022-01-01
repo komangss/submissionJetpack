@@ -3,8 +3,8 @@ package com.komangss.submissionjetpack.ui.tvshow.favorite
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
-import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.business.repository.CatalogRepository
+import com.komangss.submissionjetpack.core.data.CatalogRepository
+import com.komangss.submissionjetpack.core.domain.model.TvShow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

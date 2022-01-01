@@ -9,9 +9,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.GsonBuilder
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.business.domain.model.TvShow
-import com.komangss.submissionjetpack.framework.mapper.CatalogTvShowMapper
-import com.komangss.submissionjetpack.framework.network.model.TvShowResultResponse
+import com.komangss.submissionjetpack.core.data.source.remote.response.TvShowResultResponse
+import com.komangss.submissionjetpack.core.domain.model.TvShow
+import com.komangss.submissionjetpack.core.utils.mapper.CatalogTvShowMapper
 import com.komangss.submissionjetpack.ui.Utils
 import com.komangss.submissionjetpack.ui.rule.lazyActivityScenarioRule
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity.Companion.EXTRA_TV_SHOW_ID

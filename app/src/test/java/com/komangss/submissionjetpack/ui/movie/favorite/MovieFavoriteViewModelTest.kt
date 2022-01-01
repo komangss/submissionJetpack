@@ -2,8 +2,8 @@ package com.komangss.submissionjetpack.ui.movie.favorite
 
 import androidx.lifecycle.liveData
 import androidx.paging.PagedList
-import com.komangss.submissionjetpack.business.domain.model.Movie
-import com.komangss.submissionjetpack.business.repository.CatalogRepository
+import com.komangss.submissionjetpack.core.data.CatalogRepository
+import com.komangss.submissionjetpack.core.domain.model.Movie
 import com.komangss.submissionjetpack.utils.PagedListUtil.mockPagedList
 import com.komangss.submissionjetpack.utils.datagenerator.MovieDataGenerator.movieDomainList
 import com.nhaarman.mockitokotlin2.doReturn

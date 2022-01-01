@@ -1,8 +1,8 @@
 package com.komangss.submissionjetpack.utils.datagenerator
 
-import com.komangss.submissionjetpack.framework.mapper.CatalogMovieMapper
-import com.komangss.submissionjetpack.framework.network.model.MovieResponse
-import com.komangss.submissionjetpack.framework.network.model.MovieResultResponse
+import com.komangss.submissionjetpack.core.data.source.remote.response.MovieResponse
+import com.komangss.submissionjetpack.core.data.source.remote.response.MovieResultResponse
+import com.komangss.submissionjetpack.core.utils.mapper.CatalogMovieMapper
 
 object MovieDataGenerator {
     private val movieMapper = CatalogMovieMapper()

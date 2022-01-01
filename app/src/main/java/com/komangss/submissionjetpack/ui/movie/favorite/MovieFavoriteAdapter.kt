@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.business.domain.model.Movie
+import com.komangss.submissionjetpack.core.domain.model.Movie
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
 
 class MovieFavoriteAdapter(

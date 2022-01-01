@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.vo.Resource
+import com.komangss.submissionjetpack.core.data.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_tv_show_detail.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,7 +1,7 @@
 package com.komangss.submissionjetpack.utils
 
-import com.komangss.submissionjetpack.framework.network.utils.ApiResponse
-import com.komangss.submissionjetpack.vo.Resource
+import com.komangss.submissionjetpack.core.data.Resource
+import com.komangss.submissionjetpack.core.data.source.remote.network.ApiResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.*

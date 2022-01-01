@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.R
-import com.komangss.submissionjetpack.business.domain.model.TvShow
+import com.komangss.submissionjetpack.core.domain.model.TvShow
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity
 import com.komangss.submissionjetpack.ui.tvshow.detail.TvShowDetailActivity.Companion.EXTRA_TV_SHOW_ID
 import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
