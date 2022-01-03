@@ -1,75 +1,19 @@
 package com.komangss.submissionjetpack.di
 
-import android.content.Context
-import androidx.room.Room
-import com.komangss.submissionjetpack.core.data.source.local.CatalogLocalDataSource
-import com.komangss.submissionjetpack.core.data.source.local.room.CatalogDao
-import com.komangss.submissionjetpack.core.data.source.local.room.CatalogDatabase
-import com.komangss.submissionjetpack.core.data.source.remote.CatalogRemoteDataSource
-import com.komangss.submissionjetpack.core.data.source.remote.network.CatalogServices
-import com.komangss.submissionjetpack.core.utils.mapper.CatalogMovieMapper
-import com.komangss.submissionjetpack.core.utils.mapper.CatalogTvShowMapper
+import com.komangss.submissionjetpack.core.domain.usecase.CatalogInteractor
+import com.komangss.submissionjetpack.core.domain.usecase.CatalogUseCase
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
-    @Singleton
-    @Provides
-    fun provideCatalogRemoteDataSource(catalogServices: CatalogServices): CatalogRemoteDataSource {
-        return CatalogRemoteDataSource(catalogServices)
-    }
+@InstallIn(ViewModelComponent::class)
+abstract class AppModule {
 
-    @Singleton
-    @Provides
-    fun provideRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    @Singleton
-    @Provides
-    fun provideCatalogService(retrofit: Retrofit): CatalogServices {
-        return retrofit.create(CatalogServices::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCatalogLocalDataSource(catalogDao: CatalogDao): CatalogLocalDataSource {
-        return CatalogLocalDataSource(catalogDao)
-    }
-
-    @Singleton
-    @Provides
-    fun provideCatalogDatabase(@ApplicationContext context: Context): CatalogDatabase =
-        Room.databaseBuilder(
-            context,
-            CatalogDatabase::class.java,
-            "catalog_database"
-        )
-            .fallbackToDestructiveMigration()
-            .build()
-
-    @Singleton
-    @Provides
-    fun provideCatalogDao(catalogDatabase: CatalogDatabase): CatalogDao = catalogDatabase.catalogDao
-
-    @Singleton
-    @Provides
-    fun provideMovieMapper(): CatalogMovieMapper = CatalogMovieMapper()
-
-    @Singleton
-    @Provides
-    fun provideTvShowMapper(): CatalogTvShowMapper = CatalogTvShowMapper()
-
+    @Binds
+    @ViewModelScoped
+    abstract fun provideCatalogUseCase(catalogInteractor: CatalogInteractor): CatalogUseCase
 
 }

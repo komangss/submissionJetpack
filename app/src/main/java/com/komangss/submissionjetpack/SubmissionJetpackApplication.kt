@@ -1,4 +1,4 @@
-package com.komangss.submissionjetpack.di
+package com.komangss.submissionjetpack
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

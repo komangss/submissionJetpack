@@ -1,9 +1,9 @@
 package com.komangss.submissionjetpack.ui.tvshow.detail
 
 import androidx.lifecycle.*
-import com.komangss.submissionjetpack.core.data.CatalogRepository
 import com.komangss.submissionjetpack.core.data.Resource
 import com.komangss.submissionjetpack.core.domain.model.TvShow
+import com.komangss.submissionjetpack.core.domain.usecase.CatalogUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,19 +13,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TvShowDetailViewModel
-@Inject constructor(private val catalogRepository: CatalogRepository) : ViewModel() {
+@Inject constructor(private val catalogUseCase: CatalogUseCase) : ViewModel() {
     private val id: MutableLiveData<Int> = MutableLiveData()
 
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     val tvShow: LiveData<Resource<TvShow>> = id.switchMap { id ->
         liveData<Resource<TvShow>>(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emitSource(catalogRepository.getTvShowById(id).asLiveData())
+            emitSource(catalogUseCase.getTvShowById(id).asLiveData())
         }
     }
 
     suspend fun setFavorite(tvShow: TvShow) {
-        catalogRepository.updateTvShow(tvShow)
+        catalogUseCase.updateTvShow(tvShow)
     }
 
     fun setTvShowId(newId: Int) {
