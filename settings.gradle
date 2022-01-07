@@ -1,3 +1,4 @@
 include ':app'
 rootProject.name = "submissionJetpack"
 include ':core'
+include ':favorites'

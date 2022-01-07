@@ -9,4 +9,5 @@
     <string name="activity_movie_detail_description">Movie Description :</string>
     <string name="activity_tv_show_detail_description">Tv Show Description :</string>
     <string name="favorite">Favorite Catalog</string>
+    <string name="title_favorites">Favorite Catalog</string>
 </resources>

@@ -5,7 +5,7 @@
     android:id="@+id/parent_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.tvshow.detail.TvShowDetailActivity">
+    tools:context=".tvshow.detail.TvShowDetailActivity">
 
     <ImageView
         android:id="@+id/image_view_activity_tv_show_detail_tv_show_backdrop"
