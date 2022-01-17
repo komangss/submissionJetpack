@@ -11,7 +11,6 @@ import dagger.Component
 interface FavoriteComponent {
     fun inject(favoriteMovieFragment: MovieFavoriteFragment)
     fun inject(favoriteTvShowFragment: TvShowFavoriteFragment)
-    fun inject(activity: FavoriteActivity)
 
     @Component.Builder
     interface Builder {

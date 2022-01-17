@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.favorites.tvshow
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,15 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.di.FavoritesModuleDependencies
 import com.komangss.submissionjetpack.favorites.DaggerFavoriteComponent
-import com.komangss.submissionjetpack.favorites.R
 import com.komangss.submissionjetpack.favorites.ViewModelFactory
+import com.komangss.submissionjetpack.favorites.databinding.FragmentTvShowFavoriteBinding
 import com.komangss.submissionjetpack.tvshow.detail.TvShowDetailActivity
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
-import kotlinx.android.synthetic.main.fragment_tv_show_favorite.*
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class TvShowFavoriteFragment : Fragment() {
 
     @Inject
@@ -27,27 +25,35 @@ class TvShowFavoriteFragment : Fragment() {
     private val viewModel by viewModels<TvShowFavoriteViewModel> {
         factory
     }
+    private var _binding: FragmentTvShowFavoriteBinding? = null
+    private val binding get() = _binding!!
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        DaggerFavoriteComponent.builder()
+            .context(context)
+            .appDependencies(
+                EntryPointAccessors.fromApplication(
+                    context.applicationContext,
+                    FavoritesModuleDependencies::class.java
+                )
+            )
+            .build()
+            .inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_tv_show_favorite, container, false)
+        _binding = FragmentTvShowFavoriteBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
-            DaggerFavoriteComponent.builder()
-                .context(requireActivity())
-                .appDependencies(
-                    EntryPointAccessors.fromApplication(
-                        requireActivity().applicationContext,
-                        FavoritesModuleDependencies::class.java
-                    )
-                )
-                .build()
-                .inject(this)
             val adapter = TvShowFavoriteAdapter {
                 val intent = Intent(activity, TvShowDetailActivity::class.java)
                 intent.putExtra(TvShowDetailActivity.EXTRA_TV_SHOW_ID, it.id)
@@ -58,11 +64,17 @@ class TvShowFavoriteFragment : Fragment() {
                 adapter.submitList(it)
             })
 
-            with(fragment_tvshow_favorite_rv_tvshow) {
+            with(binding.fragmentTvshowFavoriteRvTvshow) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
                 setAdapter(adapter)
             }
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

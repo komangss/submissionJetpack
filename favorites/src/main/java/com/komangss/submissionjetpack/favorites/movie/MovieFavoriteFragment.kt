@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.favorites.movie
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,15 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.di.FavoritesModuleDependencies
 import com.komangss.submissionjetpack.favorites.DaggerFavoriteComponent
-import com.komangss.submissionjetpack.favorites.R
 import com.komangss.submissionjetpack.favorites.ViewModelFactory
+import com.komangss.submissionjetpack.favorites.databinding.FragmentMovieFavoriteBinding
 import com.komangss.submissionjetpack.movie.detail.MovieDetailActivity
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
-import kotlinx.android.synthetic.main.fragment_movie_favorite.*
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class MovieFavoriteFragment : Fragment() {
 
     @Inject
@@ -28,17 +26,13 @@ class MovieFavoriteFragment : Fragment() {
         factory
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_movie_favorite, container, false)
-    }
+    private var _binding: FragmentMovieFavoriteBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         DaggerFavoriteComponent.builder()
-            .context(requireActivity())
+            .context(context)
             .appDependencies(
                 EntryPointAccessors.fromApplication(
                     requireActivity().applicationContext,
@@ -47,6 +41,19 @@ class MovieFavoriteFragment : Fragment() {
             )
             .build()
             .inject(this)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentMovieFavoriteBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
         if (activity != null) {
             val adapter = MovieFavoriteAdapter {
                 val intent = Intent(activity, MovieDetailActivity::class.java)
@@ -59,11 +66,16 @@ class MovieFavoriteFragment : Fragment() {
                 adapter.submitList(it)
             })
 
-            with(fragment_movie_favorite_rv_movie) {
+            with(binding.fragmentMovieFavoriteRvMovie) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
                 setAdapter(adapter)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -8,28 +8,26 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.core.data.Resource
-import com.komangss.submissionjetpack.core.domain.model.Movie
+import com.komangss.submissionjetpack.databinding.FragmentMovieBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_movie.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class MovieFragment : Fragment() {
+
     val viewModel by viewModels<MovieViewModel>()
+    private var _binding: FragmentMovieBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(
-            R.layout.fragment_movie,
-            container,
-            false
-        )
+    ): View {
+        _binding = FragmentMovieBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     @ExperimentalCoroutinesApi
@@ -40,26 +38,31 @@ class MovieFragment : Fragment() {
             val movieAdapter = MovieAdapter()
             viewModel.movieList.observe(viewLifecycleOwner, {
                 when (it) {
-                    is Resource.Success<List<Movie>> -> {
-                        fragment_movie_progress_bar.visibility = View.GONE
+                    is Resource.Success -> {
+                        binding.fragmentMovieProgressBar.visibility = View.GONE
                         movieAdapter.setMovies(it.data)
                     }
                     is Resource.Error -> {
-                        fragment_movie_progress_bar.visibility = View.GONE
+                        binding.fragmentMovieProgressBar.visibility = View.GONE
                         Toast.makeText(context, "Failed To Get Data", Toast.LENGTH_LONG).show()
                     }
                     Resource.InProgress -> {
-                        fragment_movie_progress_bar.visibility = View.VISIBLE
+                        binding.fragmentMovieProgressBar.visibility = View.VISIBLE
                         Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
                     }
                 }
             })
 
-            with(fragment_movie_rv_movie) {
+            with(binding.fragmentMovieRvMovie) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
                 adapter = movieAdapter
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

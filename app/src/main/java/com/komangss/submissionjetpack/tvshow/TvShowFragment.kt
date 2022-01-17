@@ -8,55 +8,61 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.core.data.Resource
+import com.komangss.submissionjetpack.databinding.FragmentTvShowBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_tv_show.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class TvShowFragment : Fragment() {
+
     val viewModel by viewModels<TvShowViewModel>()
+    private var _binding: FragmentTvShowBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(
-            R.layout.fragment_tv_show,
-            container,
-            false
-        )
+    ): View {
+        _binding = FragmentTvShowBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     @ExperimentalCoroutinesApi
     @InternalCoroutinesApi
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (activity != null) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-            val tvShowAdapter = TvShowAdapter()
+        val tvShowAdapter = TvShowAdapter()
 
-            viewModel.tvShowList.observe(viewLifecycleOwner, {
-                when (it) {
-                    is Resource.Success -> {
-                        tvShowAdapter.setTvShows(it.data)
-                        tvShowAdapter.notifyDataSetChanged()
-                    }
-                    is Resource.Error -> {
-                        Toast.makeText(context, "Failed To Get Data", Toast.LENGTH_LONG).show()
-                    }
-                    Resource.InProgress -> {
-                    }
+        viewModel.tvShowList.observe(viewLifecycleOwner, {
+            when (it) {
+                is Resource.Success -> {
+                    binding.fragmentTvshowProgressBar.visibility = View.GONE
+                    tvShowAdapter.setTvShows(it.data)
                 }
-            })
-
-            with(fragment_tvshow_rv_tvshow) {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = tvShowAdapter
+                is Resource.Error -> {
+                    binding.fragmentTvshowProgressBar.visibility = View.GONE
+                    Toast.makeText(context, "Failed To Get Data", Toast.LENGTH_LONG).show()
+                }
+                Resource.InProgress -> {
+                    binding.fragmentTvshowProgressBar.visibility = View.VISIBLE
+                    Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
+                }
             }
+        })
+
+        with(binding.fragmentTvshowRvTvshow) {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = tvShowAdapter
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

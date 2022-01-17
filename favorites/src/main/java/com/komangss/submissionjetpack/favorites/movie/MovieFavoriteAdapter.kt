@@ -1,15 +1,13 @@
 package com.komangss.submissionjetpack.favorites.movie
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.core.domain.model.Movie
-import kotlinx.android.synthetic.main.items_movie_and_tvshow.view.*
+import com.komangss.submissionjetpack.favorites.databinding.ItemsMovieAndTvshowBinding
 
 class MovieFavoriteAdapter(
   private val onClickListener: (movie : Movie) -> Unit
@@ -26,22 +24,21 @@ class MovieFavoriteAdapter(
         }
     }
 
-    inner class MovieFavoriteViewHolder(private val v: View) : RecyclerView.ViewHolder(v) {
+    inner class MovieFavoriteViewHolder(private val binding: ItemsMovieAndTvshowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: Movie?) {
-            with(v) {
-                if (movie != null) {
-                    item_movie_tvshow_tv_item_title.text = movie.title
+            if (movie != null) {
+                binding.itemMovieTvshowTvItemTitle.text = movie.title
 
-                    item_movie_tvshow_tv_description.text = movie.description
-                    item_movie_tvshow_rating_bar.rating = movie.voteAverage.toFloat() / 2
+                binding.itemMovieTvshowTvDescription.text = movie.description
+                binding.itemMovieTvshowRatingBar.rating = movie.voteAverage.toFloat() / 2
 
-                    Glide.with(context)
-                        .load("https://image.tmdb.org/t/p/original/${movie.posterUrlPath}")
-                        .into(item_movie_tvshow_image_view_poster)
+                Glide.with(binding.root.context)
+                    .load("https://image.tmdb.org/t/p/original/${movie.posterUrlPath}")
+                    .into(binding.itemMovieTvshowImageViewPoster)
 
-                    setOnClickListener {
-                        onClickListener(movie)
-                    }
+                binding.root.setOnClickListener {
+                    onClickListener(movie)
                 }
             }
         }
@@ -49,8 +46,7 @@ class MovieFavoriteAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieFavoriteViewHolder =
         MovieFavoriteViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.items_movie_and_tvshow, parent, false)
+            ItemsMovieAndTvshowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
 
     override fun onBindViewHolder(holder: MovieFavoriteViewHolder, position: Int) {
