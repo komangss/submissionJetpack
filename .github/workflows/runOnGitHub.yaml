@@ -1,4 +1,4 @@
-name: Continuous Integration Workflow
+name: runOnGitHub
 on:
   # Trigger the workflow on push or pull request,
   # but only for the master branch
@@ -40,6 +40,10 @@ jobs:
     name: Generate APK
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
       - name: Build all artifacts
         id: buildAllApks
         uses: eskatos/gradle-command-action@v1.3.3
@@ -48,4 +52,4 @@ jobs:
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
-          arguments: assembleRelease
+          arguments: runOnGitHub
