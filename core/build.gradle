@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -65,4 +64,7 @@ dependencies {
     api "androidx.fragment:fragment-ktx:1.2.5"
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
     api "androidx.paging:paging-runtime-ktx:$pagingVersion"
+
+    implementation "net.zetetic:android-database-sqlcipher:4.4.0"
+    implementation "androidx.sqlite:sqlite-ktx:2.1.0"
 }

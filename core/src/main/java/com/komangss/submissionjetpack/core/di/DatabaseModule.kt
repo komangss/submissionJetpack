@@ -18,14 +18,19 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideCatalogDatabase(@ApplicationContext context: Context): CatalogDatabase =
-        Room.databaseBuilder(
+    fun provideCatalogDatabase(@ApplicationContext context: Context): CatalogDatabase {
+        val passphrase: ByteArray = SQLiteDatabase.getBytes("githubUser".toCharArray())
+        val factory = SupportFactory(passphrase)
+
+        return Room.databaseBuilder(
             context,
             CatalogDatabase::class.java,
             "catalog_database"
         )
             .fallbackToDestructiveMigration()
+            .openHelperFactory(factory)
             .build()
+    }
 
     @Singleton
     @Provides
