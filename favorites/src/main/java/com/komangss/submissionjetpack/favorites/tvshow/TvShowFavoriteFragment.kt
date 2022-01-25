@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,7 +52,7 @@ class TvShowFavoriteFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle ?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
             val adapter = TvShowFavoriteAdapter {
@@ -61,6 +62,14 @@ class TvShowFavoriteFragment : Fragment() {
             }
 
             viewModel.getFavoriteTvShows().observe(viewLifecycleOwner, {
+                if(it.size > 0) {
+                    binding.fragmentTvshowFavoriteRvTvshow.visibility = View.VISIBLE
+                    binding.animationView.visibility = View.GONE
+                } else {
+                    Toast.makeText(activity, "Your Favorite's Tv Show is Empty", Toast.LENGTH_SHORT).show()
+                    binding.fragmentTvshowFavoriteRvTvshow.visibility = View.GONE
+                    binding.animationView.visibility = View.VISIBLE
+                }
                 adapter.submitList(it)
             })
 
