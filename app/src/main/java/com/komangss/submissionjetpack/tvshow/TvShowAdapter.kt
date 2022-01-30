@@ -3,6 +3,7 @@ package com.komangss.submissionjetpack.tvshow
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.core.domain.model.TvShow
@@ -14,10 +15,21 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
 
     private val tvShowList = ArrayList<TvShow>()
 
-    fun setTvShows(tvShowList: List<TvShow>) {
+    fun setTvShows(newTvShowList: List<TvShow>) {
+        val diff = object : DiffUtil.Callback() {
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return tvShowList[oldItemPosition].id == newTvShowList[newItemPosition].id
+            }
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return tvShowList[oldItemPosition] == newTvShowList[newItemPosition]
+            }
+            override fun getOldListSize() = tvShowList.size
+            override fun getNewListSize() = newTvShowList.size
+        }
+        val diffResult = DiffUtil.calculateDiff(diff)
         this.tvShowList.clear()
         this.tvShowList.addAll(tvShowList)
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {

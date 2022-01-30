@@ -1,5 +1,6 @@
 package com.komangss.submissionjetpack.core.di
 
+import com.komangss.submissionjetpack.core.BuildConfig
 import com.komangss.submissionjetpack.core.data.source.remote.CatalogRemoteDataSource
 import com.komangss.submissionjetpack.core.data.source.remote.network.CatalogServices
 import dagger.Module
@@ -27,12 +28,15 @@ object NetworkModule {
             .add(hostname, "sha256/+vqZVAzTqUP8BGkfl88yU7SQ3C8J2uNEa55B7RZjEg0=")
             .add(hostname, "sha256/JSMzqOOrtyOT1kmau6zKhgT676hGgczD5VMdRMyJZFA=")
             .build()
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .certificatePinner(certificatePinner)
-            .build()
+
+        val okHttpClient = OkHttpClient.Builder().apply {
+            if (BuildConfig.DEBUG) {
+                addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            }
+            connectTimeout(60, TimeUnit.SECONDS)
+            readTimeout(60, TimeUnit.SECONDS)
+            certificatePinner(certificatePinner)
+        }.build()
 
         return Retrofit.Builder()
             .baseUrl("https://api.themoviedb.org/3/")

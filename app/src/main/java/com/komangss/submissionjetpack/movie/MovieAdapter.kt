@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.komangss.submissionjetpack.core.domain.model.Movie
 import com.komangss.submissionjetpack.databinding.ItemsMovieAndTvshowBinding
@@ -14,10 +15,21 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     private val movieList = ArrayList<Movie>()
 
-    fun setMovies(movieList: List<Movie>) {
+    fun setMovies(newMovieList: List<Movie>) {
+        val diff = object : DiffUtil.Callback() {
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return movieList[oldItemPosition].id == newMovieList[newItemPosition].id
+            }
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                return movieList[oldItemPosition] == newMovieList[newItemPosition]
+            }
+            override fun getOldListSize() = movieList.size
+            override fun getNewListSize() = newMovieList.size
+        }
+        val diffResult = DiffUtil.calculateDiff(diff)
         this.movieList.clear()
         this.movieList.addAll(movieList)
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -51,4 +63,5 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
             }
         }
     }
+
 }

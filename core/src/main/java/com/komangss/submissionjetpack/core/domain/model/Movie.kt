@@ -15,4 +15,5 @@ data class Movie(
     val description: String,
     val releaseDate: String,
     var isFavorite : Boolean = false
+
 )

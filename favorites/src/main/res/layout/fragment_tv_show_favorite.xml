@@ -17,20 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_loop="true"/>
 
-    <ProgressBar
-        android:id="@+id/fragment_tvshow_favorite_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/fragment_tvshow_favorite_rv_tvshow" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_tvshow_favorite_rv_tvshow"
         android:layout_width="0dp"
