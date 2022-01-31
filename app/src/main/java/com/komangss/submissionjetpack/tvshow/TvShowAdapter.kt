@@ -28,7 +28,7 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
         }
         val diffResult = DiffUtil.calculateDiff(diff)
         this.tvShowList.clear()
-        this.tvShowList.addAll(tvShowList)
+        this.tvShowList.addAll(newTvShowList)
         diffResult.dispatchUpdatesTo(this)
     }
 

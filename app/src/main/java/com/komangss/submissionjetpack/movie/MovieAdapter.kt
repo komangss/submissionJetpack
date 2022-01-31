@@ -28,7 +28,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
         }
         val diffResult = DiffUtil.calculateDiff(diff)
         this.movieList.clear()
-        this.movieList.addAll(movieList)
+        this.movieList.addAll(newMovieList)
         diffResult.dispatchUpdatesTo(this)
     }
 
