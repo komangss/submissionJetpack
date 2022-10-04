@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.movie.MovieFragment">
+    tools:context=".movie.MovieFragment">
 
     <ProgressBar
         android:id="@+id/fragment_movie_progress_bar"
