@@ -6,8 +6,6 @@ import com.komangss.submissionjetpack.core.domain.model.TvShow
 import com.komangss.submissionjetpack.core.domain.usecase.CatalogUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 
@@ -16,8 +14,6 @@ class TvShowDetailViewModel
 @Inject constructor(private val catalogUseCase: CatalogUseCase) : ViewModel() {
     private val id: MutableLiveData<Int> = MutableLiveData()
 
-    @InternalCoroutinesApi
-    @ExperimentalCoroutinesApi
     val tvShow: LiveData<Resource<TvShow>> = id.switchMap { id ->
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emitSource(catalogUseCase.getTvShowById(id).asLiveData())

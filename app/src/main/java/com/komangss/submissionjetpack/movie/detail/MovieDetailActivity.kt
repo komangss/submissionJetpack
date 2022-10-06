@@ -10,8 +10,6 @@ import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.core.data.Resource
 import com.komangss.submissionjetpack.databinding.ActivityMovieDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -22,8 +20,6 @@ class MovieDetailActivity : AppCompatActivity() {
     private var _binding: ActivityMovieDetailBinding? = null
     private val binding get() = _binding!!
 
-    @InternalCoroutinesApi
-    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMovieDetailBinding.inflate(layoutInflater)
@@ -35,7 +31,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         viewModel.setMovieId(movieId)
 
-        viewModel.movie.observe(this, {
+        viewModel.movie.observe(this) {
             when (it) {
                 is Resource.Success -> {
                     val movie = it.data
@@ -96,7 +92,7 @@ class MovieDetailActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-        })
+        }
     }
 
 

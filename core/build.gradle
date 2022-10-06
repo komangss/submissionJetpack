@@ -34,14 +34,11 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 }
 
 dependencies {
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
     //room
     api "androidx.room:room-runtime:2.2.6"
     kapt "androidx.room:room-compiler:2.2.6"

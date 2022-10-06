@@ -1,12 +1,8 @@
 package com.komangss.submissionjetpack.core.data
 
 import com.komangss.submissionjetpack.core.data.source.remote.network.ApiResponse
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
 inline fun <DB : Any, REMOTE : Any, DOMAIN : Any> networkBoundResource(
     crossinline fetchFromLocal: () -> Flow<DB>,
     crossinline shouldFetchFromRemote: (DB?) -> Boolean = { true },

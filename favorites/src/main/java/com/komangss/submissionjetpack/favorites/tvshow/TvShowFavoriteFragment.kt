@@ -47,7 +47,7 @@ class TvShowFavoriteFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentTvShowFavoriteBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -61,17 +61,18 @@ class TvShowFavoriteFragment : Fragment() {
                 startActivity(intent)
             }
 
-            viewModel.getFavoriteTvShows().observe(viewLifecycleOwner, {
-                if(it.size > 0) {
+            viewModel.getFavoriteTvShows().observe(viewLifecycleOwner) {
+                if (it.size > 0) {
                     binding.fragmentTvshowFavoriteRvTvshow.visibility = View.VISIBLE
                     binding.animationView.visibility = View.GONE
                 } else {
-                    Toast.makeText(activity, "Your Favorite's Tv Show is Empty", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Your Favorite's Tv Show is Empty", Toast.LENGTH_SHORT)
+                        .show()
                     binding.fragmentTvshowFavoriteRvTvshow.visibility = View.GONE
                     binding.animationView.visibility = View.VISIBLE
                 }
                 adapter.submitList(it)
-            })
+            }
 
             with(binding.fragmentTvshowFavoriteRvTvshow) {
                 layoutManager = LinearLayoutManager(context)

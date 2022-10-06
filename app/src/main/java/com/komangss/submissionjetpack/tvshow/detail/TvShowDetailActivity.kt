@@ -10,8 +10,6 @@ import com.komangss.submissionjetpack.R
 import com.komangss.submissionjetpack.core.data.Resource
 import com.komangss.submissionjetpack.databinding.ActivityTvShowDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -21,8 +19,6 @@ class TvShowDetailActivity : AppCompatActivity() {
     private var _binding: ActivityTvShowDetailBinding? = null
     private val binding get() = _binding!!
 
-    @InternalCoroutinesApi
-    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityTvShowDetailBinding.inflate(layoutInflater)
@@ -34,7 +30,7 @@ class TvShowDetailActivity : AppCompatActivity() {
 
         viewModel.setTvShowId(tvShowId)
 
-        viewModel.tvShow.observe(this, {
+        viewModel.tvShow.observe(this) {
             when (it) {
                 is Resource.Success -> {
                     val tvShow = it.data
@@ -94,7 +90,7 @@ class TvShowDetailActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-        })
+        }
 
 
     }

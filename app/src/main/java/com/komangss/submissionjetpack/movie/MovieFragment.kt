@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.core.data.Resource
 import com.komangss.submissionjetpack.databinding.FragmentMovieBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class MovieFragment : Fragment() {
@@ -30,13 +28,11 @@ class MovieFragment : Fragment() {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (activity != null) {
             val movieAdapter = MovieAdapter()
-            viewModel.movieList.observe(viewLifecycleOwner, {
+            viewModel.movieList.observe(viewLifecycleOwner) {
                 when (it) {
                     is Resource.Success -> {
                         binding.fragmentMovieProgressBar.visibility = View.GONE
@@ -51,7 +47,7 @@ class MovieFragment : Fragment() {
                         Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
                     }
                 }
-            })
+            }
 
             with(binding.fragmentMovieRvMovie) {
                 layoutManager = LinearLayoutManager(context)

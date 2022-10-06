@@ -47,7 +47,7 @@ class MovieFavoriteFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMovieFavoriteBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -63,17 +63,18 @@ class MovieFavoriteFragment : Fragment() {
 
             }
 
-            viewModel.getFavoriteMovies().observe(viewLifecycleOwner, {
-                if(it.size > 0) {
+            viewModel.getFavoriteMovies().observe(viewLifecycleOwner) {
+                if (it.size > 0) {
                     binding.fragmentMovieFavoriteRvMovie.visibility = View.VISIBLE
                     binding.animationView.visibility = View.GONE
                 } else {
-                    Toast.makeText(activity, "Your Favorite's Movie is Empty", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Your Favorite's Movie is Empty", Toast.LENGTH_SHORT)
+                        .show()
                     binding.fragmentMovieFavoriteRvMovie.visibility = View.GONE
                     binding.animationView.visibility = View.VISIBLE
                 }
                 adapter.submitList(it)
-            })
+            }
 
             with(binding.fragmentMovieFavoriteRvMovie) {
                 layoutManager = LinearLayoutManager(context)

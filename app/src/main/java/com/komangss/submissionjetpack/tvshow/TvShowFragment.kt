@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.komangss.submissionjetpack.core.data.Resource
 import com.komangss.submissionjetpack.databinding.FragmentTvShowBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 
 @AndroidEntryPoint
 class TvShowFragment : Fragment() {
@@ -30,14 +28,12 @@ class TvShowFragment : Fragment() {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
-    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val tvShowAdapter = TvShowAdapter()
 
-        viewModel.tvShowList.observe(viewLifecycleOwner, {
+        viewModel.tvShowList.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
                     binding.fragmentTvshowProgressBar.visibility = View.GONE
@@ -52,7 +48,7 @@ class TvShowFragment : Fragment() {
                     Toast.makeText(context, "Loading...", Toast.LENGTH_LONG).show()
                 }
             }
-        })
+        }
 
         with(binding.fragmentTvshowRvTvshow) {
             layoutManager = LinearLayoutManager(context)
