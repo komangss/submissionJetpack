@@ -6,13 +6,13 @@ apply plugin: 'dagger.hilt.android.plugin'
 apply from: '../shared_dependencies.gradle'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.komangss.submissionjetpack"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

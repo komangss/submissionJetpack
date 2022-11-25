@@ -14,8 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".tvshow.detail.TvShowDetailActivity" />
-        <activity android:name=".movie.detail.MovieDetailActivity" />
+        <activity android:name=".tvshow.detail.TvShowDetailActivity" android:exported="true" />
+        <activity android:name=".movie.detail.MovieDetailActivity" android:exported="true" />
         <activity
             android:name=".home.HomeActivity"
             android:exported="true">

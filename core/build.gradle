@@ -6,11 +6,11 @@ apply plugin: 'dagger.hilt.android.plugin'
 apply from: '../shared_dependencies.gradle'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -40,14 +40,14 @@ android {
 
 dependencies {
     //room
-    api "androidx.room:room-runtime:2.2.6"
-    kapt "androidx.room:room-compiler:2.2.6"
-    androidTestImplementation "androidx.room:room-testing:2.2.6"
+    api "androidx.room:room-runtime:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
+    androidTestImplementation "androidx.room:room-testing:2.4.3"
 
     //coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
-    implementation "androidx.room:room-ktx:2.2.6"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
+    implementation "androidx.room:room-ktx:2.4.3"
 
 //    Retrofit Dependency
     api 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -56,12 +56,12 @@ dependencies {
 
     implementation 'com.squareup.moshi:moshi:1.8.0'
 
-    api "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
-    api "androidx.activity:activity-ktx:1.4.0"
-    api "androidx.fragment:fragment-ktx:1.2.5"
-    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
-    api "androidx.paging:paging-runtime-ktx:$pagingVersion"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+    api "androidx.activity:activity-ktx:1.6.1"
+    api "androidx.fragment:fragment-ktx:1.5.4"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    api "androidx.paging:paging-runtime-ktx:3.1.1"
 
     implementation "net.zetetic:android-database-sqlcipher:4.4.0"
-    implementation "androidx.sqlite:sqlite-ktx:2.1.0"
+    implementation "androidx.sqlite:sqlite-ktx:2.2.0"
 }
